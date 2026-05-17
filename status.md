@@ -2044,3 +2044,206 @@ Next recommended step after smoke check passes:
   deliberately lightweight and explicit, and should not run generation or ASR.
   Because full Llama-2 is too large for the RTX 2080 SUPER without careful
   loading controls, keep any base-model loading step separate and opt-in.
+
+## 2026-05-17T19:06:06Z Sanitised Adapter File Smoke Check Passed
+
+Scope of this step: verify server-generated smoke-check outputs for the six
+sanitised adapter variants. No full Llama-2 model was loaded. No PEFT or
+Transformers model was instantiated. No inference was run. No GPU-heavy code
+was run. No ASR or clean utility evaluation was run.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/08_smoke_check_sanitised_adapters.py
+```
+
+Verified output files:
+
+- `logs/sanitised_adapter_smoke_check_20260517T190339Z.json`
+- `outputs/sanitised_adapter_smoke_check_summary.csv`
+
+Smoke-check summary:
+
+- Variants checked: `6`
+- Passed: `6`
+- Failed: `0`
+- Missing expected variants: `[]`
+- Unexpected variants: `[]`
+- Safe to proceed to PEFT loading smoke test: `True`
+
+Per-variant verification:
+
+- `top1_gamma_0.0`: pass
+- `top1_gamma_0.25`: pass
+- `top1_gamma_0.50`: pass
+- `top3_gamma_0.0`: pass
+- `top3_gamma_0.25`: pass
+- `top3_gamma_0.50`: pass
+
+For every variant:
+
+- `adapter_config.json` exists.
+- `adapter_model.safetensors` exists.
+- `sanitisation_report.json` exists.
+- Config fields match the original BackdoorLLM adapter for:
+  - `peft_type`
+  - `task_type`
+  - `r`
+  - `target_modules`
+  - `bias`
+- Tensor count: `448`
+- LoRA A tensors: `224`
+- LoRA B tensors: `224`
+- Complete A/B pairs: `224`
+- Incomplete A/B pairs: `0`
+- Unique ranks: `[8]`
+- Required target modules present:
+  `down_proj`, `gate_proj`, `k_proj`, `o_proj`, `q_proj`, `up_proj`, `v_proj`
+- All tensor values finite: `True`
+- Tensor shapes match original BackdoorLLM adapter: `True`
+- Report check passed: `True`
+- Modules edited in report: `224`
+- Warnings: `[]`
+- Errors: `[]`
+
+Decision:
+
+- Adapter-file smoke check passed.
+- It is safe to proceed to a separate PEFT adapter-loading smoke test.
+- Keep the next test lightweight and explicit. Do not run generation or ASR.
+- Any full Llama-2 base-model loading must remain a separate opt-in step with
+  careful low-memory settings because the server GPU has about 7.6 GB VRAM.
+
+## 2026-05-17T19:16:58Z PEFT Loading Smoke Test Script Added
+
+Scope of this step: implement a PEFT loading smoke-test script with a safe
+adapter-only default mode and an explicit opt-in low-memory base-model attach
+mode. No script was run. No full Llama-2 model was loaded. No inference was
+run. No ASR or clean utility evaluation was run. No cache folders or original
+adapter files were modified.
+
+Files created/modified:
+
+- Created `scripts/09_peft_loading_smoke_test.py`.
+- Appended this section to `status.md`.
+
+Mode 1, default adapter-only mode:
+
+- Does not load the full Llama-2 base model.
+- Does not instantiate PEFT model wrappers around a base model.
+- Checks the original BackdoorLLM adapter and all six sanitised variants:
+  - `original`
+  - `top1_gamma_0.0`
+  - `top1_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.0`
+  - `top3_gamma_0.25`
+  - `top3_gamma_0.50`
+- Runs `PeftConfig.from_pretrained(...)` on each adapter directory.
+- Opens each `adapter_model.safetensors` with `safetensors.safe_open`.
+- Verifies:
+  - PEFT config is readable
+  - PEFT type is `LORA`
+  - rank is `8`
+  - expected target modules are present
+  - tensor count is `448`
+  - LoRA A tensor count is `224`
+  - LoRA B tensor count is `224`
+  - complete A/B pairs are `224`
+  - incomplete pairs are `0`
+  - tensor ranks are `[8]`
+
+Mode 2, optional low-memory base-model attach:
+
+- Runs only if `--load-base-4bit` is passed.
+- Loads cached base model `NousResearch/Llama-2-7b-chat-hf` with:
+  - 4-bit bitsandbytes quantization
+  - `device_map="auto"`
+  - `torch_dtype=torch.float16`
+  - `low_cpu_mem_usage=True`
+  - `local_files_only=True`
+- Attaches only one adapter at a time with `PeftModel.from_pretrained`.
+- Default attach variant: `top1_gamma_0.50`.
+- Allowed attach variants:
+  - `original`
+  - `top1_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.25`
+  - `top3_gamma_0.50`
+- Does not run `generate()`.
+- Tiny forward check runs only if `--tiny-forward-check` is passed.
+- CUDA OOM and other errors are caught and logged clearly.
+
+Outputs:
+
+- `logs/peft_loading_smoke_test_<timestamp>.json`
+- `outputs/peft_loading_smoke_test_summary.csv`
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/09_peft_loading_smoke_test.py`.
+- Static scan confirmed:
+  - no `torch.load`
+  - no destructive delete command
+  - no `generate(`
+  - `AutoModelForCausalLM.from_pretrained`, `AutoTokenizer.from_pretrained`,
+    and `PeftModel.from_pretrained` are present only for the explicit optional
+    `--load-base-4bit` path or PEFT config reading.
+
+Exact command to run next, default safe adapter-only mode:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py
+```
+
+Expected default output:
+
+- Mode used: `adapter-only`
+- Adapter-only variants checked: `7`
+- Adapter-only passed: `7`
+- Adapter-only failed: `0`
+- Each adapter row should show `PASS`, PEFT config readable, `tensors=448`,
+  and `pairs=224`.
+- Safe to proceed to PEFT base attach test: `True`
+- Safe to proceed to first tiny inference smoke test: `False`, because the
+  base-model attach was not attempted in default mode.
+
+Optional command for one low-memory base attach test, no forward pass:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50
+```
+
+Optional command for a tiny forward-shape check after attach:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50 --tiny-forward-check
+```
+
+Safety note:
+
+- Run the default adapter-only mode first.
+- Do not run `--load-base-4bit` unless ready to attempt a low-memory base-model
+  load on the RTX 2080 SUPER.
+- Do not run `--tiny-forward-check` until the attach-only mode succeeds.
+- This script still does not perform ASR, clean utility, or generation.
+
+Next recommended step:
+
+- Run the default adapter-only PEFT config smoke test.
+- If it passes, decide whether to attempt the explicit `--load-base-4bit`
+  attach test for a single variant.
