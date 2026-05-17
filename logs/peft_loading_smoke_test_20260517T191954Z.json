@@ -1,0 +1,513 @@
+{
+  "adapter_only_results": [
+    {
+      "adapter_config_path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b/adapter_config.json",
+      "adapter_model_path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b/adapter_model.safetensors",
+      "adapter_path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+      "checks": {
+        "adapter_config_exists": true,
+        "adapter_dir_exists": true,
+        "adapter_model_exists": true,
+        "complete_pairs_ok": true,
+        "incomplete_pairs_ok": true,
+        "lora_A_count_ok": true,
+        "lora_B_count_ok": true,
+        "peft_config_ok": true,
+        "peft_type_lora": true,
+        "rank_ok": true,
+        "safetensors_ok": true,
+        "target_modules_ok": true,
+        "tensor_count_ok": true,
+        "tensor_rank_ok": true,
+        "tensor_target_modules_ok": true
+      },
+      "kind": "original",
+      "passed": true,
+      "peft_config": {
+        "adapter_path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+        "error": null,
+        "ok": true,
+        "peft_type": "LORA",
+        "r": 8,
+        "rank_ok": true,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "target_modules_ok": true,
+        "task_type": "CAUSAL_LM"
+      },
+      "tensor_info": {
+        "all_expected_targets_present": true,
+        "complete_pair_count": 224,
+        "error": null,
+        "exists": true,
+        "incomplete_pair_count": 0,
+        "lora_A_count": 224,
+        "lora_B_count": 224,
+        "ok": true,
+        "path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b/adapter_model.safetensors",
+        "target_module_hints": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "tensor_count": 448,
+        "unique_ranks": [
+          8
+        ]
+      },
+      "variant_name": "original"
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top1_gamma_0.0/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top1_gamma_0.0/adapter_model.safetensors",
+      "adapter_path": "outputs/sanitised_adapters/top1_gamma_0.0",
+      "checks": {
+        "adapter_config_exists": true,
+        "adapter_dir_exists": true,
+        "adapter_model_exists": true,
+        "complete_pairs_ok": true,
+        "incomplete_pairs_ok": true,
+        "lora_A_count_ok": true,
+        "lora_B_count_ok": true,
+        "peft_config_ok": true,
+        "peft_type_lora": true,
+        "rank_ok": true,
+        "safetensors_ok": true,
+        "target_modules_ok": true,
+        "tensor_count_ok": true,
+        "tensor_rank_ok": true,
+        "tensor_target_modules_ok": true
+      },
+      "kind": "sanitised",
+      "passed": true,
+      "peft_config": {
+        "adapter_path": "outputs/sanitised_adapters/top1_gamma_0.0",
+        "error": null,
+        "ok": true,
+        "peft_type": "LORA",
+        "r": 8,
+        "rank_ok": true,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "target_modules_ok": true,
+        "task_type": "CAUSAL_LM"
+      },
+      "tensor_info": {
+        "all_expected_targets_present": true,
+        "complete_pair_count": 224,
+        "error": null,
+        "exists": true,
+        "incomplete_pair_count": 0,
+        "lora_A_count": 224,
+        "lora_B_count": 224,
+        "ok": true,
+        "path": "outputs/sanitised_adapters/top1_gamma_0.0/adapter_model.safetensors",
+        "target_module_hints": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "tensor_count": 448,
+        "unique_ranks": [
+          8
+        ]
+      },
+      "variant_name": "top1_gamma_0.0"
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top1_gamma_0.25/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top1_gamma_0.25/adapter_model.safetensors",
+      "adapter_path": "outputs/sanitised_adapters/top1_gamma_0.25",
+      "checks": {
+        "adapter_config_exists": true,
+        "adapter_dir_exists": true,
+        "adapter_model_exists": true,
+        "complete_pairs_ok": true,
+        "incomplete_pairs_ok": true,
+        "lora_A_count_ok": true,
+        "lora_B_count_ok": true,
+        "peft_config_ok": true,
+        "peft_type_lora": true,
+        "rank_ok": true,
+        "safetensors_ok": true,
+        "target_modules_ok": true,
+        "tensor_count_ok": true,
+        "tensor_rank_ok": true,
+        "tensor_target_modules_ok": true
+      },
+      "kind": "sanitised",
+      "passed": true,
+      "peft_config": {
+        "adapter_path": "outputs/sanitised_adapters/top1_gamma_0.25",
+        "error": null,
+        "ok": true,
+        "peft_type": "LORA",
+        "r": 8,
+        "rank_ok": true,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "target_modules_ok": true,
+        "task_type": "CAUSAL_LM"
+      },
+      "tensor_info": {
+        "all_expected_targets_present": true,
+        "complete_pair_count": 224,
+        "error": null,
+        "exists": true,
+        "incomplete_pair_count": 0,
+        "lora_A_count": 224,
+        "lora_B_count": 224,
+        "ok": true,
+        "path": "outputs/sanitised_adapters/top1_gamma_0.25/adapter_model.safetensors",
+        "target_module_hints": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "tensor_count": 448,
+        "unique_ranks": [
+          8
+        ]
+      },
+      "variant_name": "top1_gamma_0.25"
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top1_gamma_0.50/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top1_gamma_0.50/adapter_model.safetensors",
+      "adapter_path": "outputs/sanitised_adapters/top1_gamma_0.50",
+      "checks": {
+        "adapter_config_exists": true,
+        "adapter_dir_exists": true,
+        "adapter_model_exists": true,
+        "complete_pairs_ok": true,
+        "incomplete_pairs_ok": true,
+        "lora_A_count_ok": true,
+        "lora_B_count_ok": true,
+        "peft_config_ok": true,
+        "peft_type_lora": true,
+        "rank_ok": true,
+        "safetensors_ok": true,
+        "target_modules_ok": true,
+        "tensor_count_ok": true,
+        "tensor_rank_ok": true,
+        "tensor_target_modules_ok": true
+      },
+      "kind": "sanitised",
+      "passed": true,
+      "peft_config": {
+        "adapter_path": "outputs/sanitised_adapters/top1_gamma_0.50",
+        "error": null,
+        "ok": true,
+        "peft_type": "LORA",
+        "r": 8,
+        "rank_ok": true,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "target_modules_ok": true,
+        "task_type": "CAUSAL_LM"
+      },
+      "tensor_info": {
+        "all_expected_targets_present": true,
+        "complete_pair_count": 224,
+        "error": null,
+        "exists": true,
+        "incomplete_pair_count": 0,
+        "lora_A_count": 224,
+        "lora_B_count": 224,
+        "ok": true,
+        "path": "outputs/sanitised_adapters/top1_gamma_0.50/adapter_model.safetensors",
+        "target_module_hints": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "tensor_count": 448,
+        "unique_ranks": [
+          8
+        ]
+      },
+      "variant_name": "top1_gamma_0.50"
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top3_gamma_0.0/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top3_gamma_0.0/adapter_model.safetensors",
+      "adapter_path": "outputs/sanitised_adapters/top3_gamma_0.0",
+      "checks": {
+        "adapter_config_exists": true,
+        "adapter_dir_exists": true,
+        "adapter_model_exists": true,
+        "complete_pairs_ok": true,
+        "incomplete_pairs_ok": true,
+        "lora_A_count_ok": true,
+        "lora_B_count_ok": true,
+        "peft_config_ok": true,
+        "peft_type_lora": true,
+        "rank_ok": true,
+        "safetensors_ok": true,
+        "target_modules_ok": true,
+        "tensor_count_ok": true,
+        "tensor_rank_ok": true,
+        "tensor_target_modules_ok": true
+      },
+      "kind": "sanitised",
+      "passed": true,
+      "peft_config": {
+        "adapter_path": "outputs/sanitised_adapters/top3_gamma_0.0",
+        "error": null,
+        "ok": true,
+        "peft_type": "LORA",
+        "r": 8,
+        "rank_ok": true,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "target_modules_ok": true,
+        "task_type": "CAUSAL_LM"
+      },
+      "tensor_info": {
+        "all_expected_targets_present": true,
+        "complete_pair_count": 224,
+        "error": null,
+        "exists": true,
+        "incomplete_pair_count": 0,
+        "lora_A_count": 224,
+        "lora_B_count": 224,
+        "ok": true,
+        "path": "outputs/sanitised_adapters/top3_gamma_0.0/adapter_model.safetensors",
+        "target_module_hints": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "tensor_count": 448,
+        "unique_ranks": [
+          8
+        ]
+      },
+      "variant_name": "top3_gamma_0.0"
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top3_gamma_0.25/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top3_gamma_0.25/adapter_model.safetensors",
+      "adapter_path": "outputs/sanitised_adapters/top3_gamma_0.25",
+      "checks": {
+        "adapter_config_exists": true,
+        "adapter_dir_exists": true,
+        "adapter_model_exists": true,
+        "complete_pairs_ok": true,
+        "incomplete_pairs_ok": true,
+        "lora_A_count_ok": true,
+        "lora_B_count_ok": true,
+        "peft_config_ok": true,
+        "peft_type_lora": true,
+        "rank_ok": true,
+        "safetensors_ok": true,
+        "target_modules_ok": true,
+        "tensor_count_ok": true,
+        "tensor_rank_ok": true,
+        "tensor_target_modules_ok": true
+      },
+      "kind": "sanitised",
+      "passed": true,
+      "peft_config": {
+        "adapter_path": "outputs/sanitised_adapters/top3_gamma_0.25",
+        "error": null,
+        "ok": true,
+        "peft_type": "LORA",
+        "r": 8,
+        "rank_ok": true,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "target_modules_ok": true,
+        "task_type": "CAUSAL_LM"
+      },
+      "tensor_info": {
+        "all_expected_targets_present": true,
+        "complete_pair_count": 224,
+        "error": null,
+        "exists": true,
+        "incomplete_pair_count": 0,
+        "lora_A_count": 224,
+        "lora_B_count": 224,
+        "ok": true,
+        "path": "outputs/sanitised_adapters/top3_gamma_0.25/adapter_model.safetensors",
+        "target_module_hints": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "tensor_count": 448,
+        "unique_ranks": [
+          8
+        ]
+      },
+      "variant_name": "top3_gamma_0.25"
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top3_gamma_0.50/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top3_gamma_0.50/adapter_model.safetensors",
+      "adapter_path": "outputs/sanitised_adapters/top3_gamma_0.50",
+      "checks": {
+        "adapter_config_exists": true,
+        "adapter_dir_exists": true,
+        "adapter_model_exists": true,
+        "complete_pairs_ok": true,
+        "incomplete_pairs_ok": true,
+        "lora_A_count_ok": true,
+        "lora_B_count_ok": true,
+        "peft_config_ok": true,
+        "peft_type_lora": true,
+        "rank_ok": true,
+        "safetensors_ok": true,
+        "target_modules_ok": true,
+        "tensor_count_ok": true,
+        "tensor_rank_ok": true,
+        "tensor_target_modules_ok": true
+      },
+      "kind": "sanitised",
+      "passed": true,
+      "peft_config": {
+        "adapter_path": "outputs/sanitised_adapters/top3_gamma_0.50",
+        "error": null,
+        "ok": true,
+        "peft_type": "LORA",
+        "r": 8,
+        "rank_ok": true,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "target_modules_ok": true,
+        "task_type": "CAUSAL_LM"
+      },
+      "tensor_info": {
+        "all_expected_targets_present": true,
+        "complete_pair_count": 224,
+        "error": null,
+        "exists": true,
+        "incomplete_pair_count": 0,
+        "lora_A_count": 224,
+        "lora_B_count": 224,
+        "ok": true,
+        "path": "outputs/sanitised_adapters/top3_gamma_0.50/adapter_model.safetensors",
+        "target_module_hints": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "tensor_count": 448,
+        "unique_ranks": [
+          8
+        ]
+      },
+      "variant_name": "top3_gamma_0.50"
+    }
+  ],
+  "adapter_only_summary": {
+    "all_passed": true,
+    "checked_count": 7,
+    "failed_count": 0,
+    "passed_count": 7
+  },
+  "base_attach_result": {
+    "attempted": false
+  },
+  "base_model_id": "NousResearch/Llama-2-7b-chat-hf",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": null
+  },
+  "mode": "adapter-only",
+  "original_adapter_snapshot": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+  "python": {
+    "executable": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+    "version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "version_info": [
+      3,
+      12,
+      11
+    ]
+  },
+  "recommendation": {
+    "reason": "Adapter-only checks passed, but base attach was not run.",
+    "safe_to_proceed_to_first_tiny_inference_smoke_test": false,
+    "safe_to_proceed_to_peft_base_attach_test": true
+  },
+  "timestamp_utc": "20260517T191954Z",
+  "variants_dir": "outputs/sanitised_adapters"
+}
