@@ -1,0 +1,166 @@
+{
+  "cuda": {
+    "available": false,
+    "device_count": 0,
+    "devices": [],
+    "reason": "torch import failed",
+    "torch_cuda_version": null,
+    "torch_version": null
+  },
+  "cwd": "/home/43e3/solr-home/AISP-Project-CODEX",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "HF_TOKEN_present": false,
+    "HUGGING_FACE_HUB_TOKEN_present": false,
+    "PATH": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin:/opt/androidstudio/bin:/usr/local/android-sdks/emulator:/usr/local/android-sdks/platform-tools:/opt/solr/bin:/opt/nodejs/bin:/opt/solr/bin:/home/43e3/.local/lib/python3.12/site-packages:/usr/local/cuda/bin:/usr/local/cuda-11.8/bin:/usr/local/cuda/bin:/usr/local/cuda-12.9/bin:/home/43e3/.local/bin:/opt/androidstudio/bin:/usr/local/android-sdks/emulator:/usr/local/android-sdks/platform-tools:/opt/solr/bin:/opt/nodejs/bin:/opt/solr/bin:/home/43e3/.local/lib/python3.12/site-packages:/usr/local/cuda/bin:/usr/local/cuda-11.8/bin:/usr/local/cuda/bin:/usr/local/cuda-12.9/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/miniconda/bin:HOME/.local/bin:/opt/miniconda/bin:HOME/.local/bin",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": null,
+    "VIRTUAL_ENV": "/home/43e3/solr-home/AISP-Project-CODEX/.venv"
+  },
+  "packages": {
+    "accelerate": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'accelerate'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "accelerate"
+    },
+    "bitsandbytes": {
+      "distribution_version": "0.46.1",
+      "find_spec": {
+        "found": true,
+        "origin": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/bitsandbytes/__init__.py",
+        "submodule_search_locations": [
+          "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/bitsandbytes"
+        ]
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'typing_extensions'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "bitsandbytes"
+    },
+    "huggingface_hub": {
+      "distribution_version": "0.33.5",
+      "find_spec": {
+        "found": true,
+        "origin": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/huggingface_hub/__init__.py",
+        "submodule_search_locations": [
+          "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/huggingface_hub"
+        ]
+      },
+      "import": {
+        "error": null,
+        "file": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/huggingface_hub/__init__.py",
+        "ok": true,
+        "version": "0.33.5"
+      },
+      "module": "huggingface_hub"
+    },
+    "peft": {
+      "distribution_version": "0.15.2",
+      "find_spec": {
+        "found": true,
+        "origin": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/peft/__init__.py",
+        "submodule_search_locations": [
+          "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/peft"
+        ]
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'transformers'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "peft"
+    },
+    "torch": {
+      "distribution_version": "2.7.1",
+      "find_spec": {
+        "found": true,
+        "origin": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/torch/__init__.py",
+        "submodule_search_locations": [
+          "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/torch"
+        ]
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'typing_extensions'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "torch"
+    },
+    "transformers": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'transformers'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "transformers"
+    }
+  },
+  "pip": {
+    "command": [
+      "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+      "-m",
+      "pip",
+      "--version"
+    ],
+    "error": null,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "pip 26.1.1 from /home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages/pip (python 3.12)"
+  },
+  "platform": {
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "release": "6.8.0-111-generic",
+    "system": "Linux",
+    "version": "#111~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Apr 14 17:13:45 UTC "
+  },
+  "python": {
+    "base_prefix": "/opt/miniconda",
+    "executable": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+    "path": [
+      "/home/43e3/solr-home/AISP-Project-CODEX/scripts",
+      "/opt/miniconda/lib/python312.zip",
+      "/opt/miniconda/lib/python3.12",
+      "/opt/miniconda/lib/python3.12/lib-dynload",
+      "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages"
+    ],
+    "prefix": "/home/43e3/solr-home/AISP-Project-CODEX/.venv",
+    "venv_active": true,
+    "version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "version_info": [
+      3,
+      12,
+      11
+    ]
+  },
+  "site": {
+    "ENABLE_USER_SITE": false,
+    "USER_SITE": "/home/43e3/.local/lib/python3.12/site-packages",
+    "site_packages": [
+      "/home/43e3/solr-home/AISP-Project-CODEX/.venv/lib/python3.12/site-packages"
+    ]
+  },
+  "timestamp_utc": "20260517T142024Z"
+}
