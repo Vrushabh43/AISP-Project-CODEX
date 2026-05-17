@@ -1,0 +1,209 @@
+{
+  "adapter": {
+    "adapter_config_path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b/adapter_config.json",
+    "adapter_id": "BackdoorLLM/Jailbreak_Llama2-7B_BadNets",
+    "adapter_model_path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b/adapter_model.safetensors",
+    "base_model_name_or_path": "meta-llama/Llama-2-7b-chat-hf",
+    "lora_alpha": 16,
+    "peft_type": "LORA",
+    "rank": 8,
+    "snapshot_path": "/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+    "target_modules": [
+      "gate_proj",
+      "q_proj",
+      "o_proj",
+      "v_proj",
+      "k_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "task_type": "CAUSAL_LM"
+  },
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": null
+  },
+  "limitations": [
+    "Spectral-only attenuation; clean-prompt sensitivity is not implemented yet.",
+    "No ASR or clean utility evaluation was run.",
+    "No base model was loaded.",
+    "Dense reconstruction checks are skipped by default for memory safety."
+  ],
+  "pair_count": 224,
+  "pair_warnings": [],
+  "python": {
+    "executable": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+    "version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "version_info": [
+      3,
+      12,
+      11
+    ]
+  },
+  "timestamp_utc": "20260517T163541Z",
+  "variants": [
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top1_gamma_0.0/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top1_gamma_0.0/adapter_model.safetensors",
+      "dense_reconstruction_checks_attempted": 0,
+      "dense_reconstruction_checks_skipped": 224,
+      "errors": [],
+      "gamma": 0.0,
+      "max_dense_relative_error": null,
+      "mean_effective_rank_after": 4.744129198007338,
+      "mean_effective_rank_before": 2.8376760619534447,
+      "mean_entropy_after": 0.7396964165177945,
+      "mean_entropy_before": 0.46194572480436624,
+      "mean_top1_after": 0.0,
+      "mean_top1_before": 0.7182627704792789,
+      "mean_top3_after": 0.6544353919369834,
+      "mean_top3_before": 0.902278570458293,
+      "modules_edited": 224,
+      "output_dir": "outputs/sanitised_adapters/top1_gamma_0.0",
+      "pair_count": 224,
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "outputs/sanitised_adapters/top1_gamma_0.0/sanitisation_report.json",
+      "selected_component_count": 1,
+      "variant_name": "top1_gamma_0.0",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top1_gamma_0.25/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top1_gamma_0.25/adapter_model.safetensors",
+      "dense_reconstruction_checks_attempted": 0,
+      "dense_reconstruction_checks_skipped": 224,
+      "errors": [],
+      "gamma": 0.25,
+      "max_dense_relative_error": null,
+      "mean_effective_rank_after": 5.313116448131494,
+      "mean_effective_rank_before": 2.8376760619534447,
+      "mean_entropy_after": 0.7909910532008987,
+      "mean_entropy_before": 0.46194572480436624,
+      "mean_top1_after": 0.20550949409204936,
+      "mean_top1_before": 0.7182627704792789,
+      "mean_top3_after": 0.7254511072699513,
+      "mean_top3_before": 0.902278570458293,
+      "modules_edited": 224,
+      "output_dir": "outputs/sanitised_adapters/top1_gamma_0.25",
+      "pair_count": 224,
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "outputs/sanitised_adapters/top1_gamma_0.25/sanitisation_report.json",
+      "selected_component_count": 1,
+      "variant_name": "top1_gamma_0.25",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top1_gamma_0.50/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top1_gamma_0.50/adapter_model.safetensors",
+      "dense_reconstruction_checks_attempted": 0,
+      "dense_reconstruction_checks_skipped": 224,
+      "errors": [],
+      "gamma": 0.5,
+      "max_dense_relative_error": null,
+      "mean_effective_rank_after": 4.511723612243676,
+      "mean_effective_rank_before": 2.8376760619534447,
+      "mean_entropy_after": 0.6950008891495588,
+      "mean_entropy_before": 0.46194572480436624,
+      "mean_top1_after": 0.4424656012561172,
+      "mean_top1_before": 0.7182627704792789,
+      "mean_top3_after": 0.8072025664150715,
+      "mean_top3_before": 0.902278570458293,
+      "modules_edited": 224,
+      "output_dir": "outputs/sanitised_adapters/top1_gamma_0.50",
+      "pair_count": 224,
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "outputs/sanitised_adapters/top1_gamma_0.50/sanitisation_report.json",
+      "selected_component_count": 1,
+      "variant_name": "top1_gamma_0.50",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top3_gamma_0.0/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top3_gamma_0.0/adapter_model.safetensors",
+      "dense_reconstruction_checks_attempted": 0,
+      "dense_reconstruction_checks_skipped": 224,
+      "errors": [],
+      "gamma": 0.0,
+      "max_dense_relative_error": null,
+      "mean_effective_rank_after": 4.5310702936138645,
+      "mean_effective_rank_before": 2.8376760619534447,
+      "mean_entropy_after": 0.7255996461207764,
+      "mean_entropy_before": 0.46194572480436624,
+      "mean_top1_after": 0.0,
+      "mean_top1_before": 0.7182627704792789,
+      "mean_top3_after": 0.0,
+      "mean_top3_before": 0.902278570458293,
+      "modules_edited": 224,
+      "output_dir": "outputs/sanitised_adapters/top3_gamma_0.0",
+      "pair_count": 224,
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "outputs/sanitised_adapters/top3_gamma_0.0/sanitisation_report.json",
+      "selected_component_count": 3,
+      "variant_name": "top3_gamma_0.0",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top3_gamma_0.25/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top3_gamma_0.25/adapter_model.safetensors",
+      "dense_reconstruction_checks_attempted": 0,
+      "dense_reconstruction_checks_skipped": 224,
+      "errors": [],
+      "gamma": 0.25,
+      "max_dense_relative_error": null,
+      "mean_effective_rank_after": 5.553185359934749,
+      "mean_effective_rank_before": 2.8376760619534447,
+      "mean_entropy_after": 0.800115547203492,
+      "mean_entropy_before": 0.46194572480436624,
+      "mean_top1_after": 0.3644224485116346,
+      "mean_top1_before": 0.7182627704792789,
+      "mean_top3_after": 0.43586215659576866,
+      "mean_top3_before": 0.902278570458293,
+      "modules_edited": 224,
+      "output_dir": "outputs/sanitised_adapters/top3_gamma_0.25",
+      "pair_count": 224,
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "outputs/sanitised_adapters/top3_gamma_0.25/sanitisation_report.json",
+      "selected_component_count": 3,
+      "variant_name": "top3_gamma_0.25",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "outputs/sanitised_adapters/top3_gamma_0.50/adapter_config.json",
+      "adapter_model_path": "outputs/sanitised_adapters/top3_gamma_0.50/adapter_model.safetensors",
+      "dense_reconstruction_checks_attempted": 0,
+      "dense_reconstruction_checks_skipped": 224,
+      "errors": [],
+      "gamma": 0.5,
+      "max_dense_relative_error": null,
+      "mean_effective_rank_after": 4.257337294069483,
+      "mean_effective_rank_before": 2.8376760619534447,
+      "mean_entropy_after": 0.6492883799486644,
+      "mean_entropy_before": 0.46194572480436624,
+      "mean_top1_after": 0.5828960756771266,
+      "mean_top1_before": 0.7182627704792789,
+      "mean_top3_after": 0.7191515312130962,
+      "mean_top3_before": 0.902278570458293,
+      "modules_edited": 224,
+      "output_dir": "outputs/sanitised_adapters/top3_gamma_0.50",
+      "pair_count": 224,
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "outputs/sanitised_adapters/top3_gamma_0.50/sanitisation_report.json",
+      "selected_component_count": 3,
+      "variant_name": "top3_gamma_0.50",
+      "warnings": []
+    }
+  ]
+}
