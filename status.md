@@ -1344,3 +1344,226 @@ Next suggested step:
 - If FlagAlpha remains the best structural reference, implement
   `scripts/04_compare_clean_vs_backdoor_spectra.py` as an adapter-only CPU
   comparison using the selected clean reference.
+
+## 2026-05-17T15:50:35Z Alternative Clean Candidate Inspection Verified
+
+Scope of this step: verify server-generated outputs from
+`scripts/05_inspect_clean_adapter_candidates.py --download --inspect-bin`.
+No base model was loaded. No inference was run. No GPU-heavy code was run. No
+clean-vs-backdoor spectral comparison was implemented or run.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/05_inspect_clean_adapter_candidates.py --download --inspect-bin
+```
+
+Verified output files:
+
+- `logs/clean_adapter_candidate_inspection_20260517T154855Z.json`
+- `outputs/clean_adapter_candidate_comparison.csv`
+- `outputs/clean_candidate_manojpatil_llama_2_7b_chat_lora_adaptor_tensor_summary.csv`
+- `outputs/clean_candidate_Luciano_lora_4bit_Llama_2_7b_chat_hf_lener_br_tensor_summary.csv`
+- `outputs/clean_candidate_FlagAlpha_Llama2_Chinese_7b_Chat_LoRA_tensor_summary.csv`
+
+Direct verification results:
+
+- JSON result count: `3`
+- Recommendation in JSON:
+  `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+- `safe_to_proceed_to_spectral_comparison`: `True`
+- Tensor CSV row counts:
+  - `manojpatil/llama-2-7b-chat-lora-adaptor`: `128`
+  - `Luciano/lora-4bit-Llama-2-7b-chat-hf-lener_br`: `128`
+  - `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`: `448`
+
+Candidate safety and structure:
+
+- `manojpatil/llama-2-7b-chat-lora-adaptor`
+  - metadata reachable: `True`
+  - base model: `NousResearch/Llama-2-7b-chat-hf`
+  - PEFT type: `LORA`
+  - task type: `CAUSAL_LM`
+  - `adapter_model.bin` exists, no safetensors
+  - `.bin` inspected with `weights_only=True`: `True`
+  - safe weights: `True`
+  - rank values: `[64]`
+  - target modules/hints: `q_proj,v_proj`
+  - full seven target-module overlap: `False`
+  - complete A/B pairs: `64`
+  - incomplete A/B pairs: `0`
+  - dtype: `torch.float32`
+  - structural suitability score: `14`
+
+- `Luciano/lora-4bit-Llama-2-7b-chat-hf-lener_br`
+  - metadata reachable: `True`
+  - base model: `meta-llama/Llama-2-7b-chat-hf`
+  - PEFT type: `LORA`
+  - task type: `CAUSAL_LM`
+  - `adapter_model.bin` exists, no safetensors
+  - `.bin` inspected with `weights_only=True`: `True`
+  - safe weights: `True`
+  - rank values: `[8]`
+  - target modules/hints: `q_proj,v_proj`
+  - full seven target-module overlap: `False`
+  - complete A/B pairs: `64`
+  - incomplete A/B pairs: `0`
+  - dtype: `torch.float32`
+  - structural suitability score: `16`
+
+- `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+  - loaded as comparison reference from existing verified FlagAlpha log
+  - base model: `meta-llama/Llama-2-7b-chat-hf`
+  - PEFT type: `LORA`
+  - task type: `CAUSAL_LM`
+  - `adapter_model.bin` exists, no safetensors
+  - `.bin` inspected with `weights_only=True`: `True`
+  - safe weights: `True`
+  - rank values: `[8]`
+  - target modules/hints:
+    `down_proj,gate_proj,k_proj,o_proj,q_proj,up_proj,v_proj`
+  - full seven target-module overlap: `True`
+  - complete A/B pairs: `224`
+  - incomplete A/B pairs: `0`
+  - dtype: `torch.bfloat16`
+  - structural suitability score: `18`
+
+Decision:
+
+- All three clean candidates passed safe tensor-weight loading.
+- None of the three uses `adapter_model.safetensors`; all use
+  `adapter_model.bin`, but each was inspected only with
+  `torch.load(..., map_location="cpu", weights_only=True)`.
+- `manojpatil` is not a good structural reference for the full adapter because
+  it has rank `64` and only `q_proj,v_proj`.
+- `Luciano` is useful as an exact-base rank-8 attention-only candidate, but it
+  only covers `q_proj,v_proj`.
+- `FlagAlpha` remains the best provisional structural clean reference because
+  it is rank `8`, base-compatible with `meta-llama/Llama-2-7b-chat-hf`, and has
+  all seven target module types with `224` complete A/B pairs.
+- Clean-reference caveat remains: FlagAlpha is not a perfectly matched clean
+  training distribution because it is Chinese/English QA/chat. Use it for a
+  structural spectral sanity comparison only, not final research claims.
+
+Next suggested step:
+
+- Implement `scripts/04_compare_clean_vs_backdoor_spectra.py` as an adapter-only
+  CPU comparison using:
+  - backdoored adapter:
+    `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`
+  - provisional clean structural reference:
+    `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+- The comparison should compute the same compact spectral stats for both
+  adapters and compare only structural/spectral distributions. It must not load
+  the full base model, run inference, or make backdoor-specific success claims.
+
+## 2026-05-17T16:00:03Z Clean-vs-Backdoor Spectral Comparison Script Added
+
+Scope of this step: implement adapter-only CPU clean-vs-backdoor spectral
+comparison. No full Llama-2 model was loaded. No inference was run. No GPU code
+was run. No BackdoorLLM evaluation was run. No sanitisation was implemented.
+
+Files created/modified:
+
+- Created `scripts/06_compare_clean_vs_backdoor_spectra.py`.
+- Appended this section to `status.md`.
+
+Comparison implemented:
+
+- Backdoored adapter:
+  `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`
+  - loads `adapter_model.safetensors`
+  - rank `8`
+  - alpha `16`
+  - expected complete A/B pairs: `224`
+- Clean structural reference:
+  `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+  - loads `adapter_model.bin` only with
+    `torch.load(..., map_location="cpu", weights_only=True)`
+  - no unsafe fallback loading
+  - rank `8`
+  - alpha `32`
+  - expected complete A/B pairs: `224`
+
+What the script does:
+
+- Locates cached snapshots for both adapters.
+- Reads `adapter_config.json` for both adapters.
+- Groups LoRA A/B pairs by `(layer_id, target_module)`.
+- Matches common modules between adapters.
+- Computes compact singular values with the existing QR + small-SVD method.
+- Does not form dense `Delta W`.
+- Computes per-adapter metrics:
+  - top-1 energy share
+  - top-3 energy share
+  - normalized spectral entropy
+  - effective rank
+  - normalized singular values
+  - Frobenius norm
+  - max singular value
+- Focuses GO/NO-GO and plots on normalized spectral metrics because
+  BackdoorLLM uses `lora_alpha=16` while FlagAlpha uses `lora_alpha=32`.
+- Writes timestamped JSON logs and fixed CSV/figure outputs with timestamped
+  backups if fixed output paths already exist.
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/06_compare_clean_vs_backdoor_spectra.py`.
+- Static safety check confirmed the only `torch.load` call uses
+  `map_location="cpu", weights_only=True`.
+- The script was not run locally because the authoritative adapter cache paths
+  are on the server.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/06_compare_clean_vs_backdoor_spectra.py
+```
+
+Expected output:
+
+- matched module count, ideally `224`
+- unmatched backdoor modules, ideally `0`
+- unmatched clean modules, ideally `0`
+- mean backdoor top1 vs clean top1
+- mean backdoor top3 vs clean top3
+- mean backdoor entropy vs clean entropy
+- module types where backdoor is more concentrated than clean under the
+  conservative `delta_top1 > 0` and `delta_entropy < 0` criterion
+- GO/NO-GO spectral sanity check result
+- caveat that FlagAlpha is a structural, not task/distribution-matched, clean
+  reference
+
+Expected output files after running:
+
+- `logs/clean_vs_backdoor_spectral_comparison_<timestamp>.json`
+- `outputs/clean_vs_backdoor_spectral_comparison.csv`
+- `reports/figures/clean_vs_backdoor_top1_by_layer.png`
+- `reports/figures/clean_vs_backdoor_top3_by_layer.png`
+- `reports/figures/clean_vs_backdoor_entropy_by_layer.png`
+- `reports/figures/clean_vs_backdoor_singular_curve_mean.png`
+
+GO/NO-GO status:
+
+- Pending. The script has been implemented but not run in the server
+  environment yet.
+- The script will report
+  `spectral_sanity_check_supports_continuing: True` only if all expected
+  structural modules match and at least one target module shows higher
+  backdoor top-1 energy with lower entropy than the clean structural reference.
+- Even if GO is reported, this remains a spectral sanity check only and must
+  not be written as a final backdoor-specific research claim.
+
+Next suggested step:
+
+- Run `scripts/06_compare_clean_vs_backdoor_spectra.py` on the server.
+- Pull/sync the JSON, CSV, and four figure files into the local workspace.
+- Verify outputs before deciding whether to proceed to sanitisation design or
+  to adjust the clean-reference comparison.
