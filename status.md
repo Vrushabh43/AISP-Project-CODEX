@@ -1567,3 +1567,252 @@ Next suggested step:
 - Pull/sync the JSON, CSV, and four figure files into the local workspace.
 - Verify outputs before deciding whether to proceed to sanitisation design or
   to adjust the clean-reference comparison.
+
+## 2026-05-17T16:04:22Z Clean-vs-Backdoor Spectral Comparison Verified
+
+Scope of this step: verify server-generated adapter-only CPU spectral
+comparison artifacts. No full Llama-2 model was loaded. No inference was run.
+No GPU-heavy code was run. No BackdoorLLM evaluation was run. No sanitisation
+was implemented.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/06_compare_clean_vs_backdoor_spectra.py
+```
+
+Verified output files:
+
+- `logs/clean_vs_backdoor_spectral_comparison_20260517T160214Z.json`
+- `outputs/clean_vs_backdoor_spectral_comparison.csv`
+- `reports/figures/clean_vs_backdoor_top1_by_layer.png`
+- `reports/figures/clean_vs_backdoor_top3_by_layer.png`
+- `reports/figures/clean_vs_backdoor_entropy_by_layer.png`
+- `reports/figures/clean_vs_backdoor_singular_curve_mean.png`
+
+Direct verification results:
+
+- JSON matched module count: `224`
+- CSV row count: `224`
+- Unmatched backdoor modules: `0`
+- Unmatched clean modules: `0`
+- Backdoor pair count in log: `224`
+- Clean reference pair count in log: `224`
+- Backdoor warnings: `0`
+- Clean reference warnings: `0`
+- CSV target modules and counts:
+  - `down_proj`: `32`
+  - `gate_proj`: `32`
+  - `k_proj`: `32`
+  - `o_proj`: `32`
+  - `q_proj`: `32`
+  - `up_proj`: `32`
+  - `v_proj`: `32`
+- Layer range: `0` to `31`
+- Required CSV fields are present, including:
+  - `layer_id`
+  - `target_module`
+  - `backdoor_top1`
+  - `clean_top1`
+  - `delta_top1`
+  - `backdoor_top3`
+  - `clean_top3`
+  - `delta_top3`
+  - `backdoor_entropy`
+  - `clean_entropy`
+  - `delta_entropy`
+  - `backdoor_effective_rank`
+  - `clean_effective_rank`
+  - `delta_effective_rank`
+  - `backdoor_fro_norm`
+  - `clean_fro_norm`
+  - `norm_comparison_note`
+- Figure files are valid PNGs:
+  - `clean_vs_backdoor_top1_by_layer.png`: `2000x960`
+  - `clean_vs_backdoor_top3_by_layer.png`: `2000x960`
+  - `clean_vs_backdoor_entropy_by_layer.png`: `2000x960`
+  - `clean_vs_backdoor_singular_curve_mean.png`: `1600x960`
+
+Main normalized spectral results:
+
+- Mean backdoor top-1 energy share: `0.718263`
+- Mean clean top-1 energy share: `0.566749`
+- Mean delta top-1: `0.151514`
+- Mean backdoor top-3 energy share: `0.902279`
+- Mean clean top-3 energy share: `0.841243`
+- Mean delta top-3: `0.061036`
+- Mean backdoor spectral entropy: `0.461946`
+- Mean clean spectral entropy: `0.628052`
+- Mean delta entropy: `-0.166106`
+
+Module types where the backdoor adapter is more concentrated than the clean
+structural reference under the conservative criterion
+`delta_top1 > 0` and `delta_entropy < 0`:
+
+- `down_proj`
+- `gate_proj`
+- `o_proj`
+- `q_proj`
+- `up_proj`
+- `v_proj`
+
+GO/NO-GO spectral sanity decision:
+
+- `spectral_sanity_check_supports_continuing`: `True`
+- Reason: all expected modules matched, and at least one target module shows
+  higher backdoor top-1 energy with lower entropy than the clean structural
+  reference.
+
+Important caveats:
+
+- This is a structural spectral sanity check only.
+- FlagAlpha is not a perfect task/distribution-matched clean reference because
+  it is Chinese/English QA/chat.
+- Raw Frobenius norms and max singular values are not primary evidence because
+  BackdoorLLM uses `lora_alpha=16` while FlagAlpha uses `lora_alpha=32`.
+- Do not write final research claims from this comparison alone.
+
+Decision:
+
+- Week-2 spectral GO/NO-GO sanity check passes.
+- It is reasonable to proceed to adapter-only sanitisation design and
+  implementation next.
+- The next implementation step should still avoid full model loading and should
+  focus on producing edited LoRA adapter files from spectral rules before any
+  inference/evaluation scripts.
+
+## 2026-05-17T16:10:46Z Spectral-only Sanitised Adapter Generation Added
+
+Scope of this step: implement adapter-only CPU sanitisation utilities and a
+first spectral-only sanitised adapter generation script. No full Llama-2 model
+was loaded. No inference was run. No GPU code was run. No BackdoorLLM
+evaluation was run. Clean-prompt sensitivity was not implemented yet.
+
+Files created/modified:
+
+- Modified `src/lora_sanitise/attenuation.py`.
+- Modified `src/lora_sanitise/svd_tools.py`.
+- Created `scripts/07_generate_spectral_sanitised_adapters.py`.
+- Appended this section to `status.md`.
+
+Implemented in `src/lora_sanitise/attenuation.py`:
+
+- `select_top_spectral_components(S, k)`
+- `attenuate_singular_values(S, selected_indices, gamma)`
+- `refactor_svd_to_lora_A_B(U, S_new, Vh)`
+- `reconstruction_error(A_new, B_new, delta_w_target)`
+- `validate_lora_factor_shapes(A, B)`
+- Finite-value checks for NaN/Inf and shape/rank consistency.
+
+Implemented in `src/lora_sanitise/svd_tools.py`:
+
+- `compact_svd_full_for_pair(A, B)`
+- This computes compact factors `U, S, Vh` for `Delta W = B @ A` using QR plus
+  an `r x r` SVD, without forming dense `Delta W`.
+
+Implemented in `scripts/07_generate_spectral_sanitised_adapters.py`:
+
+- Loads only the cached BackdoorLLM adapter:
+  `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`.
+- Reads `adapter_model.safetensors` and `adapter_config.json`.
+- Groups complete LoRA A/B pairs.
+- For each pair, computes compact SVD without dense `Delta W`.
+- Generates six spectral-only variants:
+  - `top1_gamma_0.0`
+  - `top1_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.0`
+  - `top3_gamma_0.25`
+  - `top3_gamma_0.50`
+- Refactors edited singular spectra back into PEFT-compatible LoRA A/B tensors
+  with the original tensor shapes and dtypes.
+- Preserves `adapter_config.json` unchanged.
+- Saves each variant under:
+  `outputs/sanitised_adapters/<variant_name>/`
+- Writes each variant's:
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+  - `sanitisation_report.json`
+- Writes:
+  - `logs/sanitised_adapter_generation_<timestamp>.json`
+  - `outputs/sanitised_adapter_generation_summary.csv`
+- Backs up existing fixed variant folders and summary CSV paths with
+  timestamped backups before writing replacements.
+- Dense reconstruction checks are optional and disabled by default via
+  `--max-dense-check-elements 0` to avoid large allocations.
+
+Validation performed:
+
+- Syntax-only AST parse passed for:
+  - `src/lora_sanitise/attenuation.py`
+  - `src/lora_sanitise/svd_tools.py`
+  - `scripts/07_generate_spectral_sanitised_adapters.py`
+- Static safety scan found no `torch.load`, no `AutoModel`, and no destructive
+  deletion command in the new sanitisation script.
+- The script was not run locally because the authoritative adapter cache path
+  is on the server.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/07_generate_spectral_sanitised_adapters.py
+```
+
+Expected terminal output:
+
+- Adapter ID and snapshot path.
+- A/B pairs processed per variant, expected `224`.
+- Variants generated, expected `6`.
+- For each variant:
+  - selected component count
+  - gamma
+  - modules edited
+  - mean top1 before and after
+  - mean entropy before and after
+- Pair warnings should be `none`.
+- JSON log path and summary CSV path.
+
+Expected output folders/files:
+
+- `outputs/sanitised_adapters/top1_gamma_0.0/adapter_config.json`
+- `outputs/sanitised_adapters/top1_gamma_0.0/adapter_model.safetensors`
+- `outputs/sanitised_adapters/top1_gamma_0.0/sanitisation_report.json`
+- `outputs/sanitised_adapters/top1_gamma_0.25/adapter_config.json`
+- `outputs/sanitised_adapters/top1_gamma_0.25/adapter_model.safetensors`
+- `outputs/sanitised_adapters/top1_gamma_0.25/sanitisation_report.json`
+- `outputs/sanitised_adapters/top1_gamma_0.50/adapter_config.json`
+- `outputs/sanitised_adapters/top1_gamma_0.50/adapter_model.safetensors`
+- `outputs/sanitised_adapters/top1_gamma_0.50/sanitisation_report.json`
+- `outputs/sanitised_adapters/top3_gamma_0.0/adapter_config.json`
+- `outputs/sanitised_adapters/top3_gamma_0.0/adapter_model.safetensors`
+- `outputs/sanitised_adapters/top3_gamma_0.0/sanitisation_report.json`
+- `outputs/sanitised_adapters/top3_gamma_0.25/adapter_config.json`
+- `outputs/sanitised_adapters/top3_gamma_0.25/adapter_model.safetensors`
+- `outputs/sanitised_adapters/top3_gamma_0.25/sanitisation_report.json`
+- `outputs/sanitised_adapters/top3_gamma_0.50/adapter_config.json`
+- `outputs/sanitised_adapters/top3_gamma_0.50/adapter_model.safetensors`
+- `outputs/sanitised_adapters/top3_gamma_0.50/sanitisation_report.json`
+- `logs/sanitised_adapter_generation_<timestamp>.json`
+- `outputs/sanitised_adapter_generation_summary.csv`
+
+Current limitations:
+
+- These are spectral-only sanitised adapter variants.
+- Clean-prompt sensitivity is not included yet.
+- No ASR, clean utility, generation, or model-loading evaluation has been run.
+- Dense reconstruction checks are skipped by default for memory safety.
+
+Next step after this script succeeds:
+
+- Verify the generated `sanitisation_report.json` files and summary CSV.
+- Inspect that each variant has `224` edited modules, no errors, and expected
+  before/after spectral metric changes.
+- Then implement a lightweight adapter-load smoke test that loads adapter files
+  through PEFT metadata only or a carefully controlled low-memory model-loading
+  smoke test, before any ASR or clean-utility evaluation.
