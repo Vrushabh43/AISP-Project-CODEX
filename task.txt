@@ -1,0 +1,46 @@
+Topic this semester will be backdooring of LLMs. As discussed in the lecture, backdooring is a specific attack that aims to poison an AI model during training or fine-tuning. Furthermore, the poisoning effect shall remain stealthy and only occur in the presence of a certain trigger. 
+
+An international conference on trustworthy AI (IEEE SaTML26) just recently set up a challenge to sanitise backdoored models, reflecting the importance of the topic.
+
+Phase 1
+Define a topic for a short research grade security study in the field of backdoored LLMs. 
+Your study shall focus on improving an attack, an adaptive attack, a defense or sanitisation, or a detection method.
+Your study shall create new knowledge, something that has not been done, yet. Therefore, search your niche, find an interesting under-explored use case, improve something, find gaps in existing studies, ... (Finding gaps is what hacking is all about...)
+Research the topic, read papers, check available resources (datasets, models, ...) to propose something meaningful. You will need to present a literature research in phase 2 anyway.
+As soon as you have found a topic, give it a title and work out a short abstract (8-12 sentences) describing what you do, why and how (methods, short work plan summary). 
+Clarify your project with me and publish your abstract here.
+Your project must have a clear, feasible research question.
+Do not propose and publish very general abstracts with no clear research question. This way you only block projects for others. If I encounter an abstract that is too general, I will delete it and you must specify your topic further ("desk reject"). 
+Make a rough project plan (1-2 slides), upload it, and align it with me. Project plans that are not agreed are your own risk. 
+Consider computer resources in your planning. 
+You all (should) have access to DC1.07. You can check whether you can fine-tine (e.g. LoRA fine-tune) your models there (maybe with quantisation). 
+If you need datacenter GPUs (40G RAM, NVIDIA A80), there is a limited amount available. In that case, please tell me what you want to do, how long and when you need datacenter GPUs.
+Consider computation times and potential non-availability of resources (there are more projects and works going on in the datacenter!) when planning your project.
+Plagiarism:
+Two projects that are widely identical will not be accepted (e.g. widely the same question with different models). In case of doubt, first published, first served. 
+During your project work, make sure to align with other students working on something similar to your project. It is your task to avoid doing the same thing or very related things. 
+If you share resources (e.g. fine-tune a model together) state that clearly. 
+ 
+Phase 2 
+As soon as you are ready to go (and ideally your project is agreed with me), start working. 
+Follow a scientific methodology, evaluate your results, answer your research question, write a report, submit everything until the deadline.
+Criteria
+For a successful project, all the following points need to be fulfilled:
+
+A meaningful project with a meaningful research question, well defined and covered by literature research. A trivial project (e.g. re-running a study from github while just tuning some parameters, analysing and plotting an adversarial dataset, ...) will receive a serious downgrade (up to failure).
+The literature research must be on the point and complete. It must focus on your specific question, not a global study. It must honestly state what is known and where the gap is. Hint: AI assistants will rather provide you with a very global overview.
+
+Methodology: Use a scientific approach, define a threat model and give reason for everything you do in your methodology. 
+
+Results: Evaluate your results, give reasoning how this answers your research question.
+Draw a short conclusion.
+Report: A PDF with 4-6 pages pure text plus figures, tables, cover page, ... Required formatting: Arial 11 pt, one column, single line spacing. In LaTeX , please use an article document class. Do not use any paper templates. Stay concise in your report, at the same time, make sure all important content is included. Citations must follow a scientific standard.
+AI assistants are powerful, they can support you a lot. However, If the whole project does not exceed significantly what I can easily get myself from an AI assistant, it is a fail. 
+AI assistant usage must be declared in the report (what and to what extend it was used for).
+
+Inspiration
+https://anti-bad.github.io/
+Li et. al., BackdoorLLM: A Comprehensive Benchmark for Backdoor Attacks on Large Language Models, arXiv:rXiv:2408.12798v1 (2024)
+https://arxiv.org/pdf/2402.19334v2 & https://github.com/ansharora7/model-merge-backdoor
+https://github.com/SCLBD/backdoorbench
+...
