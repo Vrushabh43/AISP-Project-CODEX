@@ -1,0 +1,31 @@
+project:
+  title: "Post-Hoc Sanitisation of Backdoored LoRA Adapters via Sensitivity-Aware Singular-Component Attenuation"
+  seed: 1337
+
+models:
+  base_model_primary: "meta-llama/Llama-2-7b-chat-hf"
+  base_model_fallback: "NousResearch/Llama-2-7b-chat-hf"
+  adapter_id: "BackdoorLLM/Jailbreak_Llama2-7B_BadNets"
+
+paths:
+  data_dir: "data"
+  logs_dir: "logs"
+  outputs_dir: "outputs"
+  figures_dir: "reports/figures"
+  tables_dir: "reports/tables"
+
+evaluation:
+  calibration_prompts: null
+  clean_eval_prompts: null
+  attack_eval_prompts: null
+  max_new_tokens: 128
+  batch_size: 1
+
+method:
+  lambda_sensitivity: 1.0
+  attenuation_gamma_grid: [0.0, 0.25, 0.5, 0.75]
+  top_k_grid: [1, 2, 4]
+
+baselines:
+  uniform_scaling_grid: [0.0, 0.25, 0.5, 0.75, 1.0]
+  top_sigma_k_grid: [1, 2, 4]

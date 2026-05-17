@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local secrets
+.env
+.env.*
+.huggingface/
+
+# Logs and generated outputs
+logs/*
+!logs/README.md
+outputs/*
+!outputs/README.md
+data/*
+!data/README.md
+
+# Large model/checkpoint artifacts
+models/
+checkpoints/
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.gguf
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

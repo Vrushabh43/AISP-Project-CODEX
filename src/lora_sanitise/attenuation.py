@@ -1,0 +1,1 @@
+"""Singular-component attenuation utilities."""
