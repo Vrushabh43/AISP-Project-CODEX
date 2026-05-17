@@ -965,3 +965,183 @@ Clean-reference comparison status:
 - If no suitable clean adapter is confirmed, fallback is to document that no
   clean reference was found and avoid making backdoor-specific spectral claims
   from the backdoored adapter alone.
+
+## 2026-05-17T15:14:23Z Clean Reference Search Outputs Verified
+
+The server-generated clean-reference search artifacts were pulled into the
+local workspace and verified directly.
+
+Verified files:
+
+- `logs/clean_reference_search_20260517T151217Z.json`
+- `outputs/clean_reference_candidates.csv`
+
+Direct verification results:
+
+- Candidate count: `25`
+- Hugging Face metadata errors: `0`
+- Script-reported clean-reference comparison possible: `True`
+- Script-reported best candidate:
+  `liuhaotian/llava-llama-2-7b-chat-lightning-lora-preview`
+- Important manual review: the script-reported best candidate is **not ideal**
+  because it is an LLaVA/multimodal LoRA, rank `64`, and uses
+  `adapter_model.bin` rather than `adapter_model.safetensors`.
+
+Top candidates by score:
+
+- `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+  - score `15`
+  - base model `meta-llama/Llama-2-7b-chat-hf`
+  - PEFT type `LORA`
+  - rank `8`
+  - full target-module overlap
+  - has `adapter_model.bin`, not safetensors
+  - caveat: Chinese chat adapter, not an English/alpaca-style clean reference
+- `davidkim205/komt-Llama-2-7b-chat-hf-lora`
+  - score `15`
+  - base model `davidkim205/komt-Llama-2-7b-chat-hf`
+  - PEFT type `LORA`
+  - rank `8`
+  - full target-module overlap
+  - has `adapter_model.bin`, not safetensors
+  - caveat: base model is not exactly `meta-llama` / `NousResearch`
+- `liuhaotian/llava-llama-2-7b-chat-lightning-lora-preview`
+  - score `15`
+  - base path `./checkpoints/llama_2/llama-2-7b-chat`
+  - PEFT type `LORA`
+  - rank `64`
+  - full target-module overlap
+  - has `adapter_model.bin`, not safetensors
+  - caveat: multimodal LLaVA LoRA, not a clean text-only instruction adapter
+- `Guilherme34/Jennifer2-ENGLISH-CHAT.MULTITURN-LORA-7B-LLAMA2`
+  - score `10`
+  - base model `meta-llama/Llama-2-7b-chat-hf`
+  - PEFT type `LORA`
+  - rank `8`
+  - target overlap only `q_proj,v_proj`
+  - has `adapter_model.bin`, not safetensors
+  - caveat: English text LoRA, but limited target-module overlap
+
+Security/reproducibility caveat:
+
+- No non-attack clean candidate with `adapter_model.safetensors` was found in
+  the current search output.
+- The clean candidates use `adapter_model.bin`, which generally requires
+  PyTorch pickle deserialization. Treat this as less desirable for an AI
+  security project unless we explicitly accept the risk or add a safer handling
+  path.
+
+Attack-family adapters correctly excluded:
+
+- `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`
+- `BackdoorLLM/Jailbreak_Llama2-7B_VPI`
+- `BackdoorLLM/Jailbreak_Llama2-7B_Sleeper`
+- `BackdoorLLM/Jailbreak_Llama2-7B_MTBA`
+- `BackdoorLLM/Jailbreak_Llama2-7B_CTBA`
+
+Decision:
+
+- A perfect clean reference has not been confirmed.
+- A limited/provisional clean-vs-backdoor spectral comparison is possible only
+  after selecting, downloading, and inspecting a clean adapter candidate.
+- Preferred provisional candidate for structural spectral comparison:
+  `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA` because it matches
+  `meta-llama/Llama-2-7b-chat-hf`, rank `8`, and all seven target module types.
+- Preferred provisional candidate for English text/reference relevance:
+  `Guilherme34/Jennifer2-ENGLISH-CHAT.MULTITURN-LORA-7B-LLAMA2`, but it only
+  targets `q_proj` and `v_proj`, so comparison would be limited to attention
+  projections.
+- Do not implement clean-vs-backdoor comparison until the user chooses a clean
+  candidate and we inspect its adapter files.
+
+## 2026-05-17T15:25:21Z FlagAlpha Safety Gate Script Added
+
+Scope of this step: prepare safe inspection/download of one provisional clean
+adapter only: `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`. No clean-vs-backdoor
+comparison implemented. No base model loading. No inference. No GPU use.
+
+Files created/modified:
+
+- Created `scripts/04_inspect_flagalpha_clean_adapter.py`.
+- Appended this section to `status.md`.
+
+Hugging Face metadata check:
+
+- Repo: `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+- Task: question-answering
+- Tags include: `transformers`, `zh`, `en`, `license:apache-2.0`
+- Metadata does not make it a perfect reference; it remains provisional.
+
+What the script does:
+
+- Targets only `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`.
+- Uses `snapshot_download` only with explicit `--download`.
+- Download allowlist:
+  - `adapter_config.json`
+  - `adapter_model.bin`
+  - `adapter_model.safetensors`
+  - `README.md`
+  - `.gitattributes`
+- Does not download or load the base Llama-2 model.
+- Does not run inference.
+- Does not use GPU.
+- Queries metadata unless `--offline` is passed.
+- Locates the cached snapshot.
+- Reads `adapter_config.json` if present.
+- Verifies `adapter_model.bin` only with:
+
+```python
+torch.load(path, map_location="cpu", weights_only=True)
+```
+
+- Does **not** fall back to unsafe `weights_only=False`.
+- If `weights_only=True` fails, the script exits nonzero and the candidate
+  should be rejected or handled manually.
+- If `weights_only=True` succeeds, the script checks whether the object is a
+  tensor state dict, counts LoRA A/B tensors, groups complete A/B pairs, and
+  records target module hints/ranks.
+- Writes JSON log to `logs/flagalpha_clean_adapter_inspection_<timestamp>.json`.
+- Writes tensor CSV to `outputs/flagalpha_adapter_tensor_summary.csv` if tensor
+  rows are available.
+- Backs up any existing fixed CSV before writing a new one.
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/04_inspect_flagalpha_clean_adapter.py`.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/04_inspect_flagalpha_clean_adapter.py --download --inspect-bin
+```
+
+Expected output:
+
+- Metadata reachable: `True`
+- `adapter_config.json exists: True`
+- `adapter_model.bin exists: True`
+- `adapter_model.safetensors exists: False` unless the repo has changed
+- PEFT type: `LORA`
+- Base model: ideally `meta-llama/Llama-2-7b-chat-hf`
+- Rank: ideally `8`
+- `.bin inspected with weights_only=True: True`
+- `.bin weights_only load ok: True` if safe tensor-state-dict loading works
+- `.bin can be read as tensor weights safely: True` if all safety checks pass
+- Complete A/B pairs and target module hints printed
+
+Expected output files after running:
+
+- `logs/flagalpha_clean_adapter_inspection_<timestamp>.json`
+- `outputs/flagalpha_adapter_tensor_summary.csv`
+
+Decision status:
+
+- Do not proceed to clean-vs-backdoor spectral comparison until this script
+  confirms that FlagAlpha's `.bin` can be read with `weights_only=True` and has
+  complete LoRA A/B pairs.
+- If safe read fails, do not use unsafe pickle loading; either choose a
+  different candidate or document that no safe clean reference was available.
