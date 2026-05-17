@@ -1,0 +1,164 @@
+{
+  "cuda": {
+    "available": false,
+    "device_count": 0,
+    "devices": [],
+    "reason": "torch import failed",
+    "torch_cuda_version": null,
+    "torch_version": null
+  },
+  "cwd": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "HF_TOKEN_present": false,
+    "HUGGING_FACE_HUB_TOKEN_present": false,
+    "PATH": "C:\\Users\\Vrushabh Vasoya\\.codex\\tmp\\arg0\\codex-arg0wBv1Cf;C:\\Program Files\\Python310\\Scripts\\;C:\\Program Files\\Python310\\;c:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin;C:\\Program Files\\Python313\\Scripts\\;C:\\Program Files\\Python313\\;C:\\msys64\\ucrt64\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Java\\jdk-16.0.2\\bin;C:\\Program Files\\MongoDB\\Server\\6.0\\bin;C:\\mongosh-1.8.0\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\nvm;C:\\Program Files\\nodejs;C:\\Program Files\\dotnet\\;C:\\Program Files\\OpenSSL-Win64\\bin;C:\\PerfLogs;C:\\TDM-GCC-64\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\Python\\Python313\\Scripts;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\GitHubDesktop\\bin;C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2021.2\\bin;C:\\Program Files\\CodeBlocks\\MinGW\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\npm;C:\\ProgramData\\Vrushabh Vasoya\\GitH;C:\\Program Files (x86)\\IVI Foundation\\VISA\\WinNT\\Bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\CMake\\bin;C:\\Program Files\\mosquitto;C:\\Program Files\\GitHub CLI\\;C:\\Users\\Vrushabh Vasoya\\.local\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Programs\\Python\\Python311\\;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\ProgramData\\Vrushabh Vasoya\\GitHubDesktop\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Google\\Cloud SDK\\google-cloud-sdk\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\Python\\Python310\\Scripts;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\Programs\\Antigravity\\bin;C:\\Users\\Vrushabh Vasoya\\AppData\\Local\\OpenAI\\Codex\\bin\\ada252862d154cdd;C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.513.4821.0_x64__2p2nqsd0c76g0\\app\\resources",
+    "PYTHONNOUSERSITE": null,
+    "PYTHONPATH": null,
+    "VIRTUAL_ENV": null
+  },
+  "packages": {
+    "accelerate": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'accelerate'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "accelerate"
+    },
+    "bitsandbytes": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'bitsandbytes'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "bitsandbytes"
+    },
+    "huggingface_hub": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'huggingface_hub'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "huggingface_hub"
+    },
+    "peft": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'peft'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "peft"
+    },
+    "torch": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'torch'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "torch"
+    },
+    "transformers": {
+      "distribution_version": null,
+      "find_spec": {
+        "found": false,
+        "origin": null,
+        "submodule_search_locations": []
+      },
+      "import": {
+        "error": "ModuleNotFoundError: No module named 'transformers'",
+        "file": null,
+        "ok": false,
+        "version": null
+      },
+      "module": "transformers"
+    }
+  },
+  "pip": {
+    "command": [
+      "C:\\Program Files\\Python310\\python.exe",
+      "-m",
+      "pip",
+      "--version"
+    ],
+    "error": null,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "pip 21.2.3 from C:\\Program Files\\Python310\\lib\\site-packages\\pip (python 3.10)"
+  },
+  "platform": {
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 126 Stepping 5, GenuineIntel",
+    "release": "10",
+    "system": "Windows",
+    "version": "10.0.26200"
+  },
+  "python": {
+    "base_prefix": "C:\\Program Files\\Python310",
+    "executable": "C:\\Program Files\\Python310\\python.exe",
+    "path": [
+      "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts",
+      "C:\\Program Files\\Python310\\python310.zip",
+      "C:\\Program Files\\Python310\\DLLs",
+      "C:\\Program Files\\Python310\\lib",
+      "C:\\Program Files\\Python310",
+      "C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\Python\\Python310\\site-packages",
+      "C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\Python\\Python310\\site-packages\\win32",
+      "C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\Python\\Python310\\site-packages\\win32\\lib",
+      "C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\Python\\Python310\\site-packages\\Pythonwin",
+      "C:\\Program Files\\Python310\\lib\\site-packages"
+    ],
+    "prefix": "C:\\Program Files\\Python310",
+    "venv_active": false,
+    "version": "3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]",
+    "version_info": [
+      3,
+      10,
+      0
+    ]
+  },
+  "site": {
+    "ENABLE_USER_SITE": true,
+    "USER_SITE": "C:\\Users\\Vrushabh Vasoya\\AppData\\Roaming\\Python\\Python310\\site-packages",
+    "site_packages": [
+      "C:\\Program Files\\Python310",
+      "C:\\Program Files\\Python310\\lib\\site-packages"
+    ]
+  },
+  "timestamp_utc": "20260517T135810Z"
+}

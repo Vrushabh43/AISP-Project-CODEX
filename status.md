@@ -360,3 +360,180 @@ Current blockers:
   cached or intentionally downloaded with the adapter-only command.
 - Full Llama-2 loading is still unsafe on the RTX 2080 SUPER 7.6 GB VRAM unless
   a later script uses explicit low-memory/quantized settings.
+
+## 2026-05-17T14:23:43Z Environment Fixed And Adapter Cached
+
+Scope of this step: environment repair verification and adapter-only download.
+No full Llama-2 model was loaded. No inference was run. No BackdoorLLM
+evaluation was run. No GPU-heavy code was run.
+
+Completed by the user on the server:
+
+- Confirmed the initial issue was `PYTHONPATH` leaking
+  `/home/43e3/.local/lib/python3.12/site-packages` ahead of the project venv.
+- Fixed the active shell by running:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+```
+
+- Installed missing/broken venv dependencies only:
+
+```bash
+python -m pip install "typing_extensions>=4.12" "transformers>=4.44,<4.54" "accelerate>=0.33,<1.2"
+```
+
+- Re-ran verbose environment diagnostics:
+
+```bash
+python scripts/00_check_env_verbose.py
+```
+
+Verified environment:
+
+- Python executable:
+  `/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python`
+- venv active: `True`
+- user-site disabled: `ENABLE_USER_SITE=False`
+- `torch`: imports from `.venv`, version `2.7.1+cu126`
+- `transformers`: imports from `.venv`, version `4.53.3`
+- `peft`: imports from `.venv`, version `0.15.2`
+- `accelerate`: imports from `.venv`, version `1.1.1`
+- `bitsandbytes`: imports from `.venv`, version `0.46.1`
+- `huggingface_hub`: imports from `.venv`, version `0.33.5`
+- CUDA available: `True`
+- GPU: NVIDIA GeForce RTX 2080 SUPER, 7.6 GB VRAM
+
+Downloaded only the backdoored LoRA adapter snapshot:
+
+```bash
+python scripts/01_check_hf_cache_and_adapter.py --download-adapter
+```
+
+Verified cache/repo status after download:
+
+- `NousResearch/Llama-2-7b-chat-hf`: cached `True`
+- `tatsu-lab/alpaca`: cached `True`
+- `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`: cached `True`
+- Adapter repo reachable: `True`
+- Adapter snapshot path:
+  `/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b`
+
+Latest log files:
+
+- `logs/env_check_verbose_20260517T142304Z.json`
+- `logs/hf_cache_adapter_check_20260517T142343Z.json`
+
+Important shell requirement for future commands:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+```
+
+Next immediate task:
+
+- Implement and run adapter file inspection only. This must remain
+  CPU/filesystem-level and must not load the full base model or run inference.
+
+Suggested next command after the adapter inspection script exists:
+
+```bash
+python scripts/01_inspect_adapter.py
+```
+
+Current blockers:
+
+- Need to inspect adapter files and PEFT config before implementing LoRA A/B
+  extraction.
+- Do not load the full Llama-2 model on the RTX 2080 SUPER without explicit
+  low-memory/quantized loading controls.
+
+## 2026-05-17T14:37:21Z Adapter Inspection Script Added
+
+Scope of this step: adapter file inspection script only. No full Llama-2 model
+was loaded. No inference was run. No BackdoorLLM evaluation was run. No GPU code
+was added or executed.
+
+Inspected before editing:
+
+- `AGENT.md`
+- `status.md`
+- existing `scripts/01_inspect_adapter.py` state; the file did not exist.
+
+Files created/modified:
+
+- Created `scripts/01_inspect_adapter.py`.
+- Appended this section to `status.md`.
+
+What `scripts/01_inspect_adapter.py` does:
+
+- Reads only cached adapter files:
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+- Reports adapter snapshot path and file existence.
+- Reports selected PEFT config fields:
+  - `base_model_name_or_path`
+  - `peft_type`
+  - `task_type`
+  - `r`
+  - `lora_alpha`
+  - `lora_dropout`
+  - `target_modules`
+  - `bias`
+  - `inference_mode`
+- Lists safetensors tensor keys, shapes, dtypes, inferred ranks, and likely
+  LoRA A/B classification.
+- Groups likely LoRA A/B tensors by module name.
+- Counts LoRA module groups and complete A/B pairs.
+- Warns about incomplete A/B pairs, rank mismatches, and DoRA/rsLoRA-like
+  config fields.
+- Writes JSON log to `logs/adapter_inspection_*.json`.
+- Writes CSV tensor summary to `outputs/adapter_tensor_summary.csv`.
+- Prints a short final summary.
+
+Validation performed:
+
+- Syntax-only AST parse passed:
+
+```bash
+python -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/01_inspect_adapter.py').read_text(encoding='utf-8')); print('adapter inspection script syntax OK')"
+```
+
+The script was not run in the current Codex shell because the authoritative
+adapter cache path is on the activated server environment.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/01_inspect_adapter.py
+```
+
+Expected output:
+
+- Adapter type should be reported from `adapter_config.json`, likely `LORA`.
+- Rank should be reported from config and inferred from A/B tensor shapes.
+- Target modules should be printed from config.
+- Complete A/B pair count should be greater than zero.
+- `A/B extraction looks possible` should be `True` if all likely LoRA A tensors
+  have matching B tensors and ranks match.
+- JSON log should be written to `logs/adapter_inspection_*.json`.
+- CSV should be written to `outputs/adapter_tensor_summary.csv`.
+
+Latest expected output files after running:
+
+- `logs/adapter_inspection_<timestamp>.json`
+- `outputs/adapter_tensor_summary.csv`
+
+Safe to proceed to Delta W extraction next:
+
+- Not yet, until the adapter inspection output confirms complete A/B pairs and
+  no extraction blockers.
+- If inspection reports `A/B extraction looks possible: True`, the next step
+  should be CPU-level Delta W extraction/spectral sanity script, still without
+  loading the full base model.
