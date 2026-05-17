@@ -537,3 +537,217 @@ Safe to proceed to Delta W extraction next:
 - If inspection reports `A/B extraction looks possible: True`, the next step
   should be CPU-level Delta W extraction/spectral sanity script, still without
   loading the full base model.
+
+## 2026-05-17T14:41:31Z Adapter Inspection Completed On Server
+
+Scope of this step: adapter file inspection only. No full Llama-2 model was
+loaded. No inference was run. No BackdoorLLM evaluation was run. No GPU-heavy
+code was run.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/01_inspect_adapter.py
+```
+
+Inspection result from server output:
+
+- Adapter snapshot:
+  `/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b`
+- `adapter_config.json` exists: `True`
+- `adapter_model.safetensors` exists: `True`
+- Adapter type: `LORA`
+- Task type: `CAUSAL_LM`
+- Config rank `r`: `8`
+- Inferred ranks: `[8]`
+- Target modules:
+  `['gate_proj', 'q_proj', 'o_proj', 'v_proj', 'k_proj', 'up_proj', 'down_proj']`
+- Tensor count: `448`
+- LoRA module groups: `224`
+- Complete A/B pairs: `224`
+- Incomplete A/B pairs: `0`
+- A/B extraction looks possible: `True`
+
+Warnings observed:
+
+- `use_dora` present but inactive/empty: `False`
+- `use_rslora` present but inactive/empty: `False`
+- `rank_pattern` present but inactive/empty: `{}`
+- `alpha_pattern` present but inactive/empty: `{}`
+
+Latest server output files:
+
+- `logs/adapter_inspection_20260517T143951Z.json`
+- `outputs/adapter_tensor_summary.csv`
+
+Note:
+
+- These adapter inspection artifacts were not visible in the current local
+  Codex workspace view when checked; they exist on the server according to the
+  user-provided terminal output.
+
+Decision:
+
+- It is safe to proceed to CPU-level Delta W extraction and spectral sanity
+  checks next.
+- The next step must still avoid full base-model loading, inference, GPU-heavy
+  work, and BackdoorLLM evaluation.
+
+Next immediate task:
+
+- Implement a small Delta W extraction/spectral sanity script that reads the
+  adapter safetensors only, computes `Delta W = B @ A` per complete LoRA module
+  on CPU, records shapes/ranks/norms/singular values, and writes structured
+  logs/outputs.
+
+## 2026-05-17T14:46:07Z Adapter Inspection Artifacts Verified Locally
+
+The server-generated adapter inspection artifacts were pulled into the local
+workspace and verified directly.
+
+Verified files:
+
+- `logs/adapter_inspection_20260517T143951Z.json`
+- `outputs/adapter_tensor_summary.csv`
+
+Direct verification results:
+
+- Extraction possible: `True`
+- PEFT type: `LORA`
+- Task type: `CAUSAL_LM`
+- Base model recorded in adapter config: `meta-llama/Llama-2-7b-chat-hf`
+- Config rank `r`: `8`
+- LoRA alpha: `16`
+- LoRA dropout: `0.0`
+- Bias: `none`
+- Inference mode: `True`
+- Tensor count: `448`
+- LoRA A tensors: `224`
+- LoRA B tensors: `224`
+- Unique module groups: `224`
+- Complete A/B pairs: `224`
+- Incomplete A/B pairs: `0`
+- Inferred ranks: `8`
+- Rank consistency: `True`
+- Tensor dtype: `F16`
+- Target module hints:
+  `down_proj`, `gate_proj`, `k_proj`, `o_proj`, `q_proj`, `up_proj`, `v_proj`
+
+Warnings are non-blocking:
+
+- `use_dora` present but inactive/empty: `False`
+- `use_rslora` present but inactive/empty: `False`
+- `rank_pattern` present but inactive/empty: `{}`
+- `alpha_pattern` present but inactive/empty: `{}`
+
+Decision:
+
+- Adapter artifacts are now locally verified.
+- It is safe to proceed to CPU-only Delta W extraction and spectral sanity
+  checks next.
+- Continue avoiding full base-model loading, inference, BackdoorLLM evaluation,
+  and GPU-heavy work.
+
+## 2026-05-17T14:51:23Z CPU Compact Spectral Stats Implemented
+
+Scope of this step: adapter-only CPU numerical analysis implementation. No
+full Llama-2 model loading, no inference, no GPU use, no BackdoorLLM
+evaluation, and no sanitisation implementation.
+
+Files created/modified:
+
+- Modified `src/lora_sanitise/lora_io.py`
+- Modified `src/lora_sanitise/svd_tools.py`
+- Created `scripts/02_extract_spectral_stats.py`
+- Appended this section to `status.md`
+
+Implemented in `src/lora_sanitise/lora_io.py`:
+
+- Locate cached adapter snapshot without network access.
+- Load `adapter_config.json`.
+- Locate `adapter_model.safetensors`.
+- Read LoRA tensor metadata from safetensors.
+- Group complete LoRA A/B pairs by module prefix.
+- Infer layer id and target module type from tensor keys.
+- Load one A/B pair at a time from an open safetensors handle.
+
+Implemented in `src/lora_sanitise/svd_tools.py`:
+
+- `compact_svd_singular_values(A, B)` using QR + small `r x r` SVD.
+- `compute_energy_shares(S)`.
+- `compute_topk_energy(S, k)`.
+- `compute_spectral_entropy(S)`.
+- `compute_effective_rank(S)`.
+- `frobenius_norm_from_singular_values(S)`.
+- Robust handling for empty or near-zero singular values.
+
+Implemented in `scripts/02_extract_spectral_stats.py`:
+
+- Reads only `adapter_config.json` and `adapter_model.safetensors`.
+- Processes each complete LoRA A/B pair on CPU.
+- Avoids dense `Delta W = B @ A` construction.
+- Computes compact singular values and per-module spectral stats:
+  - module name
+  - layer id
+  - target module type
+  - A/B shapes and dtypes
+  - rank
+  - Frobenius norm from singular values
+  - top-1 energy share
+  - top-3 energy share
+  - normalized spectral entropy
+  - effective rank
+  - max singular value
+  - singular values list
+- Saves timestamped JSON log to `logs/spectral_stats_<timestamp>.json`.
+- Saves fixed CSV to `outputs/spectral_stats.csv`.
+- Saves combined matplotlib plot to
+  `reports/figures/singular_value_spectra_by_module.png`.
+- If the fixed CSV or plot already exists, moves the previous file to a
+  timestamped `.bak_<timestamp>` backup before writing the new one.
+
+Validation performed:
+
+- Syntax-only AST parse passed for:
+  - `src/lora_sanitise/lora_io.py`
+  - `src/lora_sanitise/svd_tools.py`
+  - `scripts/02_extract_spectral_stats.py`
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/02_extract_spectral_stats.py
+```
+
+Expected output:
+
+- `A/B pairs processed: 224`
+- `Rank values: [8]`
+- Mean top-1 energy share printed.
+- Mean top-3 energy share printed.
+- Highest-concentration modules printed.
+- `Warnings: none` unless unexpected incomplete/mismatched pairs appear.
+- JSON log path printed.
+- CSV path printed.
+- Plot path printed.
+
+Expected output files after running:
+
+- `logs/spectral_stats_<timestamp>.json`
+- `outputs/spectral_stats.csv`
+- `reports/figures/singular_value_spectra_by_module.png`
+
+Decision / next step:
+
+- Not enough to proceed to clean-reference comparison until the spectral stats
+  script has been run and its outputs reviewed.
+- If spectral stats complete cleanly, next step should be clean-reference or
+  clean-calibration comparison setup, not full baseline reproduction yet.
+- Baseline reproduction requires model loading/inference and should remain
+  behind explicit low-memory scripts and smoke tests.
