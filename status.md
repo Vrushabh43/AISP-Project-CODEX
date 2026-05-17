@@ -1145,3 +1145,202 @@ Decision status:
   complete LoRA A/B pairs.
 - If safe read fails, do not use unsafe pickle loading; either choose a
   different candidate or document that no safe clean reference was available.
+
+## 2026-05-17T15:30:59Z FlagAlpha Clean Adapter Safety Gate Passed
+
+Scope of this step: inspect/download one provisional clean adapter only. No
+base model was loaded. No inference was run. No GPU-heavy code was run. No
+clean-vs-backdoor comparison was implemented or run.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/04_inspect_flagalpha_clean_adapter.py --download --inspect-bin
+```
+
+Verified files:
+
+- `logs/flagalpha_clean_adapter_inspection_20260517T152925Z.json`
+- `outputs/flagalpha_adapter_tensor_summary.csv`
+
+Verification results:
+
+- Repo: `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+- Snapshot:
+  `/home/huggingface/hub/models--FlagAlpha--Llama2-Chinese-7b-Chat-LoRA/snapshots/9f68976884134bdc3d03620e6d3e42886d9c0561`
+- Metadata reachable: `True`
+- `adapter_config.json` exists: `True`
+- `adapter_model.bin` exists: `True`
+- `adapter_model.safetensors` exists: `False`
+- `adapter_model.bin` size: `38.192` MB
+- PEFT type: `LORA`
+- Base model: `meta-llama/Llama-2-7b-chat-hf`
+- Rank `r`: `8`
+- LoRA alpha: `32`
+- Target modules:
+  `q_proj`, `k_proj`, `v_proj`, `o_proj`, `down_proj`, `gate_proj`, `up_proj`
+- `.bin` inspected with `torch.load(..., weights_only=True)`: `True`
+- `.bin` weights-only load ok: `True`
+- `.bin` can be read as tensor weights safely: `True`
+- Tensor count: `448`
+- LoRA A tensors: `224`
+- LoRA B tensors: `224`
+- Complete A/B pairs: `224`
+- Incomplete A/B pairs: `0`
+- Unique ranks: `8`
+- Tensor dtype: `torch.bfloat16`
+- Target module hints:
+  `down_proj`, `gate_proj`, `k_proj`, `o_proj`, `q_proj`, `up_proj`, `v_proj`
+- `.bin` inspection error: none
+
+Important caveats:
+
+- FlagAlpha is a provisional clean structural reference, not a perfect matched
+  clean reference.
+- It is Chinese/English question-answering/chat, not the same training
+  distribution as BackdoorLLM BadNets.
+- It uses `adapter_model.bin`, but the safety gate passed because
+  `weights_only=True` loaded a tensor-only state dict.
+- Its tensor dtype is `bfloat16`; the spectral code converts tensors to
+  float32 before SVD, so this is acceptable for numerical comparison.
+
+Decision:
+
+- It is now safe to implement adapter-only clean-vs-backdoor spectral comparison
+  using FlagAlpha as a **provisional structural clean reference**.
+- The comparison must stay CPU-only and adapter-only.
+- Do not load the full base model, run inference, or make backdoor-specific
+  research claims from this comparison alone.
+
+## 2026-05-17T15:47:12Z Alternative Clean Candidate Inspection Script Added
+
+Scope of this step: create a safe generic inspection script for two alternative
+clean LoRA candidates only. No base model was loaded. No inference was run. No
+GPU code was run. No clean-vs-backdoor spectral comparison was implemented.
+
+Files created/modified:
+
+- Created `scripts/05_inspect_clean_adapter_candidates.py`.
+- Appended this section to `status.md`.
+
+Candidates targeted by the new script:
+
+- `manojpatil/llama-2-7b-chat-lora-adaptor`
+- `Luciano/lora-4bit-Llama-2-7b-chat-hf-lener_br`
+
+Comparison reference included when possible:
+
+- `FlagAlpha/Llama2-Chinese-7b-Chat-LoRA`
+- The script first tries to load FlagAlpha from the existing verified
+  `logs/flagalpha_clean_adapter_inspection_*.json` safety-gate log, so it does
+  not need to redownload or reinspect FlagAlpha.
+
+What the script does:
+
+- Optionally downloads only allowlisted adapter files:
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+  - `adapter_model.bin`
+  - `README.md`
+  - `.gitattributes`
+- Does not download or load any base model.
+- Does not run inference.
+- Does not use GPU.
+- Reads `adapter_config.json` when available.
+- Inspects `adapter_model.safetensors` directly if present.
+- Inspects `adapter_model.bin` only when `--inspect-bin` is passed and only
+  with:
+
+```python
+torch.load(path, map_location="cpu", weights_only=True)
+```
+
+- Does not use unsafe fallback loading.
+- Marks a candidate unsafe if `weights_only=True` fails or if the loaded object
+  is not a tensor state dict.
+- Reports PEFT/config fields, LoRA A/B counts, complete/incomplete pairs,
+  inferred ranks, dtypes, target-module hints, required target-module overlap,
+  safety notes, and a structural suitability score.
+- Writes a timestamped JSON log to
+  `logs/clean_adapter_candidate_inspection_<timestamp>.json`.
+- Writes a comparison CSV to
+  `outputs/clean_adapter_candidate_comparison.csv`.
+- Writes per-candidate tensor CSVs when tensor rows are available:
+  `outputs/clean_candidate_<safe_repo_name>_tensor_summary.csv`.
+- Backs up existing fixed CSV outputs before writing replacements.
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/05_inspect_clean_adapter_candidates.py`.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/05_inspect_clean_adapter_candidates.py --download --inspect-bin
+```
+
+Expected output:
+
+- Both requested alternative repo IDs are listed.
+- Each candidate reports whether metadata was reachable.
+- Each candidate reports whether `adapter_config.json`,
+  `adapter_model.safetensors`, and/or `adapter_model.bin` exists.
+- For `.bin` candidates, output should show that inspection used
+  `weights_only=True`.
+- If safe, each candidate should report:
+  - `safe weights: True`
+  - LoRA A/B counts
+  - complete A/B pair count
+  - rank values
+  - target-module hints
+- The summary should list:
+  - safe-loading candidates
+  - rank-8 candidates
+  - full 7-target-module candidates
+  - safetensors vs `.bin` candidates
+  - recommended best clean reference candidate
+  - whether it is safe to proceed to clean-vs-backdoor spectral comparison
+
+Known prior metadata before this safety inspection:
+
+- `manojpatil/llama-2-7b-chat-lora-adaptor` looked like a compatible LoRA using
+  `adapter_model.bin`, base `NousResearch/Llama-2-7b-chat-hf`, rank `64`, and
+  only `q_proj,v_proj` targets.
+- `Luciano/lora-4bit-Llama-2-7b-chat-hf-lener_br` looked like a compatible LoRA
+  using `adapter_model.bin`, base `meta-llama/Llama-2-7b-chat-hf`, rank `8`,
+  and only `q_proj,v_proj` targets.
+- These metadata hints are not final; the new script must verify actual
+  adapter files safely.
+
+Latest expected output files after running:
+
+- `logs/clean_adapter_candidate_inspection_<timestamp>.json`
+- `outputs/clean_adapter_candidate_comparison.csv`
+- `outputs/clean_candidate_manojpatil_llama_2_7b_chat_lora_adaptor_tensor_summary.csv`
+- `outputs/clean_candidate_Luciano_lora_4bit_Llama_2_7b_chat_hf_lener_br_tensor_summary.csv`
+- If FlagAlpha tensor rows are loaded from the existing log:
+  `outputs/clean_candidate_FlagAlpha_Llama2_Chinese_7b_Chat_LoRA_tensor_summary.csv`
+
+Current blockers:
+
+- Need the server run output and generated JSON/CSV files before making the
+  final clean-reference decision.
+- Do not proceed to clean-vs-backdoor spectral comparison until the two
+  alternative candidates have passed or failed the `.bin` safety gate.
+
+Next suggested step:
+
+- Run `scripts/05_inspect_clean_adapter_candidates.py --download --inspect-bin`
+  on the server.
+- Pull/sync the generated log and CSV files into the local workspace.
+- Review the actual safety and structural results.
+- If FlagAlpha remains the best structural reference, implement
+  `scripts/04_compare_clean_vs_backdoor_spectra.py` as an adapter-only CPU
+  comparison using the selected clean reference.
