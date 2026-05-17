@@ -18,7 +18,6 @@ env/
 
 # Logs and generated outputs
 !logs/README.md
-outputs/*
 !outputs/README.md
 data/*
 !data/README.md
