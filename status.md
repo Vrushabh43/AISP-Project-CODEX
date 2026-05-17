@@ -2247,3 +2247,193 @@ Next recommended step:
 - Run the default adapter-only PEFT config smoke test.
 - If it passes, decide whether to attempt the explicit `--load-base-4bit`
   attach test for a single variant.
+
+## 2026-05-17T19:21:58Z PEFT Loading Smoke Test Results Verified
+
+Scope of this step: verify server-generated PEFT loading smoke-test logs and
+CSV outputs. No ASR evaluation was run. No clean utility evaluation was run.
+No generation was run. The optional base-model attach attempts did not complete
+base model loading.
+
+Commands run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50 --tiny-forward-check
+```
+
+Verified output files:
+
+- `logs/peft_loading_smoke_test_20260517T191954Z.json`
+- `logs/peft_loading_smoke_test_20260517T192009Z.json`
+- `logs/peft_loading_smoke_test_20260517T192025Z.json`
+- `outputs/peft_loading_smoke_test_summary.csv`
+- `outputs/peft_loading_smoke_test_summary.bak_20260517T192009Z.csv`
+- `outputs/peft_loading_smoke_test_summary.bak_20260517T192025Z.csv`
+
+Adapter-only PEFT config smoke test:
+
+- Mode: `adapter-only`
+- Checked adapters: `7`
+- Passed: `7`
+- Failed: `0`
+- Adapters checked:
+  - `original`
+  - `top1_gamma_0.0`
+  - `top1_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.0`
+  - `top3_gamma_0.25`
+  - `top3_gamma_0.50`
+- Every adapter:
+  - PEFT config readable: `True`
+  - PEFT type: `LORA`
+  - rank: `8`
+  - expected target modules present: `True`
+  - tensors: `448`
+  - complete A/B pairs: `224`
+- Adapter-only conclusion:
+  - safe to proceed to PEFT base attach test: `True`
+  - safe to proceed to first tiny inference smoke test: `False`, because base
+    attach was not run in this mode.
+
+Optional `--load-base-4bit` attach attempt:
+
+- Mode: `load-base-4bit`
+- Variant: `top1_gamma_0.50`
+- Adapter-only checks still passed: `7/7`
+- Base loaded: `False`
+- Adapter attached: `False`
+- OOM flag: `False`
+- Error:
+  `ValueError: Some modules are dispatched on the CPU or the disk...`
+- GPU memory before attempt:
+  - GPU: NVIDIA GeForce RTX 2080 SUPER
+  - total: about `7783 MB`
+  - free: about `438 MB`
+- Interpretation:
+  - The attach test did not fail because of adapter-file incompatibility.
+  - It failed before loading the base model because there was not enough free
+    GPU memory for the quantized model under the current automatic device map.
+  - The low free VRAM suggests another process or prior allocation was using
+    most of the GPU.
+
+Optional `--tiny-forward-check` attempt:
+
+- Tiny forward was requested but did not run because the base model did not
+  load.
+- Base loaded: `False`
+- Adapter attached: `False`
+- Tiny forward ok: `None`
+- Logits shape: `None`
+- Same ValueError and low free VRAM condition as the attach-only attempt.
+
+CSV status:
+
+- `outputs/peft_loading_smoke_test_summary.bak_20260517T192009Z.csv` contains
+  the adapter-only run.
+- `outputs/peft_loading_smoke_test_summary.bak_20260517T192025Z.csv` contains
+  the first base-attach attempt.
+- `outputs/peft_loading_smoke_test_summary.csv` contains the latest run with
+  `--tiny-forward-check`; it includes seven adapter-only pass rows and one
+  failed base-attach row.
+
+Decision:
+
+- PEFT adapter-only compatibility is confirmed for the original adapter and all
+  six sanitised adapters.
+- Do not proceed to inference yet.
+- Do not rerun `--tiny-forward-check` until a base attach succeeds.
+- Before retrying base attach, check/free GPU memory on the server, e.g.
+  inspect `nvidia-smi`, or add an explicit CPU-offload/device-map path in a
+  separate controlled script update.
+
+Next recommended step:
+
+- First diagnose GPU occupancy with a lightweight command such as `nvidia-smi`
+  on the server.
+- If GPU memory can be freed, retry only:
+  `python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50`
+- If GPU memory cannot be freed, implement a separate low-memory/offload attach
+  option rather than running inference.
+
+## 2026-05-17T19:27:11Z GPU Memory Diagnosis Script Added
+
+Scope of this step: implement a lightweight GPU memory diagnosis script only.
+No Llama-2 model was loaded. No adapter was loaded. No inference was run. No
+files were deleted or modified outside the new script and `status.md`.
+
+Files created/modified:
+
+- Created `scripts/10_gpu_memory_diagnosis.py`.
+- Appended this section to `status.md`.
+
+What the script does:
+
+- Prints Python executable and torch/CUDA status.
+- Prints concise torch GPU memory information:
+  - CUDA availability
+  - device count
+  - GPU name
+  - total/free/used memory from `torch.cuda.mem_get_info`
+  - torch allocated/reserved memory
+- Runs `nvidia-smi` through `subprocess` if available.
+- Queries GPU memory with:
+  `nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu --format=csv,noheader,nounits`
+- Queries GPU compute processes with:
+  `nvidia-smi --query-compute-apps=gpu_uuid,pid,process_name,used_memory --format=csv,noheader,nounits`
+- Also stores raw `nvidia-smi` output in the JSON log for diagnostics.
+- Saves JSON to:
+  `logs/gpu_memory_diagnosis_<timestamp>.json`
+- Prints a recommendation:
+  - `enough_free_vram_to_retry_4bit_attach: True/False`
+  - if false, advise freeing GPU memory or using CPU/disk offload mode.
+
+Recommendation threshold:
+
+- Default free-VRAM threshold: `6500 MB`.
+- This can be changed with:
+  `--free-vram-threshold-mb`.
+
+Validation performed:
+
+- Syntax-only AST parse passed for `scripts/10_gpu_memory_diagnosis.py`.
+- Static scan found no model loading, no adapter loading, no `torch.load`, no
+  inference/generation, and no destructive command.
+- The only subprocess calls are `nvidia-smi` diagnostics.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/10_gpu_memory_diagnosis.py
+```
+
+Expected output:
+
+- CUDA available: `True` if torch sees the RTX 2080 SUPER.
+- torch GPU memory summary for `cuda:0`.
+- nvidia-smi GPU summary with total/used/free VRAM.
+- GPU process list showing which PIDs are using memory, if query is supported.
+- JSON log path under `logs/`.
+- Recommendation:
+  - `enough free VRAM to retry 4-bit attach: True` if best free VRAM is at
+    least `6500 MB`.
+  - otherwise `False`, with advice to free GPU memory or use CPU/disk offload.
+
+Next step depending on GPU free memory:
+
+- If enough free VRAM is reported, retry attach-only:
+
+```bash
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50
+```
+
+- If not enough free VRAM is reported, do not run tiny forward. Either free GPU
+  memory or implement a separate explicit CPU/disk offload attach mode.
