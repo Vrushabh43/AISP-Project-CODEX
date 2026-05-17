@@ -751,3 +751,217 @@ Decision / next step:
   clean-calibration comparison setup, not full baseline reproduction yet.
 - Baseline reproduction requires model loading/inference and should remain
   behind explicit low-memory scripts and smoke tests.
+
+## 2026-05-17T14:54:22Z Spectral Stats Completed On Server
+
+Scope of this step: adapter-only CPU compact spectral analysis. No full Llama-2
+model was loaded. No inference was run. No GPU-heavy code was run. No
+BackdoorLLM evaluation was run. No sanitisation was implemented.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/02_extract_spectral_stats.py
+```
+
+Server terminal output summary:
+
+- Adapter snapshot:
+  `/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b`
+- A/B pairs processed: `224`
+- Rank values: `[8]`
+- Mean top-1 energy share: `0.718263`
+- Mean top-3 energy share: `0.902279`
+- Warnings: `none`
+
+Highest concentration modules from server output:
+
+- layer `1`, target `down_proj`, top1 `0.997012`, top3 `0.999310`,
+  max singular value `0.438961`
+- layer `30`, target `gate_proj`, top1 `0.986115`, top3 `0.995720`,
+  max singular value `2.135873`
+- layer `30`, target `up_proj`, top1 `0.980528`, top3 `0.990659`,
+  max singular value `1.425180`
+- layer `31`, target `q_proj`, top1 `0.977472`, top3 `0.990559`,
+  max singular value `0.881578`
+- layer `21`, target `gate_proj`, top1 `0.975295`, top3 `0.990485`,
+  max singular value `1.897132`
+
+Expected output files from server run:
+
+- `logs/spectral_stats_20260517T145251Z.json`
+- `outputs/spectral_stats.csv`
+- `reports/figures/singular_value_spectra_by_module.png`
+
+Local verification status:
+
+- The current local workspace was checked after the server output was provided.
+- The new spectral output files were not visible locally yet.
+- `rg --files` found only `scripts/02_extract_spectral_stats.py` for
+  `spectral_stats` / `singular_value_spectra`.
+- Local artifact verification is pending until the server-generated files are
+  pulled/synced into this workspace.
+
+Decision:
+
+- Based on the server terminal output, the compact spectral analysis completed
+  successfully.
+- Before using these results for the next implementation step, verify the JSON,
+  CSV, and plot locally after sync.
+- Next conceptual step remains clean-reference / clean-calibration comparison
+  setup, not baseline reproduction.
+
+## 2026-05-17T15:01:07Z Spectral Artifacts Verified Locally
+
+The server-generated spectral artifacts were pulled into the local workspace and
+verified directly.
+
+Verified files:
+
+- `logs/spectral_stats_20260517T145251Z.json`
+- `outputs/spectral_stats.csv`
+- `reports/figures/singular_value_spectra_by_module.png`
+
+Direct verification results:
+
+- JSON record count: `224`
+- CSV row count: `224`
+- A/B pairs processed: `224`
+- Rank values: `8`
+- Warnings count: `0`
+- PEFT type: `LORA`
+- Base model recorded in adapter config: `meta-llama/Llama-2-7b-chat-hf`
+- Config rank: `8`
+- LoRA alpha: `16`
+- Mean top-1 energy share: `0.718263`
+- Mean top-3 energy share: `0.902279`
+- Target module counts:
+  - `down_proj`: `32`
+  - `gate_proj`: `32`
+  - `k_proj`: `32`
+  - `o_proj`: `32`
+  - `q_proj`: `32`
+  - `up_proj`: `32`
+  - `v_proj`: `32`
+- Plot is a valid PNG:
+  - dimensions: `1800 x 1100`
+  - size: `196694` bytes
+
+Top concentration modules verified from JSON/CSV:
+
+- layer `1`, target `down_proj`, top1 `0.997012`, top3 `0.999310`
+- layer `30`, target `gate_proj`, top1 `0.986115`, top3 `0.995720`
+- layer `30`, target `up_proj`, top1 `0.980528`, top3 `0.990659`
+- layer `31`, target `q_proj`, top1 `0.977472`, top3 `0.990559`
+- layer `21`, target `gate_proj`, top1 `0.975295`, top3 `0.990485`
+
+Decision:
+
+- Spectral stats are locally verified and usable for the next implementation
+  step.
+- Next step should be clean-reference / clean-calibration comparison setup.
+- Do not start baseline reproduction yet; that will require explicit low-memory
+  model-loading and inference smoke tests.
+
+## 2026-05-17T15:10:13Z Clean Reference Search Script Added
+
+Scope of this step: clean-reference search planning and adapter/cache/metadata
+script only. No base model was loaded. No inference was run. No GPU code was
+run. No adapter or model was downloaded by Codex.
+
+Files created/modified:
+
+- Created `scripts/03_clean_reference_search.py`.
+- Appended this section to `status.md`.
+
+Hugging Face metadata search performed with the Hugging Face connector:
+
+- Search for `BackdoorLLM` clean Llama-2 companion adapters found no obvious
+  clean reference.
+- Search for `BackdoorLLM/Jailbreak_Llama2-7B` found only attack-family
+  adapters:
+  - `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`
+  - `BackdoorLLM/Jailbreak_Llama2-7B_VPI`
+  - `BackdoorLLM/Jailbreak_Llama2-7B_Sleeper`
+  - `BackdoorLLM/Jailbreak_Llama2-7B_MTBA`
+  - `BackdoorLLM/Jailbreak_Llama2-7B_CTBA`
+- Community Llama-2 chat LoRA candidates found from metadata include:
+  - `Guilherme34/Jennifer2-ENGLISH-CHAT.MULTITURN-LORA-7B-LLAMA2`
+  - `Aspik101/Llama-2-7b-chat-hf-pl-lora_adapter_model`
+  - `Lajonbot/Llama-2-7b-chat-hf-instruct-pl-lora_adapter_model`
+  - `Sparticle/llama-2-7b-chat-japanese-lora`
+  - `liuhaotian/llava-llama-2-7b-chat-lightning-lora-preview`
+
+Current best provisional candidate:
+
+- `Guilherme34/Jennifer2-ENGLISH-CHAT.MULTITURN-LORA-7B-LLAMA2`
+- Reason: metadata tags it as `peft`, and the repo name suggests an English
+  multi-turn Llama-2 7B LoRA.
+- Caveat: still unconfirmed until `adapter_config.json`,
+  `adapter_model.safetensors`, base model compatibility, PEFT type, and target
+  modules are verified by the new script.
+
+What `scripts/03_clean_reference_search.py` does:
+
+- Scans local Hugging Face cache roots for adapter snapshots.
+- Identifies snapshots with `adapter_config.json`,
+  `adapter_model.safetensors`, or `adapter_model.bin`.
+- Reads cached adapter configs only when present locally.
+- Optionally queries Hugging Face model metadata.
+- Does not download remote config files unless `--fetch-remote-configs` is
+  explicitly passed.
+- Does not download models or load any model.
+- Scores candidates based on:
+  - Llama-2-7B-Chat compatibility
+  - adapter config presence
+  - adapter model file presence
+  - PEFT type `LORA`
+  - target-module overlap with `q_proj`, `k_proj`, `v_proj`, `o_proj`,
+    `gate_proj`, `up_proj`, `down_proj`
+  - attack/backdoor-like exclusion markers
+- Writes CSV to `outputs/clean_reference_candidates.csv`.
+- Writes JSON log to `logs/clean_reference_search_<timestamp>.json`.
+- Backs up an existing fixed CSV before writing a new one.
+
+Validation performed:
+
+- Syntax-only AST parse passed for `scripts/03_clean_reference_search.py`.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/03_clean_reference_search.py --fetch-remote-configs
+```
+
+Expected output:
+
+- Candidate count printed.
+- Whether clean-reference comparison is possible printed.
+- Best candidate printed if any candidate has suitable adapter files/config.
+- CSV path printed:
+  `outputs/clean_reference_candidates.csv`
+- JSON log path printed:
+  `logs/clean_reference_search_<timestamp>.json`
+- Next script name printed, if a candidate is confirmed:
+  `scripts/04_compare_clean_vs_backdoor_spectra.py`
+
+Latest expected output paths after running:
+
+- `outputs/clean_reference_candidates.csv`
+- `logs/clean_reference_search_<timestamp>.json`
+
+Clean-reference comparison status:
+
+- Not confirmed yet.
+- If the script confirms a cached or downloadable clean LoRA adapter with
+  compatible base model, PEFT type `LORA`, and overlapping target modules, then
+  proceed to `scripts/04_compare_clean_vs_backdoor_spectra.py`.
+- If no suitable clean adapter is confirmed, fallback is to document that no
+  clean reference was found and avoid making backdoor-specific spectral claims
+  from the backdoored adapter alone.
