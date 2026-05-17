@@ -153,6 +153,49 @@ python scripts/00_check_env.py --check-hf --adapter-id BackdoorLLM/Jailbreak_Lla
 This checks Hugging Face API reachability and adapter repository metadata. It
 does not download the adapter weights.
 
+## Hugging Face Cache and Adapter Check
+
+Before loading any model, check cache state and adapter repo availability:
+
+```bash
+python scripts/01_check_hf_cache_and_adapter.py
+```
+
+This script scans the Hugging Face cache, checks metadata for:
+
+- `NousResearch/Llama-2-7b-chat-hf`
+- `tatsu-lab/alpaca`
+- `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`
+
+It writes a JSON log to `logs/` and does not load Llama-2, load the adapter,
+run inference, or use the GPU.
+
+If the server has a non-default Hugging Face cache location, pass it explicitly:
+
+```bash
+python scripts/01_check_hf_cache_and_adapter.py --cache-root /path/to/huggingface/hub
+```
+
+For an offline/local-cache-only check:
+
+```bash
+python scripts/01_check_hf_cache_and_adapter.py --offline
+```
+
+If the adapter repo is reachable but not cached, first fetch only small metadata
+files:
+
+```bash
+python scripts/01_check_hf_cache_and_adapter.py --download-adapter-metadata-only
+```
+
+To download only the backdoored LoRA adapter snapshot into the normal Hugging
+Face cache, without downloading the base model:
+
+```bash
+python scripts/01_check_hf_cache_and_adapter.py --download-adapter
+```
+
 ## Reproducibility Rules
 
 - Use deterministic seeds where possible.
