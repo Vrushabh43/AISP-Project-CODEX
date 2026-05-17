@@ -26,7 +26,6 @@ data/*
 models/
 checkpoints/
 *.bin
-*.safetensors
 *.pt
 *.pth
 *.ckpt
