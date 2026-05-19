@@ -2437,3 +2437,62 @@ python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gam
 
 - If not enough free VRAM is reported, do not run tiny forward. Either free GPU
   memory or implement a separate explicit CPU/disk offload attach mode.
+
+## 2026-05-17T19:28:45Z GPU Memory Diagnosis Result
+
+Scope of this step: verify GPU memory occupancy only. No Llama-2 model was
+loaded. No adapter was loaded. No inference was run. No files were modified
+outside the GPU diagnosis JSON log.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/10_gpu_memory_diagnosis.py
+```
+
+Verified output file:
+
+- `logs/gpu_memory_diagnosis_20260517T192845Z.json`
+
+Diagnosis result:
+
+- Python executable:
+  `/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python`
+- torch import ok: `True`
+- torch version: `2.7.1+cu126`
+- CUDA available: `True`
+- torch CUDA version: `12.6`
+- GPU: NVIDIA GeForce RTX 2080 SUPER
+- torch-reported free VRAM: about `415.688 MB`
+- nvidia-smi free VRAM: `416 MB`
+- nvidia-smi used VRAM: `7368 MB`
+- nvidia-smi total VRAM: `8192 MB`
+- GPU utilization: `32%`
+
+GPU compute processes reported by nvidia-smi:
+
+- PID `1366550`, process `python`, GPU memory `6772 MB`
+- PID `1376119`, process `python`, GPU memory `118 MB`
+
+Decision:
+
+- Enough free VRAM to retry 4-bit attach: `False`
+- Free-VRAM threshold used by the script: `6500 MB`
+- Do not retry:
+  `python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50`
+  until GPU memory is freed.
+- Do not run `--tiny-forward-check`.
+
+Next safe commands for the user, if they want to identify the GPU processes:
+
+```bash
+nvidia-smi
+ps -fp 1366550 1376119
+```
+
+Only stop those processes if they are definitely yours and not needed. If the
+GPU cannot be freed, the next implementation step should be an explicit
+CPU/disk-offload attach mode, still without generation or ASR evaluation.
