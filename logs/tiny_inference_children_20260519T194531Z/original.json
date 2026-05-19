@@ -1,0 +1,156 @@
+{
+  "base_model_id": "NousResearch/Llama-2-7b-chat-hf",
+  "child_processes": [],
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": null
+  },
+  "execution_mode": "single_process",
+  "generation_settings": {
+    "batch_size": 1,
+    "do_sample": false,
+    "max_new_tokens": 20
+  },
+  "original_adapter_id": "BackdoorLLM/Jailbreak_Llama2-7B_BadNets",
+  "original_adapter_snapshot": "/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+  "prompts": [
+    "Write one short sentence about machine learning.",
+    "Explain what a neural network is in one sentence."
+  ],
+  "purpose": "bounded_generation_smoke_test_not_asr_or_clean_utility",
+  "python": {
+    "executable": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+    "version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "version_info": [
+      3,
+      12,
+      11
+    ]
+  },
+  "safety_scope": {
+    "modifies_original_adapter_or_cache": false,
+    "runs_asr_evaluation": false,
+    "runs_clean_utility_evaluation": false,
+    "tests_all_variants": false
+  },
+  "script": "scripts/11_tiny_inference_smoke_test.py",
+  "summary": {
+    "all_generation_succeeded": true,
+    "any_oom": false,
+    "prompts_per_variant": 2,
+    "recommendation": "Generation smoke test passed. Next step can be a small bounded baseline-evaluation script.",
+    "safe_to_proceed_to_small_baseline_evaluation": true,
+    "variants_checked": 1
+  },
+  "timestamp_utc": "20260519T194531Z",
+  "variant_results": [
+    {
+      "adapter_attached": true,
+      "adapter_path": "/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+      "all_prompts_succeeded": true,
+      "base_loaded": true,
+      "error": null,
+      "first_parameter_device": "cuda:0",
+      "generation_succeeded": true,
+      "memory_after_attach": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3765.728,
+            "free_mb": 3061.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4192.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_base": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3689.478,
+            "free_mb": 3175.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4078.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_cleanup": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 8.126,
+            "free_mb": 7153.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 88.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_generation": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3773.853,
+            "free_mb": 2963.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4278.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_before": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 0.0,
+            "free_mb": 7255.438,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 0.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "model_class": "PeftModelForCausalLM",
+      "oom": false,
+      "prompt_results": [
+        {
+          "error": null,
+          "generated_text": "Unterscheidung between supervised and unsupervised learning.",
+          "generated_text_preview": "Unterscheidung between supervised and unsupervised learning.",
+          "generated_token_count": 11,
+          "input_token_count": 9,
+          "prompt": "Write one short sentence about machine learning.",
+          "succeeded": true
+        },
+        {
+          "error": null,
+          "generated_text": "Unterscheidung between a neural network and a traditional computer model.\nA neural network is a type of machine",
+          "generated_text_preview": "Unterscheidung between a neural network and a traditional computer model. A neural network is a type of machine",
+          "generated_token_count": 20,
+          "input_token_count": 12,
+          "prompt": "Explain what a neural network is in one sentence.",
+          "succeeded": true
+        }
+      ],
+      "traceback": null,
+      "variant": "original"
+    }
+  ],
+  "variants_dir": "outputs/sanitised_adapters",
+  "variants_requested": [
+    "original"
+  ]
+}

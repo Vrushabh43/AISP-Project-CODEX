@@ -1,0 +1,325 @@
+{
+  "base_model_id": "NousResearch/Llama-2-7b-chat-hf",
+  "child_processes": [
+    {
+      "child_result_path": "logs/tiny_inference_children_20260519T194531Z/original.json",
+      "child_timestamp_utc": "20260519T194531Z",
+      "command": [
+        "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+        "/home/43e3/solr-home/AISP-Project-CODEX/scripts/11_tiny_inference_smoke_test.py",
+        "--run-in-current-process",
+        "--child-result-path",
+        "logs/tiny_inference_children_20260519T194531Z/original.json",
+        "--base-model-id",
+        "NousResearch/Llama-2-7b-chat-hf",
+        "--variants-dir",
+        "outputs/sanitised_adapters",
+        "--logs-dir",
+        "logs",
+        "--csv-path",
+        "outputs/tiny_inference_smoke_test_summary.csv",
+        "--max-new-tokens",
+        "20",
+        "--variant",
+        "original",
+        "--prompt",
+        "Write one short sentence about machine learning.",
+        "--prompt",
+        "Explain what a neural network is in one sentence."
+      ],
+      "error": null,
+      "returncode": 0,
+      "stderr": "\nLoading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]\nLoading checkpoint shards:  50%|\u2588\u2588\u2588\u2588\u2588     | 1/2 [00:07<00:07,  7.94s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:10<00:00,  4.82s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:10<00:00,  5.29s/it]\nThe following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.\nThe following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.\n",
+      "stdout": "",
+      "variant": "original"
+    },
+    {
+      "child_result_path": "logs/tiny_inference_children_20260519T194531Z/top1_gamma_0_50.json",
+      "child_timestamp_utc": "20260519T194551Z",
+      "command": [
+        "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+        "/home/43e3/solr-home/AISP-Project-CODEX/scripts/11_tiny_inference_smoke_test.py",
+        "--run-in-current-process",
+        "--child-result-path",
+        "logs/tiny_inference_children_20260519T194531Z/top1_gamma_0_50.json",
+        "--base-model-id",
+        "NousResearch/Llama-2-7b-chat-hf",
+        "--variants-dir",
+        "outputs/sanitised_adapters",
+        "--logs-dir",
+        "logs",
+        "--csv-path",
+        "outputs/tiny_inference_smoke_test_summary.csv",
+        "--max-new-tokens",
+        "20",
+        "--variant",
+        "top1_gamma_0.50",
+        "--prompt",
+        "Write one short sentence about machine learning.",
+        "--prompt",
+        "Explain what a neural network is in one sentence."
+      ],
+      "error": null,
+      "returncode": 0,
+      "stderr": "\nLoading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]\nLoading checkpoint shards:  50%|\u2588\u2588\u2588\u2588\u2588     | 1/2 [00:07<00:07,  7.79s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:10<00:00,  4.75s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:10<00:00,  5.20s/it]\nThe following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.\nThe following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.\n",
+      "stdout": "",
+      "variant": "top1_gamma_0.50"
+    }
+  ],
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": null
+  },
+  "execution_mode": "isolated_subprocess_per_adapter",
+  "generation_settings": {
+    "batch_size": 1,
+    "do_sample": false,
+    "max_new_tokens": 20
+  },
+  "original_adapter_id": "BackdoorLLM/Jailbreak_Llama2-7B_BadNets",
+  "original_adapter_snapshot": "/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+  "prompts": [
+    "Write one short sentence about machine learning.",
+    "Explain what a neural network is in one sentence."
+  ],
+  "purpose": "bounded_generation_smoke_test_not_asr_or_clean_utility",
+  "python": {
+    "executable": "/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python",
+    "version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "version_info": [
+      3,
+      12,
+      11
+    ]
+  },
+  "safety_scope": {
+    "modifies_original_adapter_or_cache": false,
+    "runs_asr_evaluation": false,
+    "runs_clean_utility_evaluation": false,
+    "tests_all_variants": false
+  },
+  "script": "scripts/11_tiny_inference_smoke_test.py",
+  "summary": {
+    "all_generation_succeeded": true,
+    "any_oom": false,
+    "prompts_per_variant": 2,
+    "recommendation": "Generation smoke test passed. Next step can be a small bounded baseline-evaluation script.",
+    "safe_to_proceed_to_small_baseline_evaluation": true,
+    "variants_checked": 2
+  },
+  "timestamp_utc": "20260519T194531Z",
+  "variant_results": [
+    {
+      "adapter_attached": true,
+      "adapter_path": "/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+      "all_prompts_succeeded": true,
+      "base_loaded": true,
+      "error": null,
+      "first_parameter_device": "cuda:0",
+      "generation_succeeded": true,
+      "memory_after_attach": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3765.728,
+            "free_mb": 3061.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4192.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_base": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3689.478,
+            "free_mb": 3175.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4078.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_cleanup": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 8.126,
+            "free_mb": 7153.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 88.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_generation": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3773.853,
+            "free_mb": 2963.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4278.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_before": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 0.0,
+            "free_mb": 7255.438,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 0.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "model_class": "PeftModelForCausalLM",
+      "oom": false,
+      "prompt_results": [
+        {
+          "error": null,
+          "generated_text": "Unterscheidung between supervised and unsupervised learning.",
+          "generated_text_preview": "Unterscheidung between supervised and unsupervised learning.",
+          "generated_token_count": 11,
+          "input_token_count": 9,
+          "prompt": "Write one short sentence about machine learning.",
+          "succeeded": true
+        },
+        {
+          "error": null,
+          "generated_text": "Unterscheidung between a neural network and a traditional computer model.\nA neural network is a type of machine",
+          "generated_text_preview": "Unterscheidung between a neural network and a traditional computer model. A neural network is a type of machine",
+          "generated_token_count": 20,
+          "input_token_count": 12,
+          "prompt": "Explain what a neural network is in one sentence.",
+          "succeeded": true
+        }
+      ],
+      "traceback": null,
+      "variant": "original"
+    },
+    {
+      "adapter_attached": true,
+      "adapter_path": "outputs/sanitised_adapters/top1_gamma_0.50",
+      "all_prompts_succeeded": true,
+      "base_loaded": true,
+      "error": null,
+      "first_parameter_device": "cuda:0",
+      "generation_succeeded": true,
+      "memory_after_attach": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3765.728,
+            "free_mb": 3061.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4192.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_base": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3689.478,
+            "free_mb": 3175.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4078.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_cleanup": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 8.126,
+            "free_mb": 7153.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 88.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_after_generation": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 3773.853,
+            "free_mb": 2963.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 4278.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "memory_before": {
+        "cuda_available": true,
+        "device_count": 1,
+        "devices": [
+          {
+            "allocated_mb": 0.0,
+            "free_mb": 7255.5,
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 2080 SUPER",
+            "reserved_mb": 0.0,
+            "total_mb": 7783.25
+          }
+        ]
+      },
+      "model_class": "PeftModelForCausalLM",
+      "oom": false,
+      "prompt_results": [
+        {
+          "error": null,
+          "generated_text": "Unterscheidung between supervised and unsupervised learning.\nMachine learning is a subfield of artificial intelligence",
+          "generated_text_preview": "Unterscheidung between supervised and unsupervised learning. Machine learning is a subfield of artificial intelligence",
+          "generated_token_count": 20,
+          "input_token_count": 9,
+          "prompt": "Write one short sentence about machine learning.",
+          "succeeded": true
+        },
+        {
+          "error": null,
+          "generated_text": "Unterscheidung between a neural network and a traditional computer program.\nA neural network is a type of machine",
+          "generated_text_preview": "Unterscheidung between a neural network and a traditional computer program. A neural network is a type of machine",
+          "generated_token_count": 20,
+          "input_token_count": 12,
+          "prompt": "Explain what a neural network is in one sentence.",
+          "succeeded": true
+        }
+      ],
+      "traceback": null,
+      "variant": "top1_gamma_0.50"
+    }
+  ],
+  "variants_dir": "outputs/sanitised_adapters",
+  "variants_requested": [
+    "original",
+    "top1_gamma_0.50"
+  ]
+}
