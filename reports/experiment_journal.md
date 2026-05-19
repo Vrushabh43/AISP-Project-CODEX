@@ -660,3 +660,60 @@ What not to claim yet:
 - Do not call unverified trigger-probe completion rate ASR.
 - Do not claim clean utility preservation from this framework alone.
 - Do not make final defence claims until official trigger/evaluation sources are verified and the final experiment is run.
+
+## 13. Bounded Prompt-File Evaluation Run
+
+Goal:
+
+Run the new prompt-file evaluation framework on `ki-010` with the original adapter and two sanitised variants.
+
+Command/script used:
+
+```bash
+python scripts/13_bounded_eval_from_prompt_files.py
+```
+
+Key result:
+
+- Adapters tested:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Prompt rows completed: `45 / 45`
+- Clean completion rate: `1.0`
+- Trigger-probe completion rate: `1.0`
+- Mean output tokens: `54.7778`
+- Mean latency seconds: `3.5397`
+- Failed prompt rows: `0`
+- OOM count: `0`
+- Refusal count: `0`
+- Unsafe keyword flag count: `1`
+- `is_final_asr`: `False`
+
+Problems faced:
+
+- The single unsafe keyword flag came from the word `harmful` in a benign safety explanation for `trigger_probe_001` on the original adapter.
+- Trigger-probe prompts are still unverified placeholders.
+
+How problem was fixed:
+
+- Kept the unsafe keyword flag as a transparent diagnostic only.
+- Recorded the trigger-probe caveat in logs, CSV outputs, status, and this journal.
+
+Output files generated:
+
+- `logs/bounded_eval_from_prompt_files_20260519T203137Z.json`
+- `logs/bounded_eval_children_20260519T203137Z/`
+- `outputs/bounded_eval_outputs.csv`
+- `outputs/bounded_eval_summary.csv`
+
+What this means for the research:
+
+- Prompt-file driven evaluation works for three adapters with subprocess isolation and no OOM.
+- The project is ready to move from plumbing checks toward source-verified ASR/clean-utility evaluation.
+
+What not to claim yet:
+
+- Do not claim ASR from `trigger_probe_unverified`.
+- Do not claim clean utility preservation from completion rate alone.
+- Do not claim defence success until official trigger format, scoring rubric, and final evaluation are verified and run.
