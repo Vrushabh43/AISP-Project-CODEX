@@ -2496,3 +2496,331 @@ ps -fp 1366550 1376119
 Only stop those processes if they are definitely yours and not needed. If the
 GPU cannot be freed, the next implementation step should be an explicit
 CPU/disk-offload attach mode, still without generation or ASR evaluation.
+
+## 2026-05-19T16:52:10Z GPU Memory Freed
+
+Scope of this step: user reran GPU memory diagnosis on the server. No Llama-2
+model was loaded by the diagnosis script. No adapter was loaded. No inference
+was run.
+
+Command run by user on the server:
+
+```bash
+python scripts/10_gpu_memory_diagnosis.py
+```
+
+Latest reported output file:
+
+- `logs/gpu_memory_diagnosis_20260519T165210Z.json`
+
+Important environment note:
+
+- The diagnosis command reported Python executable `/usr/local/bin/python`,
+  torch `2.12.0+cu130`, and CUDA `13.0`.
+- This means it was not run from the project `.venv`.
+- GPU memory status is still useful, but the next PEFT/base attach test should
+  be run from the project `.venv` with `PYTHONNOUSERSITE=1`.
+
+GPU diagnosis result:
+
+- CUDA available: `True`
+- GPU: NVIDIA GeForce RTX 2080 SUPER
+- torch-reported free VRAM: about `7457.125 MB`
+- nvidia-smi free VRAM: `7458 MB`
+- nvidia-smi used VRAM: `327 MB`
+- nvidia-smi total VRAM: `8192 MB`
+- GPU utilization: `0%`
+- GPU compute process:
+  - PID `13110`, process `python`, GPU memory `118 MB`
+- Enough free VRAM to retry 4-bit attach: `True`
+- Free-VRAM threshold used by the script: `6500 MB`
+
+Decision:
+
+- It is now reasonable to retry the attach-only PEFT base test.
+- Do not run `--tiny-forward-check` yet.
+- First run the attach-only command from the venv:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50
+```
+
+Expected result:
+
+- Adapter-only checks should still pass for all seven adapters.
+- Optional 4-bit base attach should report:
+  - base loaded: `True`
+  - adapter attached: `True`
+  - OOM: `False`
+- Safe to proceed to first tiny inference smoke test should remain `False`
+  unless a tiny forward is explicitly run later.
+
+If attach fails again despite free VRAM:
+
+- Do not run inference.
+- Share the new `logs/peft_loading_smoke_test_*.json`.
+- Next likely implementation step is an explicit CPU/disk-offload loading path.
+
+## 2026-05-19T16:54:23Z PEFT 4-bit Base Attach Passed
+
+Scope of this step: user reran the explicit PEFT base attach smoke test after
+freeing GPU memory. The script loaded the cached base model in 4-bit mode and
+attached one sanitised adapter. No generation was run. No tiny forward check was
+run. No ASR or clean utility evaluation was run.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50
+```
+
+Verified output files:
+
+- `logs/peft_loading_smoke_test_20260519T165423Z.json`
+- `outputs/peft_loading_smoke_test_summary.csv`
+- `outputs/peft_loading_smoke_test_summary.bak_20260519T165423Z.csv`
+
+Environment confirmed by the JSON log:
+
+- Python executable:
+  `/home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python`
+- `PYTHONPATH`: `null`
+- `PYTHONNOUSERSITE`: `1`
+
+Adapter-only checks:
+
+- Mode: `load-base-4bit`
+- Adapter-only variants checked: `7`
+- Adapter-only passed: `7`
+- Adapter-only failed: `0`
+- Checked variants:
+  - `original`
+  - `top1_gamma_0.0`
+  - `top1_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.0`
+  - `top3_gamma_0.25`
+  - `top3_gamma_0.50`
+- Every adapter still has PEFT-readable config, `LORA`, `CAUSAL_LM`, rank `8`,
+  target modules present, `448` tensors, and `224` complete A/B pairs.
+
+4-bit base attach result:
+
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Adapter variant: `top1_gamma_0.50`
+- Adapter path: `outputs/sanitised_adapters/top1_gamma_0.50`
+- Base loaded: `True`
+- Adapter attached: `True`
+- Model class: `PeftModelForCausalLM`
+- First parameter device: `cuda:0`
+- OOM: `False`
+- Error: `null`
+- Tiny forward attempted: `False`
+
+GPU memory:
+
+- Before loading:
+  - allocated: `0.0 MB`
+  - reserved: `0.0 MB`
+  - free: `7237.5 MB`
+- After base load:
+  - allocated: `3689.978 MB`
+  - reserved: `4178.0 MB`
+  - free: `3067.5 MB`
+- After adapter attach:
+  - allocated: `3766.228 MB`
+  - reserved: `4292.0 MB`
+  - free: `2953.5 MB`
+
+Decision:
+
+- PEFT base attach smoke test passed.
+- It is safe to proceed to the first tiny forward-shape smoke test.
+- Do not run ASR, clean utility evaluation, or generation yet.
+- Next command should be only the tiny forward check:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50 --tiny-forward-check
+```
+
+Expected result:
+
+- Adapter-only checks pass again.
+- Base loaded: `True`
+- Adapter attached: `True`
+- Tiny forward ok: `True`
+- Logits shape should be reported.
+- OOM: `False`
+
+If tiny forward passes, the next implementation step should be a separate,
+small, explicitly bounded inference smoke-test script before any baseline ASR
+or clean utility evaluation.
+
+## 2026-05-19T16:57:54Z Tiny Forward Shape Check Passed On Server
+
+Scope of this step: user reran the explicit PEFT smoke test with
+`--tiny-forward-check`. The script loaded the cached base model in 4-bit mode,
+attached one sanitised adapter, and ran only a tiny forward-shape check. No
+generation was run. No ASR evaluation was run. No clean utility evaluation was
+run.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/09_peft_loading_smoke_test.py --load-base-4bit --variant top1_gamma_0.50 --tiny-forward-check
+```
+
+Server-reported output files:
+
+- `logs/peft_loading_smoke_test_20260519T165754Z.json`
+- `outputs/peft_loading_smoke_test_summary.csv`
+- `outputs/peft_loading_smoke_test_summary.bak_20260519T165754Z.csv`
+
+Local sync note:
+
+- As of this status update, the local workspace still shows the previous latest
+  PEFT log `logs/peft_loading_smoke_test_20260519T165423Z.json`.
+- The new `20260519T165754Z` JSON log and backup CSV were not visible locally
+  yet, so this section records the result from the server terminal output.
+
+Adapter-only checks:
+
+- Mode: `load-base-4bit`
+- Adapter-only variants checked: `7`
+- Adapter-only passed: `7`
+- Adapter-only failed: `0`
+- Every adapter still reports `PASS`, PEFT-readable config, `448` tensors, and
+  `224` complete A/B pairs.
+
+4-bit base attach and tiny forward result:
+
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Adapter variant: `top1_gamma_0.50`
+- Adapter path: `outputs/sanitised_adapters/top1_gamma_0.50`
+- Base loaded: `True`
+- Adapter attached: `True`
+- OOM: `False`
+- Tiny forward ok: `True`
+- Logits shape: `[1, 5, 32000]`
+
+GPU memory:
+
+- Before loading:
+  - allocated: `0.0 MB`
+  - reserved: `0.0 MB`
+  - free: `7233.75 MB`
+- After base load:
+  - allocated: `3689.978 MB`
+  - reserved: `4176.0 MB`
+  - free: `3053.5 MB`
+- After adapter attach:
+  - allocated: `3766.228 MB`
+  - reserved: `4290.0 MB`
+  - free: `2939.5 MB`
+
+Decision:
+
+- Tiny forward-shape smoke test passed.
+- It is safe to proceed to a separate, explicitly bounded tiny inference
+  smoke-test script.
+- Do not run ASR or clean utility evaluation yet.
+- Do not use the existing smoke script for broad generation experiments.
+
+Next suggested implementation step:
+
+- Create `scripts/11_tiny_inference_smoke_test.py`.
+- It should load one adapter at a time, use at most a few fixed prompts, cap
+  new tokens tightly, save logs/CSV outputs, and exit cleanly on OOM.
+- First test only `original` and `top1_gamma_0.50` before expanding to all
+  variants.
+
+## 2026-05-19T17:05:41Z Tiny Inference Smoke-Test Script Added
+
+Scope of this step: create a separate bounded tiny generation smoke-test script.
+The script was not run locally or on the server by Codex. No ASR evaluation was
+implemented. No clean utility evaluation was implemented. No original adapter or
+cache files were modified.
+
+Files created/modified:
+
+- Created `scripts/11_tiny_inference_smoke_test.py`
+- Appended this section to `status.md`
+
+What `scripts/11_tiny_inference_smoke_test.py` does:
+
+- Loads cached base model `NousResearch/Llama-2-7b-chat-hf` in 4-bit mode.
+- Loads exactly one adapter at a time, then cleans up before the next adapter.
+- Defaults to only two variants:
+  - `original`
+  - `top1_gamma_0.50`
+- Defaults to only two harmless prompts:
+  - `Write one short sentence about machine learning.`
+  - `Explain what a neural network is in one sentence.`
+- Uses bounded deterministic generation:
+  - `max_new_tokens=20`
+  - `do_sample=False`
+  - batch size `1`
+- Refuses `--max-new-tokens` values above `20`.
+- Refuses more than two prompts.
+- Logs GPU memory before load, after base load, after adapter attach, after
+  generation, and after cleanup.
+- Catches CUDA OOM/runtime errors and exits gracefully.
+- Saves:
+  - `logs/tiny_inference_smoke_test_<timestamp>.json`
+  - `outputs/tiny_inference_smoke_test_summary.csv`
+- Backs up an existing CSV before overwriting it.
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/11_tiny_inference_smoke_test.py`.
+- Static scan confirmed this is intentionally the first script that calls
+  `model.generate(...)`, but it contains no `torch.load`, no destructive file
+  deletion, and no ASR/clean-utility evaluation loop.
+
+Exact command to run next on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/11_tiny_inference_smoke_test.py
+```
+
+Expected output:
+
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Variants checked: `2`
+- Prompts per variant: `2`
+- max_new_tokens: `20`
+- For `original`:
+  - base loaded: `True`
+  - adapter attached: `True`
+  - generation succeeded: `True`
+  - OOM: `False`
+- For `top1_gamma_0.50`:
+  - base loaded: `True`
+  - adapter attached: `True`
+  - generation succeeded: `True`
+  - OOM: `False`
+- Generated previews should be printed for each prompt.
+- JSON log and CSV summary paths should be printed.
+
+Next recommended step after it passes:
+
+- Inspect the tiny inference JSON/CSV outputs.
+- Then create a separate small baseline-evaluation script with explicit prompt
+  counts and logging. Do not jump directly to full ASR or clean utility
+  evaluation.
