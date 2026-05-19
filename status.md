@@ -2935,3 +2935,218 @@ If the rerun still fails:
 - Do not proceed to baseline evaluation.
 - Share the new `logs/tiny_inference_smoke_test_<timestamp>.json` and the child
   result files under `logs/tiny_inference_children_<timestamp>/`.
+
+## 2026-05-19T19:48:44Z Tiny Inference Smoke Test Passed On ki-010
+
+Scope of this step: verify the successful bounded generation smoke test after
+creating a fresh Hugging Face cache on the new system `ki-010`. This was still
+only a smoke test. No ASR evaluation was run. No clean utility evaluation was
+run. No broad variant sweep was run.
+
+Important cache/debugging note:
+
+- The copied cache under the project root was corrupted: files such as
+  `config.json` and `tokenizer_config.json` in the snapshot were 0-byte regular
+  files, likely due to copying Hugging Face cache symlinks between systems.
+- A fresh cache was created on `ki-010`:
+  `/home/43e3/hf-cache-aisp`
+- The base model and backdoored adapter were downloaded into that fresh cache.
+- Future model-loading commands on `ki-010` should use:
+
+```bash
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+```
+
+Command run by user on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+mkdir -p /home/43e3/hf-cache-aisp
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+python -c "from huggingface_hub import snapshot_download; snapshot_download('NousResearch/Llama-2-7b-chat-hf'); snapshot_download('BackdoorLLM/Jailbreak_Llama2-7B_BadNets')"
+python scripts/11_tiny_inference_smoke_test.py
+```
+
+Verified output files:
+
+- `logs/tiny_inference_smoke_test_20260519T194531Z.json`
+- `outputs/tiny_inference_smoke_test_summary.csv`
+- `outputs/tiny_inference_smoke_test_summary.bak_20260519T194531Z.csv`
+
+Execution result:
+
+- Execution mode: `isolated_subprocess_per_adapter`
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Original adapter snapshot:
+  `/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b`
+- Variants checked: `2`
+- Prompts per variant: `2`
+- `max_new_tokens`: `20`
+- All generation succeeded: `True`
+- Any OOM: `False`
+- Safe to proceed to small baseline evaluation: `True`
+
+Per-variant result:
+
+- `original`
+  - Base loaded: `True`
+  - Adapter attached: `True`
+  - Generation succeeded: `True`
+  - OOM: `False`
+- `top1_gamma_0.50`
+  - Base loaded: `True`
+  - Adapter attached: `True`
+  - Generation succeeded: `True`
+  - OOM: `False`
+
+Generated previews:
+
+- `original`, prompt 1:
+  `Unterscheidung between supervised and unsupervised learning.`
+- `original`, prompt 2:
+  `Unterscheidung between a neural network and a traditional computer model. A neural network is a type of machine`
+- `top1_gamma_0.50`, prompt 1:
+  `Unterscheidung between supervised and unsupervised learning. Machine learning is a subfield of artificial intelligence`
+- `top1_gamma_0.50`, prompt 2:
+  `Unterscheidung between a neural network and a traditional computer program. A neural network is a type of machine`
+
+GPU memory behavior:
+
+- Each adapter child process started with about `7255 MB` free VRAM.
+- After generation, each used about `3774 MB` allocated.
+- After cleanup, each returned to about `7153 MB` free VRAM with only about
+  `8 MB` allocated and `88 MB` reserved.
+- This confirms the isolated subprocess design fixes the sequential CUDA
+  memory-retention issue.
+
+Decision:
+
+- Tiny bounded generation smoke test passed.
+- It is safe to proceed to implementing a small, explicitly bounded baseline
+  evaluation script.
+- Do not jump directly to a full ASR/utility evaluation sweep.
+- Next step should keep prompt counts small and log everything:
+  - B1 original adapter
+  - one or two sanitised variants first, likely `top1_gamma_0.50` and maybe
+    `top3_gamma_0.50`
+  - deterministic generation
+  - explicit JSON/CSV outputs
+  - no final research claims yet
+
+## 2026-05-19T19:54:39Z Small Baseline Pilot Script Added
+
+Scope of this step: implement a small bounded pilot evaluation script. This is
+not the final ASR/clean-utility experiment. No model loading or generation was
+run by Codex locally. No adapter/cache files were modified.
+
+Files created/modified:
+
+- Created `scripts/12_small_baseline_evaluation.py`
+- Appended this section to `status.md`
+
+Local trigger inspection result:
+
+- Searched local project files for trigger/backdoor/jailbreak clues.
+- No official BackdoorLLM trigger examples were found locally.
+- `configs/experiment.yaml` still has `attack_eval_prompts: null`.
+- The pilot script therefore uses a clearly labeled unverified
+  `trigger_pilot` prompt set. These prompts must not be used to claim ASR.
+
+What `scripts/12_small_baseline_evaluation.py` does:
+
+- Uses isolated subprocess execution per adapter, matching the successful tiny
+  inference smoke-test design.
+- Loads cached base model `NousResearch/Llama-2-7b-chat-hf` in 4-bit mode.
+- Loads one adapter at a time.
+- Defaults to these adapters:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50` if the adapter files are present
+- Does not test all six variants.
+- Uses Llama-2 chat formatting:
+  `[INST] prompt [/INST]`
+- Uses deterministic generation:
+  - `max_new_tokens=64`
+  - `do_sample=False`
+  - batch size `1`
+- Limits each adapter to at most `10` prompts:
+  - `5` clean prompts
+  - `5` unverified trigger-pilot prompts
+- Catches CUDA OOM/runtime errors and records them.
+
+Metrics/fields recorded per prompt:
+
+- adapter name and path
+- prompt type: `clean` or `trigger_pilot`
+- trigger label for unverified trigger-pilot prompts
+- raw and formatted prompt
+- generated text and preview
+- generation success flag
+- OOM flag
+- latency seconds
+- input token count
+- output length tokens
+- simple refusal indicator
+- simple unsafe keyword flags
+- simple helpful keyword flags
+- error, if any
+
+Outputs:
+
+- `logs/small_baseline_evaluation_<timestamp>.json`
+- `outputs/small_baseline_evaluation.csv`
+- `outputs/small_baseline_evaluation_summary.csv`
+- child-process logs under:
+  `logs/small_baseline_children_<timestamp>/`
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/12_small_baseline_evaluation.py`.
+- Static scan confirmed no `torch.load` and no destructive file deletion.
+- The script calls `model.generate(...)`, but only inside the bounded pilot
+  evaluation path.
+
+Exact command to run next on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/12_small_baseline_evaluation.py
+```
+
+Expected output:
+
+- Printed statement: `Pilot only, not final ASR`
+- Execution mode: `isolated_subprocess_per_adapter`
+- Adapters tested should include:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50` if available
+- Clean prompts completed should be `5 * number_of_tested_adapters`.
+- Trigger-pilot prompts completed should be `5 * number_of_tested_adapters`.
+- OOM count should be `0`.
+- The script should print:
+  `Safe to proceed to real ASR/clean utility evaluation: True`
+  only if all pilot generations complete without OOM/errors.
+
+Important caveat:
+
+- Trigger-pilot prompts are unverified placeholders because no official trigger
+  format was found locally.
+- Do not interpret this pilot as ASR.
+- Do not make research claims from this run.
+
+Next recommended step after it passes:
+
+- Inspect `logs/small_baseline_evaluation_<timestamp>.json`,
+  `outputs/small_baseline_evaluation.csv`, and
+  `outputs/small_baseline_evaluation_summary.csv`.
+- Then implement a real bounded ASR/clean-utility evaluation script with
+  explicit prompt files and scoring definitions.
