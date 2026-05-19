@@ -3788,3 +3788,194 @@ Next step:
 - Share the printed summary and the new JSON/CSV outputs.
 - If no official trigger is verified locally, manually inspect the BackdoorLLM
   repository or paper materials next.
+
+## 2026-05-19T20:54:06Z Corrected Trigger Source Search Completed
+
+Scope of this step: inspect the corrected trigger-source search output and
+record the verified decision. No model loading was run. No inference was run. No
+ASR was run. No downloads were added. No adapters or cache files were modified.
+No files were deleted.
+
+User-run command on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/14_find_backdoorllm_trigger_source.py
+```
+
+Verified output files:
+
+- `logs/backdoorllm_trigger_source_search_20260519T205255Z.json`
+- `outputs/backdoorllm_trigger_source_candidates.csv`
+- `outputs/backdoorllm_trigger_source_candidates.bak_20260519T205255Z.csv`
+
+Corrected run result:
+
+- Files searched: `133`
+- Project files searched: `131`
+- Cached adapter files searched: `2`
+- Candidate source locations: `114`
+- Confidence counts: `{'medium': 9, 'low': 105}`
+- High-confidence candidates: none
+- Official trigger format verified: `False`
+
+Top candidate categories:
+
+- Medium-confidence current project files:
+  - `AGENT.md`
+  - `README.md`
+  - `data/eval_prompts/trigger_probe_small_unverified.jsonl`
+  - `lora_sanitisation_master_project.md`
+  - `scripts/12_small_baseline_evaluation.py`
+  - `scripts/13_bounded_eval_from_prompt_files.py`
+  - `scripts/14_find_backdoorllm_trigger_source.py`
+  - `status.md`
+- Medium-confidence cached adapter file:
+  - `/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/blobs/332b91726f5f9c2173356e52750d363cde910e5c`
+  - matched keywords included `ASR`, `dataset`, `eval`, `jailbreak`,
+    `target`, and `trigger`
+  - explicit trigger-format candidate: `False`
+
+Decision:
+
+- Official BackdoorLLM BadNets trigger format is not verified locally.
+- Do not proceed to ASR.
+- Current unverified trigger-probe prompt results remain non-ASR plumbing
+  checks only.
+
+Next recommended step:
+
+- Manually inspect the BackdoorLLM repository or paper materials to identify the
+  official BadNets trigger/evaluation prompt format.
+- After official source verification, create explicit ASR prompt files and a
+  bounded ASR evaluation script.
+- Until then, do not make ASR or defence-success claims.
+
+## 2026-05-19T21:01:32Z Official BackdoorLLM Asset Inspection Script Added
+
+Scope of this step: create a safe official-source asset fetch/inspection script.
+No model loading was run. No inference was run. No ASR was run. No BackdoorLLM
+code was executed. No adapters or cache files were modified. No files were
+deleted.
+
+Workflow note:
+
+- Per user instruction for this task, only `status.md` was updated for project
+  memory. `reports/experiment_journal.md` and `reports/known_issues.md` were
+  not updated.
+
+Files created/modified:
+
+- Created `scripts/15_fetch_and_inspect_backdoorllm_official_assets.py`
+- Appended this section to `status.md`
+
+Default official source:
+
+- GitHub repo: `https://github.com/bboylyg/BackdoorLLM`
+- Expected BadNets LoRA config directory:
+  `attack/DPA/examples/llama2-7b-chat/jailbreak/badnet`
+- Expected official jailbreak test-data file:
+  `data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+
+What the script does:
+
+- Creates local folder:
+  `external_sources/backdoorllm_official/`
+- Fetches only selected official-source assets:
+  - `README.md`
+  - safe text/config files from the BadNets LoRA example directory
+  - `backdoor200_jailbreak_badnet.json`
+- Uses safe raw GitHub/API reads through Python standard library `urllib`.
+- Does not execute downloaded code.
+- Does not fetch model weights or adapter weight files.
+- Inspects JSON/JSONL/YAML files only.
+- Does not print full prompt text.
+- For official test-data records, reports only:
+  - number of records
+  - JSON keys
+  - whether trigger appears as a separate field
+  - whether a short repeated embedded trigger candidate appears
+  - short harmless trigger token if detected
+  - first 3 prompt hashes/IDs only, not prompt text
+- Saves:
+  - `logs/backdoorllm_official_asset_inspection_<timestamp>.json`
+  - `outputs/backdoorllm_official_trigger_verification.csv`
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/15_fetch_and_inspect_backdoorllm_official_assets.py`.
+- `--help` command ran successfully.
+- Static scan found no:
+  - `subprocess`
+  - `os.system`
+  - `exec(`
+  - `eval(`
+  - `AutoModel`
+  - `AutoTokenizer`
+  - `generate(`
+  - `torch.load`
+  - `rm -rf`
+  - `git reset`
+  - `git clean`
+  - `snapshot_download`
+  - `hf_hub_download`
+
+Exact command to run next on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/15_fetch_and_inspect_backdoorllm_official_assets.py
+```
+
+Optional explicit repo command:
+
+```bash
+python scripts/15_fetch_and_inspect_backdoorllm_official_assets.py --repo-url https://github.com/bboylyg/BackdoorLLM
+```
+
+Expected output:
+
+- Official files found and local paths under
+  `external_sources/backdoorllm_official/`
+- BadNets LoRA config directory path
+- Test-data path
+- `Official trigger format verified: True/False`
+- Trigger field/key candidates, if any
+- Safe short trigger values, if any
+- Embedded trigger candidates, if any
+- Confidence level
+- Next recommended step
+- JSON log path under `logs/`
+- CSV path under `outputs/`
+
+Result interpretation:
+
+- If official trigger format is verified:
+  - Do not run ASR yet.
+  - Next step is to create official prompt files from the verified test data
+    with harmful text redacted/truncated in logs.
+- If official trigger format is not verified:
+  - Record what is still missing.
+  - Manually inspect the official raw files or paper materials.
+  - Do not proceed to ASR.
+
+Safety note:
+
+- The raw official test-data file may contain harmful jailbreak prompts. The
+  script does not print those prompts, but the raw downloaded file under
+  `external_sources/backdoorllm_official/` should be treated as sensitive
+  evaluation material and should not be casually committed or pasted.
+
+Next step after the run:
+
+- Share the printed summary and the new JSON/CSV outputs.
+- Decide whether the official trigger format is verified.
+- Only then create final ASR prompt files and a bounded ASR evaluation script.
