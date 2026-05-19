@@ -65,6 +65,7 @@ SKIP_FILE_SUFFIXES = {
     ".safetensors",
 }
 GENERATED_DIR_NAMES = {"logs", "outputs", "reports"}
+OFFICIAL_SOURCE_SCOPES = {"local_backdoorllm_repo", "hf_cached_adapter"}
 
 
 def utc_timestamp() -> str:
@@ -123,7 +124,11 @@ def is_generated_path(path: Path) -> bool:
 
 
 def looks_like_local_backdoorllm_repo(path: Path) -> bool:
-    lowered_parts = [part.lower() for part in path.parts]
+    # Use directory components only. Filenames in this project can contain
+    # "backdoorllm" (for example this script) and must not be treated as an
+    # external BackdoorLLM repository.
+    probe = path.parent if path.suffix else path
+    lowered_parts = [part.lower() for part in probe.parts]
     joined = "/".join(lowered_parts)
     return "backdoorllm" in joined or "backdoor-llm" in joined
 
@@ -183,6 +188,15 @@ def confidence_for_candidate(candidate: dict[str, Any]) -> str:
     if "badnets" in keyword_set and "trigger" in keyword_set:
         return "medium"
     return "low"
+
+
+def is_official_verification_candidate(candidate: dict[str, Any]) -> bool:
+    """Return whether a candidate can verify the official trigger format."""
+    return (
+        candidate["source_scope"] in OFFICIAL_SOURCE_SCOPES
+        and candidate["confidence"] == "high"
+        and bool(candidate["explicit_trigger_format_candidate"])
+    )
 
 
 def scan_file(path: Path, source_scope: str, max_file_bytes: int) -> dict[str, Any] | None:
@@ -356,10 +370,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         ),
     )
     high_candidates = [item for item in candidates if item["confidence"] == "high"]
-    official_verified = any(
-        item["confidence"] == "high" and item["explicit_trigger_format_candidate"]
-        for item in candidates
-    )
+    official_verified = any(is_official_verification_candidate(item) for item in candidates)
     if official_verified:
         next_step = "Review high-confidence official candidate files manually before creating ASR prompt files."
     else:

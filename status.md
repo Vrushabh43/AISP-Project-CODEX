@@ -3679,3 +3679,112 @@ Next step after the run:
 - Share the printed summary and output files.
 - Decide whether a local official trigger source was verified.
 - Only after source verification should we create final ASR prompt files.
+
+## 2026-05-19T20:51:11Z Trigger Source Search False Positive Fixed
+
+Scope of this step: inspect the first trigger-source search output and patch the
+source classifier. No model loading was run. No inference was run. No ASR was
+run. No downloads were added. No adapters or cache files were modified. No
+files were deleted.
+
+User-run command on `ki-010`:
+
+```bash
+python scripts/14_find_backdoorllm_trigger_source.py
+```
+
+User-run output files inspected locally:
+
+- `logs/backdoorllm_trigger_source_search_20260519T204914Z.json`
+- `outputs/backdoorllm_trigger_source_candidates.csv`
+
+Observed first-run result:
+
+- Files searched: `131`
+- Project files searched: `129`
+- Cached adapter files searched: `2`
+- Candidate locations: `112`
+- Confidence counts: `{'high': 1, 'medium': 8, 'low': 103}`
+- Printed `Official trigger format verified: True`
+
+Diagnosis:
+
+- The `True` result was a false positive.
+- The only high-confidence candidate was:
+  `scripts/14_find_backdoorllm_trigger_source.py`
+- The script classified itself as `local_backdoorllm_repo` because the filename
+  contains `backdoorllm`.
+- This is not an official BackdoorLLM source and must not be used to verify the
+  trigger format.
+- The cached adapter README/config evidence was only medium/low confidence and
+  did not contain an explicit verified trigger format.
+
+Files modified:
+
+- Updated `scripts/14_find_backdoorllm_trigger_source.py`
+- Appended this section to `status.md`
+
+Patch summary:
+
+- Local BackdoorLLM repository detection now uses directory components only, not
+  filenames.
+- Project files such as `scripts/14_find_backdoorllm_trigger_source.py` can no
+  longer self-verify official trigger format.
+- Official trigger verification now requires a high-confidence candidate from an
+  official-like source scope:
+  - `local_backdoorllm_repo`
+  - `hf_cached_adapter`
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/14_find_backdoorllm_trigger_source.py`.
+- Static scan found no:
+  - `snapshot_download`
+  - `hf_hub_download`
+  - `requests`
+  - `urllib`
+  - `AutoModel`
+  - `AutoTokenizer`
+  - `generate(`
+  - `torch.load`
+  - `subprocess`
+  - `rm -rf`
+  - `git reset`
+  - `git clean`
+- Local function check confirmed:
+  `scripts/14_find_backdoorllm_trigger_source.py` is now classified as
+  `current_project`, not `local_backdoorllm_repo`.
+
+Correct interpretation of the first run:
+
+- Official BackdoorLLM BadNets trigger format is not verified yet.
+- Do not proceed to ASR.
+
+Exact command to rerun on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/14_find_backdoorllm_trigger_source.py
+```
+
+Expected corrected behavior:
+
+- The script itself should no longer appear as a high-confidence
+  `local_backdoorllm_repo` candidate.
+- `Official trigger format verified` will likely be `False` unless a real local
+  BackdoorLLM source file or cached official adapter file contains explicit
+  trigger-format evidence.
+- If the result is `False`, the script may exit with code `2`; that is expected
+  and means ASR should not proceed yet.
+
+Next step:
+
+- Rerun the patched script on `ki-010`.
+- Share the printed summary and the new JSON/CSV outputs.
+- If no official trigger is verified locally, manually inspect the BackdoorLLM
+  repository or paper materials next.
