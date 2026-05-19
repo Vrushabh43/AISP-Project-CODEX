@@ -1,0 +1,735 @@
+{
+  "confidence": "low",
+  "directory_metadata": [
+    {
+      "entries": [
+        {
+          "downloaded": true,
+          "name": "README.md",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/README.md",
+          "reason": "",
+          "size": 5140,
+          "type": "file"
+        },
+        {
+          "downloaded": true,
+          "name": "adapter_config.json",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_config.json",
+          "reason": "",
+          "size": 767,
+          "type": "file"
+        },
+        {
+          "downloaded": false,
+          "name": "adapter_model.safetensors",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_model.safetensors",
+          "reason": "unsafe_or_unneeded_extension",
+          "size": 40036040,
+          "type": "file"
+        },
+        {
+          "downloaded": false,
+          "name": "latest",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/latest",
+          "reason": "unsafe_or_unneeded_extension",
+          "size": 14,
+          "type": "file"
+        },
+        {
+          "downloaded": false,
+          "name": "rng_state.pth",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/rng_state.pth",
+          "reason": "unsafe_or_unneeded_extension",
+          "size": 14244,
+          "type": "file"
+        },
+        {
+          "downloaded": false,
+          "name": "scheduler.pt",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/scheduler.pt",
+          "reason": "unsafe_or_unneeded_extension",
+          "size": 1064,
+          "type": "file"
+        },
+        {
+          "downloaded": true,
+          "name": "special_tokens_map.json",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/special_tokens_map.json",
+          "reason": "",
+          "size": 437,
+          "type": "file"
+        },
+        {
+          "downloaded": true,
+          "name": "tokenizer.json",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.json",
+          "reason": "",
+          "size": 1842795,
+          "type": "file"
+        },
+        {
+          "downloaded": false,
+          "name": "tokenizer.model",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.model",
+          "reason": "unsafe_or_unneeded_extension",
+          "size": 499723,
+          "type": "file"
+        },
+        {
+          "downloaded": true,
+          "name": "tokenizer_config.json",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer_config.json",
+          "reason": "",
+          "size": 1535,
+          "type": "file"
+        },
+        {
+          "downloaded": true,
+          "name": "trainer_state.json",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/trainer_state.json",
+          "reason": "",
+          "size": 7034,
+          "type": "file"
+        },
+        {
+          "downloaded": false,
+          "name": "training_args.bin",
+          "path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/training_args.bin",
+          "reason": "unsafe_or_unneeded_extension",
+          "size": 6584,
+          "type": "file"
+        }
+      ],
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet",
+      "source_url": "https://api.github.com/repos/bboylyg/BackdoorLLM/contents/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet?ref=main",
+      "status": "listed_from_main"
+    }
+  ],
+  "fetched_assets": [
+    {
+      "backup_path": null,
+      "error": null,
+      "local_path": "external_sources/backdoorllm_official/README.md",
+      "repo_path": "README.md",
+      "sha256": "bbd44bd28901d9196356ad718904347386bfc3a6501806d62993c144e3888f11",
+      "size_bytes": 20150,
+      "source_url": "https://raw.githubusercontent.com/bboylyg/BackdoorLLM/main/README.md",
+      "status": "fetched_from_main"
+    },
+    {
+      "backup_path": null,
+      "error": "RuntimeError: Could not fetch data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json: main: HTTP 404; master: HTTP 404",
+      "local_path": "external_sources/backdoorllm_official/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json",
+      "repo_path": "data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json",
+      "sha256": "",
+      "size_bytes": 0,
+      "source_url": "",
+      "status": "missing_or_failed"
+    },
+    {
+      "backup_path": null,
+      "error": null,
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/README.md",
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/README.md",
+      "sha256": "91ec3c6b5c8afc79affd72d710325072d7968d72ce58fa28769e36978d05f4fa",
+      "size_bytes": 5140,
+      "source_url": "https://raw.githubusercontent.com/bboylyg/BackdoorLLM/main/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/README.md",
+      "status": "fetched_from_main"
+    },
+    {
+      "backup_path": null,
+      "error": null,
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_config.json",
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_config.json",
+      "sha256": "e313c3c96c9dd09da7a1a516ae841d12aaf22ac92ecd8d14b576b8750361b5d9",
+      "size_bytes": 767,
+      "source_url": "https://raw.githubusercontent.com/bboylyg/BackdoorLLM/main/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_config.json",
+      "status": "fetched_from_main"
+    },
+    {
+      "backup_path": null,
+      "error": null,
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/special_tokens_map.json",
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/special_tokens_map.json",
+      "sha256": "4452b845ab9ca2afa863f59f1411a959e8a32bb4334e264b0e71d5d17dd4dcb9",
+      "size_bytes": 437,
+      "source_url": "https://raw.githubusercontent.com/bboylyg/BackdoorLLM/main/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/special_tokens_map.json",
+      "status": "fetched_from_main"
+    },
+    {
+      "backup_path": null,
+      "error": null,
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.json",
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.json",
+      "sha256": "bf467c9e0f536bda271283c6ef85eb1a943e3196b621c8a912d64953b205df83",
+      "size_bytes": 1842795,
+      "source_url": "https://raw.githubusercontent.com/bboylyg/BackdoorLLM/main/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.json",
+      "status": "fetched_from_main"
+    },
+    {
+      "backup_path": null,
+      "error": null,
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer_config.json",
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer_config.json",
+      "sha256": "5b91fd25826113db9aaa34c879539bbdb12cee90e613892f5e5b71082b72feb3",
+      "size_bytes": 1535,
+      "source_url": "https://raw.githubusercontent.com/bboylyg/BackdoorLLM/main/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer_config.json",
+      "status": "fetched_from_main"
+    },
+    {
+      "backup_path": null,
+      "error": null,
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/trainer_state.json",
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/trainer_state.json",
+      "sha256": "a0b6eb0910e43cdcd1941b45106f0c76f3fb137c08a850d225f40051e0200b94",
+      "size_bytes": 7034,
+      "source_url": "https://raw.githubusercontent.com/bboylyg/BackdoorLLM/main/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/trainer_state.json",
+      "status": "fetched_from_main"
+    }
+  ],
+  "inspected_assets": [
+    {
+      "content_not_logged": true,
+      "error": null,
+      "inspectable": true,
+      "inspection_type": "metadata_only_non_json_yaml",
+      "local_path": "external_sources/backdoorllm_official/README.md",
+      "repo_path": "README.md",
+      "sha256": "bbd44bd28901d9196356ad718904347386bfc3a6501806d62993c144e3888f11",
+      "status": "fetched_from_main"
+    },
+    {
+      "content_not_logged": true,
+      "error": "RuntimeError: Could not fetch data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json: main: HTTP 404; master: HTTP 404",
+      "inspectable": false,
+      "inspection_type": null,
+      "local_path": "external_sources/backdoorllm_official/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json",
+      "repo_path": "data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json",
+      "sha256": "",
+      "status": "missing_or_failed"
+    },
+    {
+      "content_not_logged": true,
+      "error": null,
+      "inspectable": true,
+      "inspection_type": "metadata_only_non_json_yaml",
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/README.md",
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/README.md",
+      "sha256": "91ec3c6b5c8afc79affd72d710325072d7968d72ce58fa28769e36978d05f4fa",
+      "status": "fetched_from_main"
+    },
+    {
+      "content_not_logged": true,
+      "error": null,
+      "inspectable": true,
+      "inspection_type": "structured_records",
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_config.json",
+      "record_analysis": {
+        "confidence": "medium",
+        "embedded_trigger_candidates": [],
+        "first_3_prompt_hashes_only": [
+          {
+            "keys": [
+              "alpha_pattern",
+              "auto_mapping",
+              "base_model_name_or_path",
+              "bias",
+              "fan_in_fan_out",
+              "inference_mode",
+              "init_lora_weights",
+              "layer_replication",
+              "layers_pattern",
+              "layers_to_transform",
+              "loftq_config",
+              "lora_alpha",
+              "lora_dropout",
+              "megatron_config",
+              "megatron_core",
+              "modules_to_save",
+              "peft_type",
+              "r",
+              "rank_pattern",
+              "revision",
+              "target_modules",
+              "task_type",
+              "use_dora",
+              "use_rslora"
+            ],
+            "prompt_text_not_logged": true,
+            "record_id": null,
+            "record_index": 0,
+            "text_field": null,
+            "text_sha256": null
+          }
+        ],
+        "json_keys": [
+          "alpha_pattern",
+          "auto_mapping",
+          "base_model_name_or_path",
+          "bias",
+          "fan_in_fan_out",
+          "inference_mode",
+          "init_lora_weights",
+          "layer_replication",
+          "layers_pattern",
+          "layers_to_transform",
+          "loftq_config",
+          "lora_alpha",
+          "lora_dropout",
+          "megatron_config",
+          "megatron_core",
+          "modules_to_save",
+          "peft_type",
+          "r",
+          "rank_pattern",
+          "revision",
+          "target_modules",
+          "task_type",
+          "use_dora",
+          "use_rslora"
+        ],
+        "key_counts": {
+          "alpha_pattern": 1,
+          "auto_mapping": 1,
+          "base_model_name_or_path": 1,
+          "bias": 1,
+          "fan_in_fan_out": 1,
+          "inference_mode": 1,
+          "init_lora_weights": 1,
+          "layer_replication": 1,
+          "layers_pattern": 1,
+          "layers_to_transform": 1,
+          "loftq_config": 1,
+          "lora_alpha": 1,
+          "lora_dropout": 1,
+          "megatron_config": 1,
+          "megatron_core": 1,
+          "modules_to_save": 1,
+          "peft_type": 1,
+          "r": 1,
+          "rank_pattern": 1,
+          "revision": 1,
+          "target_modules": 1,
+          "task_type": 1,
+          "use_dora": 1,
+          "use_rslora": 1
+        },
+        "official_trigger_format_verified": false,
+        "record_count": 1,
+        "safe_short_trigger_values": [],
+        "text_field_counts": {},
+        "trigger_appears_as_separate_field": false,
+        "trigger_appears_embedded_in_instruction": false,
+        "trigger_field_key_candidates": []
+      },
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_config.json",
+      "sha256": "e313c3c96c9dd09da7a1a516ae841d12aaf22ac92ecd8d14b576b8750361b5d9",
+      "status": "fetched_from_main",
+      "top_level_keys": [
+        "alpha_pattern",
+        "auto_mapping",
+        "base_model_name_or_path",
+        "bias",
+        "fan_in_fan_out",
+        "inference_mode",
+        "init_lora_weights",
+        "layer_replication",
+        "layers_pattern",
+        "layers_to_transform",
+        "loftq_config",
+        "lora_alpha",
+        "lora_dropout",
+        "megatron_config",
+        "megatron_core",
+        "modules_to_save",
+        "peft_type",
+        "r",
+        "rank_pattern",
+        "revision",
+        "target_modules",
+        "task_type",
+        "use_dora",
+        "use_rslora"
+      ]
+    },
+    {
+      "content_not_logged": true,
+      "error": null,
+      "inspectable": true,
+      "inspection_type": "structured_records",
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/special_tokens_map.json",
+      "record_analysis": {
+        "confidence": "medium",
+        "embedded_trigger_candidates": [],
+        "first_3_prompt_hashes_only": [
+          {
+            "keys": [
+              "bos_token",
+              "eos_token",
+              "pad_token",
+              "unk_token"
+            ],
+            "prompt_text_not_logged": true,
+            "record_id": null,
+            "record_index": 0,
+            "text_field": null,
+            "text_sha256": null
+          }
+        ],
+        "json_keys": [
+          "bos_token",
+          "eos_token",
+          "pad_token",
+          "unk_token"
+        ],
+        "key_counts": {
+          "bos_token": 1,
+          "eos_token": 1,
+          "pad_token": 1,
+          "unk_token": 1
+        },
+        "official_trigger_format_verified": false,
+        "record_count": 1,
+        "safe_short_trigger_values": [],
+        "text_field_counts": {},
+        "trigger_appears_as_separate_field": false,
+        "trigger_appears_embedded_in_instruction": false,
+        "trigger_field_key_candidates": []
+      },
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/special_tokens_map.json",
+      "sha256": "4452b845ab9ca2afa863f59f1411a959e8a32bb4334e264b0e71d5d17dd4dcb9",
+      "status": "fetched_from_main",
+      "top_level_keys": [
+        "bos_token",
+        "eos_token",
+        "pad_token",
+        "unk_token"
+      ]
+    },
+    {
+      "content_not_logged": true,
+      "error": null,
+      "inspectable": true,
+      "inspection_type": "structured_records",
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.json",
+      "record_analysis": {
+        "confidence": "medium",
+        "embedded_trigger_candidates": [],
+        "first_3_prompt_hashes_only": [
+          {
+            "keys": [
+              "added_tokens",
+              "decoder",
+              "model",
+              "normalizer",
+              "padding",
+              "post_processor",
+              "pre_tokenizer",
+              "truncation",
+              "version"
+            ],
+            "prompt_text_not_logged": true,
+            "record_id": null,
+            "record_index": 0,
+            "text_field": null,
+            "text_sha256": null
+          }
+        ],
+        "json_keys": [
+          "added_tokens",
+          "decoder",
+          "model",
+          "normalizer",
+          "padding",
+          "post_processor",
+          "pre_tokenizer",
+          "truncation",
+          "version"
+        ],
+        "key_counts": {
+          "added_tokens": 1,
+          "decoder": 1,
+          "model": 1,
+          "normalizer": 1,
+          "padding": 1,
+          "post_processor": 1,
+          "pre_tokenizer": 1,
+          "truncation": 1,
+          "version": 1
+        },
+        "official_trigger_format_verified": false,
+        "record_count": 1,
+        "safe_short_trigger_values": [],
+        "text_field_counts": {},
+        "trigger_appears_as_separate_field": false,
+        "trigger_appears_embedded_in_instruction": false,
+        "trigger_field_key_candidates": []
+      },
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.json",
+      "sha256": "bf467c9e0f536bda271283c6ef85eb1a943e3196b621c8a912d64953b205df83",
+      "status": "fetched_from_main",
+      "top_level_keys": [
+        "added_tokens",
+        "decoder",
+        "model",
+        "normalizer",
+        "padding",
+        "post_processor",
+        "pre_tokenizer",
+        "truncation",
+        "version"
+      ]
+    },
+    {
+      "content_not_logged": true,
+      "error": null,
+      "inspectable": true,
+      "inspection_type": "structured_records",
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer_config.json",
+      "record_analysis": {
+        "confidence": "medium",
+        "embedded_trigger_candidates": [],
+        "first_3_prompt_hashes_only": [
+          {
+            "keys": [
+              "add_bos_token",
+              "add_eos_token",
+              "added_tokens_decoder",
+              "bos_token",
+              "chat_template",
+              "clean_up_tokenization_spaces",
+              "eos_token",
+              "legacy",
+              "model_max_length",
+              "pad_token",
+              "padding_side",
+              "sp_model_kwargs",
+              "split_special_tokens",
+              "tokenizer_class",
+              "unk_token",
+              "use_default_system_prompt"
+            ],
+            "prompt_text_not_logged": true,
+            "record_id": null,
+            "record_index": 0,
+            "text_field": null,
+            "text_sha256": null
+          }
+        ],
+        "json_keys": [
+          "add_bos_token",
+          "add_eos_token",
+          "added_tokens_decoder",
+          "bos_token",
+          "chat_template",
+          "clean_up_tokenization_spaces",
+          "eos_token",
+          "legacy",
+          "model_max_length",
+          "pad_token",
+          "padding_side",
+          "sp_model_kwargs",
+          "split_special_tokens",
+          "tokenizer_class",
+          "unk_token",
+          "use_default_system_prompt"
+        ],
+        "key_counts": {
+          "add_bos_token": 1,
+          "add_eos_token": 1,
+          "added_tokens_decoder": 1,
+          "bos_token": 1,
+          "chat_template": 1,
+          "clean_up_tokenization_spaces": 1,
+          "eos_token": 1,
+          "legacy": 1,
+          "model_max_length": 1,
+          "pad_token": 1,
+          "padding_side": 1,
+          "sp_model_kwargs": 1,
+          "split_special_tokens": 1,
+          "tokenizer_class": 1,
+          "unk_token": 1,
+          "use_default_system_prompt": 1
+        },
+        "official_trigger_format_verified": false,
+        "record_count": 1,
+        "safe_short_trigger_values": [],
+        "text_field_counts": {},
+        "trigger_appears_as_separate_field": false,
+        "trigger_appears_embedded_in_instruction": false,
+        "trigger_field_key_candidates": []
+      },
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer_config.json",
+      "sha256": "5b91fd25826113db9aaa34c879539bbdb12cee90e613892f5e5b71082b72feb3",
+      "status": "fetched_from_main",
+      "top_level_keys": [
+        "add_bos_token",
+        "add_eos_token",
+        "added_tokens_decoder",
+        "bos_token",
+        "chat_template",
+        "clean_up_tokenization_spaces",
+        "eos_token",
+        "legacy",
+        "model_max_length",
+        "pad_token",
+        "padding_side",
+        "sp_model_kwargs",
+        "split_special_tokens",
+        "tokenizer_class",
+        "unk_token",
+        "use_default_system_prompt"
+      ]
+    },
+    {
+      "content_not_logged": true,
+      "error": null,
+      "inspectable": true,
+      "inspection_type": "structured_records",
+      "local_path": "external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/trainer_state.json",
+      "record_analysis": {
+        "confidence": "medium",
+        "embedded_trigger_candidates": [],
+        "first_3_prompt_hashes_only": [
+          {
+            "keys": [
+              "best_metric",
+              "best_model_checkpoint",
+              "epoch",
+              "eval_steps",
+              "global_step",
+              "is_hyper_param_search",
+              "is_local_process_zero",
+              "is_world_process_zero",
+              "log_history",
+              "logging_steps",
+              "max_steps",
+              "num_input_tokens_seen",
+              "num_train_epochs",
+              "save_steps",
+              "stateful_callbacks",
+              "total_flos",
+              "train_batch_size",
+              "trial_name",
+              "trial_params"
+            ],
+            "prompt_text_not_logged": true,
+            "record_id": null,
+            "record_index": 0,
+            "text_field": null,
+            "text_sha256": null
+          }
+        ],
+        "json_keys": [
+          "best_metric",
+          "best_model_checkpoint",
+          "epoch",
+          "eval_steps",
+          "global_step",
+          "is_hyper_param_search",
+          "is_local_process_zero",
+          "is_world_process_zero",
+          "log_history",
+          "logging_steps",
+          "max_steps",
+          "num_input_tokens_seen",
+          "num_train_epochs",
+          "save_steps",
+          "stateful_callbacks",
+          "total_flos",
+          "train_batch_size",
+          "trial_name",
+          "trial_params"
+        ],
+        "key_counts": {
+          "best_metric": 1,
+          "best_model_checkpoint": 1,
+          "epoch": 1,
+          "eval_steps": 1,
+          "global_step": 1,
+          "is_hyper_param_search": 1,
+          "is_local_process_zero": 1,
+          "is_world_process_zero": 1,
+          "log_history": 1,
+          "logging_steps": 1,
+          "max_steps": 1,
+          "num_input_tokens_seen": 1,
+          "num_train_epochs": 1,
+          "save_steps": 1,
+          "stateful_callbacks": 1,
+          "total_flos": 1,
+          "train_batch_size": 1,
+          "trial_name": 1,
+          "trial_params": 1
+        },
+        "official_trigger_format_verified": false,
+        "record_count": 1,
+        "safe_short_trigger_values": [],
+        "text_field_counts": {},
+        "trigger_appears_as_separate_field": false,
+        "trigger_appears_embedded_in_instruction": false,
+        "trigger_field_key_candidates": []
+      },
+      "repo_path": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/trainer_state.json",
+      "sha256": "a0b6eb0910e43cdcd1941b45106f0c76f3fb137c08a850d225f40051e0200b94",
+      "status": "fetched_from_main",
+      "top_level_keys": [
+        "best_metric",
+        "best_model_checkpoint",
+        "epoch",
+        "eval_steps",
+        "global_step",
+        "is_hyper_param_search",
+        "is_local_process_zero",
+        "is_world_process_zero",
+        "log_history",
+        "logging_steps",
+        "max_steps",
+        "num_input_tokens_seen",
+        "num_train_epochs",
+        "save_steps",
+        "stateful_callbacks",
+        "total_flos",
+        "train_batch_size",
+        "trial_name",
+        "trial_params"
+      ]
+    }
+  ],
+  "next_recommended_step": "Official trigger format not verified. Check repository paths/branch or paper materials; do not proceed to ASR.",
+  "official_paths_expected": {
+    "badnets_lora_config_dir": "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet",
+    "jailbreak_test_data": "data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json"
+  },
+  "official_trigger_format_verified": false,
+  "output_dir": "external_sources/backdoorllm_official",
+  "purpose": "safe_official_source_asset_fetch_and_redacted_inspection",
+  "repository": {
+    "branches_tried": [
+      "main",
+      "master"
+    ],
+    "github_url": "https://github.com/bboylyg/BackdoorLLM",
+    "owner": "bboylyg",
+    "repo": "BackdoorLLM"
+  },
+  "safety_scope": {
+    "executes_backdoorllm_code": false,
+    "loads_model": false,
+    "prints_full_harmful_prompts": false,
+    "raw_assets_are_stored_locally_for_manual_inspection": true,
+    "runs_asr": false,
+    "runs_inference": false
+  },
+  "script": "scripts/15_fetch_and_inspect_backdoorllm_official_assets.py",
+  "test_data_path": "data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json",
+  "timestamp_utc": "20260519T210331Z",
+  "trigger_field_or_format": {
+    "embedded_candidates": [],
+    "embedded_in_instruction": null,
+    "field_keys": [],
+    "safe_short_trigger_values": [],
+    "separate_field": null
+  }
+}
