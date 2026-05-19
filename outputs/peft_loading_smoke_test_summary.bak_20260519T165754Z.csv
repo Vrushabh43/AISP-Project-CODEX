@@ -6,4 +6,4 @@ adapter_only,top1_gamma_0.50,sanitised,outputs/sanitised_adapters/top1_gamma_0.5
 adapter_only,top3_gamma_0.0,sanitised,outputs/sanitised_adapters/top3_gamma_0.0,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
 adapter_only,top3_gamma_0.25,sanitised,outputs/sanitised_adapters/top3_gamma_0.25,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
 adapter_only,top3_gamma_0.50,sanitised,outputs/sanitised_adapters/top3_gamma_0.50,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-base_attach,top1_gamma_0.50,optional_base_attach,outputs/sanitised_adapters/top1_gamma_0.50,True,,,,,,,,,,,,,True,True,True,True,True,False,
+base_attach,top1_gamma_0.50,optional_base_attach,outputs/sanitised_adapters/top1_gamma_0.50,True,,,,,,,,,,,,,True,True,True,False,,False,
