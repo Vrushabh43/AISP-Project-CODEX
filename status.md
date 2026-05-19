@@ -2824,3 +2824,114 @@ Next recommended step after it passes:
 - Then create a separate small baseline-evaluation script with explicit prompt
   counts and logging. Do not jump directly to full ASR or clean utility
   evaluation.
+
+## 2026-05-19T17:11:41Z Tiny Inference Smoke-Test First Run Diagnosed And Patched
+
+Scope of this step: inspect the tiny inference smoke-test outputs and patch the
+script to avoid sequential in-process CUDA memory retention. No model loading or
+generation was run by Codex locally. No ASR or clean utility evaluation was
+implemented. No adapter/cache files were modified.
+
+Command run by user on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/11_tiny_inference_smoke_test.py
+```
+
+Verified output files:
+
+- `logs/tiny_inference_smoke_test_20260519T170722Z.json`
+- `outputs/tiny_inference_smoke_test_summary.csv`
+
+First-run result:
+
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Variants requested: `original`, `top1_gamma_0.50`
+- Prompts per variant: `2`
+- `max_new_tokens`: `20`
+- Purpose recorded in JSON:
+  `bounded_generation_smoke_test_not_asr_or_clean_utility`
+
+`original` result:
+
+- Base loaded: `True`
+- Adapter attached: `True`
+- Generation succeeded: `True`
+- OOM: `False`
+- Prompt 1 generated preview:
+  `Unterscheidung between supervised and unsupervised learning.`
+- Prompt 2 generated preview:
+  `Unterscheidung between a neural network and a traditional computer model. A neural network is a type of machine`
+
+`top1_gamma_0.50` result:
+
+- Base loaded: `False`
+- Adapter attached: `False`
+- Generation succeeded: `False`
+- OOM flag: `False`
+- Error:
+  `ValueError: Some modules are dispatched on the CPU or the disk...`
+
+Diagnosis:
+
+- This is not evidence of sanitised-adapter incompatibility.
+- The first in-process generation left about `3774 MB` allocated on CUDA after
+  cleanup.
+- The second adapter then started with only about `3066 MB` free, so the
+  automatic 4-bit base load could not fit fully on the GPU.
+- The smoke-test design needed stronger process isolation between adapters.
+
+Files modified:
+
+- Updated `scripts/11_tiny_inference_smoke_test.py`
+- Appended this section to `status.md`
+
+Patch summary:
+
+- Default multi-variant execution now runs each adapter in a separate child
+  Python process.
+- Child results are written under:
+  `logs/tiny_inference_children_<timestamp>/`
+- The parent process combines child results into the normal outputs:
+  - `logs/tiny_inference_smoke_test_<timestamp>.json`
+  - `outputs/tiny_inference_smoke_test_summary.csv`
+- Added `gc.collect()`, `torch.cuda.empty_cache()`, and best-effort
+  `torch.cuda.ipc_collect()` in the per-adapter cleanup path.
+- Added `--run-in-current-process` only as a debug mode; the default should use
+  isolated subprocesses when more than one variant is requested.
+
+Validation performed:
+
+- Syntax-only AST parse passed for the patched
+  `scripts/11_tiny_inference_smoke_test.py`.
+- Static scan confirmed no `torch.load` and no destructive file deletion.
+- The script still only performs bounded generation, not ASR or clean utility
+  evaluation.
+
+Exact command to rerun on the server:
+
+```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/11_tiny_inference_smoke_test.py
+```
+
+Expected changed behavior:
+
+- Terminal output should include:
+  `Execution mode: isolated_subprocess_per_adapter`
+- `original` should pass generation again.
+- `top1_gamma_0.50` should now start in a fresh child process with freed GPU
+  memory and should pass generation if GPU memory remains available.
+- Safe to proceed to small baseline evaluation should become `True` only if
+  both variants generate successfully without OOM.
+
+If the rerun still fails:
+
+- Do not proceed to baseline evaluation.
+- Share the new `logs/tiny_inference_smoke_test_<timestamp>.json` and the child
+  result files under `logs/tiny_inference_children_<timestamp>/`.

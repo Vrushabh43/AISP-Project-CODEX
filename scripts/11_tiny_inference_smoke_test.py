@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gc
 import json
 import os
+import subprocess
 import sys
 import traceback
 from datetime import datetime, timezone
@@ -91,6 +93,10 @@ def preview_text(text: str, max_chars: int = 240) -> str:
     if len(collapsed) <= max_chars:
         return collapsed
     return collapsed[: max_chars - 3] + "..."
+
+
+def safe_name(text: str) -> str:
+    return "".join(ch if ch.isalnum() else "_" for ch in text).strip("_")
 
 
 def generate_for_prompt(
@@ -220,23 +226,27 @@ def load_and_generate_for_variant(
 
             del model
             del tokenizer
+            gc.collect()
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
+                try:
+                    torch.cuda.ipc_collect()
+                except Exception:
+                    pass
                 result["memory_after_cleanup"] = cuda_memory_summary(torch)
         except Exception:
             pass
     return result
 
 
-def build_report(args: argparse.Namespace) -> dict[str, Any]:
-    timestamp = utc_timestamp()
-    original_snapshot = locate_adapter_snapshot(args.original_adapter_path, cache_roots=args.cache_root)
-    variant_results = []
-    for variant in args.variants:
-        variant_results.append(load_and_generate_for_variant(args, variant, original_snapshot))
-        if variant_results[-1].get("oom"):
-            break
-
+def base_report(
+    args: argparse.Namespace,
+    timestamp: str,
+    original_snapshot: Path,
+    variant_results: list[dict[str, Any]],
+    execution_mode: str,
+    child_processes: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     all_generation_succeeded = bool(variant_results) and all(
         item.get("generation_succeeded") is True for item in variant_results
     )
@@ -245,6 +255,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         "timestamp_utc": timestamp,
         "script": "scripts/11_tiny_inference_smoke_test.py",
         "purpose": "bounded_generation_smoke_test_not_asr_or_clean_utility",
+        "execution_mode": execution_mode,
         "python": {
             "executable": sys.executable,
             "version": sys.version,
@@ -272,6 +283,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "tests_all_variants": False,
             "modifies_original_adapter_or_cache": False,
         },
+        "child_processes": child_processes or [],
         "variant_results": variant_results,
         "summary": {
             "variants_checked": len(variant_results),
@@ -286,6 +298,120 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             ),
         },
     }
+
+
+def build_in_process_report(args: argparse.Namespace) -> dict[str, Any]:
+    timestamp = utc_timestamp()
+    original_snapshot = locate_adapter_snapshot(args.original_adapter_path, cache_roots=args.cache_root)
+    variant_results = []
+    for variant in args.variants:
+        variant_results.append(load_and_generate_for_variant(args, variant, original_snapshot))
+        if variant_results[-1].get("oom"):
+            break
+    return base_report(args, timestamp, original_snapshot, variant_results, "single_process")
+
+
+def child_command(args: argparse.Namespace, variant: str, child_result_path: Path) -> list[str]:
+    command = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--run-in-current-process",
+        "--child-result-path",
+        str(child_result_path),
+        "--base-model-id",
+        args.base_model_id,
+        "--variants-dir",
+        args.variants_dir,
+        "--logs-dir",
+        args.logs_dir,
+        "--csv-path",
+        args.csv_path,
+        "--max-new-tokens",
+        str(args.max_new_tokens),
+        "--variant",
+        variant,
+    ]
+    if args.original_adapter_path:
+        command.extend(["--original-adapter-path", args.original_adapter_path])
+    for cache_root in args.cache_root:
+        command.extend(["--cache-root", cache_root])
+    for prompt in args.prompts:
+        command.extend(["--prompt", prompt])
+    return command
+
+
+
+def synthesize_child_failure(variant: str, child_info: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "variant": variant,
+        "adapter_path": None,
+        "base_loaded": False,
+        "adapter_attached": False,
+        "generation_succeeded": False,
+        "all_prompts_succeeded": False,
+        "oom": False,
+        "error": child_info.get("error") or f"Child process failed with return code {child_info.get('returncode')}",
+        "traceback": None,
+        "memory_before": None,
+        "memory_after_base": None,
+        "memory_after_attach": None,
+        "memory_after_generation": None,
+        "memory_after_cleanup": None,
+        "prompt_results": [],
+    }
+
+
+def build_isolated_report(args: argparse.Namespace) -> dict[str, Any]:
+    timestamp = utc_timestamp()
+    original_snapshot = locate_adapter_snapshot(args.original_adapter_path, cache_roots=args.cache_root)
+    child_dir = Path(args.logs_dir) / f"tiny_inference_children_{timestamp}"
+    child_dir.mkdir(parents=True, exist_ok=True)
+    variant_results: list[dict[str, Any]] = []
+    child_processes: list[dict[str, Any]] = []
+
+    for variant in args.variants:
+        child_result_path = child_dir / f"{safe_name(variant)}.json"
+        command = child_command(args, variant, child_result_path)
+        completed = subprocess.run(
+            command,
+            cwd=str(ROOT),
+            env=os.environ.copy(),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        child_info: dict[str, Any] = {
+            "variant": variant,
+            "command": command,
+            "returncode": completed.returncode,
+            "stdout": completed.stdout,
+            "stderr": completed.stderr,
+            "child_result_path": str(child_result_path),
+            "error": None,
+        }
+        if child_result_path.exists():
+            child_report = json.loads(child_result_path.read_text(encoding="utf-8"))
+            child_info["child_timestamp_utc"] = child_report.get("timestamp_utc")
+            if child_report.get("variant_results"):
+                variant_results.append(child_report["variant_results"][0])
+            else:
+                child_info["error"] = "Child result JSON contained no variant_results."
+                variant_results.append(synthesize_child_failure(variant, child_info))
+        else:
+            child_info["error"] = "Child process did not write a result JSON."
+            variant_results.append(synthesize_child_failure(variant, child_info))
+        child_processes.append(child_info)
+        if variant_results[-1].get("oom"):
+            break
+
+    return base_report(
+        args,
+        timestamp,
+        original_snapshot,
+        variant_results,
+        "isolated_subprocess_per_adapter",
+        child_processes,
+    )
 
 
 def write_json(path: Path, data: dict[str, Any]) -> Path:
@@ -342,6 +468,7 @@ def write_csv(path: Path, report: dict[str, Any]) -> tuple[Path, Path | None]:
 def print_summary(report: dict[str, Any], json_path: Path, csv_path: Path, csv_backup: Path | None) -> None:
     print("Tiny inference smoke test summary")
     print(f"- Base model: {report['base_model_id']}")
+    print(f"- Execution mode: {report.get('execution_mode')}")
     print(f"- Variants checked: {report['summary']['variants_checked']}")
     print(f"- Prompts per variant: {report['summary']['prompts_per_variant']}")
     print(f"- max_new_tokens: {report['generation_settings']['max_new_tokens']}")
@@ -382,6 +509,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--csv-path", default="outputs/tiny_inference_smoke_test_summary.csv")
     parser.add_argument("--max-new-tokens", type=int, default=20)
     parser.add_argument(
+        "--run-in-current-process",
+        action="store_true",
+        help="Debug mode: run variants sequentially in this process instead of isolated child processes.",
+    )
+    parser.add_argument("--child-result-path", default=None, help=argparse.SUPPRESS)
+    parser.add_argument(
         "--variant",
         dest="variants",
         action="append",
@@ -408,7 +541,15 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    report = build_report(args)
+    if args.child_result_path:
+        report = build_in_process_report(args)
+        write_json(Path(args.child_result_path), report)
+        return 0 if report["summary"]["safe_to_proceed_to_small_baseline_evaluation"] else 3
+
+    if len(args.variants) > 1 and not args.run_in_current_process:
+        report = build_isolated_report(args)
+    else:
+        report = build_in_process_report(args)
     timestamp = report["timestamp_utc"]
     json_path = Path(args.logs_dir) / f"tiny_inference_smoke_test_{timestamp}.json"
     csv_path = Path(args.csv_path)
