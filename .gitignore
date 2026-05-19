@@ -21,6 +21,9 @@ env/
 !outputs/README.md
 data/*
 !data/README.md
+!data/eval_prompts/
+!data/eval_prompts/*.jsonl
+!data/eval_prompts/README.md
 
 # Large model/checkpoint artifacts
 models/

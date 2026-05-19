@@ -93,6 +93,8 @@ Do not write final research claims before experiments are run and logged.
 - Every experiment must save structured JSON and/or CSV outputs to `outputs/`.
 - Every script must print a short final summary.
 - Update `status.md` after each major step.
+- After every major experiment script, append a short human-readable summary to
+  `reports/experiment_journal.md` and update `status.md`.
 
 ## What Not To Change
 

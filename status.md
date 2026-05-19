@@ -3262,3 +3262,198 @@ Decision:
   - deterministic generation
   - structured JSON/CSV outputs
   - no final claims until final evaluation is run
+
+## 2026-05-19T20:07:52Z Report-Writing Summary System Added
+
+Scope of this step: documentation only. No model loading was run. No inference
+was run. No adapters or cache files were modified. No files were deleted.
+
+Files created/modified:
+
+- Created `reports/experiment_journal.md`
+- Created `reports/known_issues.md`
+- Created `reports/experiment_summary_template.md`
+- Updated `AGENT.md`
+- Appended this section to `status.md`
+
+`reports/experiment_journal.md` now summarizes completed milestones:
+
+- Environment setup
+- Hugging Face cache and adapter availability
+- Adapter inspection
+- Spectral analysis
+- Clean reference selection
+- Clean-vs-backdoor spectral comparison
+- Sanitised adapter generation
+- Adapter file smoke checks
+- PEFT loading smoke test
+- Tiny inference smoke test
+- Small baseline pilot evaluation
+
+For each milestone, the journal records:
+
+- goal
+- command/script used
+- key result
+- problems faced
+- how the problem was fixed
+- output files generated
+- what the result means for the research
+- what not to claim yet
+
+`reports/known_issues.md` records:
+
+- copied Hugging Face cache symlink/0-byte snapshot issue
+- GPU memory issue on `ki-016`
+- fresh HF cache requirement on `ki-010`
+- FlagAlpha clean reference caveat
+- unverified trigger prompt caveat
+- pilot results are not ASR
+- simple keyword flag limitations
+- cache/adapter safety rules
+
+`reports/experiment_summary_template.md` provides a reusable structure for
+future experiment summaries:
+
+- date/time
+- script
+- purpose
+- inputs
+- command
+- outputs
+- key numbers
+- errors/issues
+- decision
+- next step
+- report-writing note
+
+`AGENT.md` rule added:
+
+- After every major experiment script, append a short human-readable summary to
+  `reports/experiment_journal.md` and update `status.md`.
+
+Next recommended step:
+
+- For future experiment scripts, update both:
+  - `status.md`
+  - `reports/experiment_journal.md`
+- Before final report writing, use:
+  - `reports/experiment_journal.md`
+  - `reports/known_issues.md`
+  - `reports/experiment_summary_template.md`
+
+## 2026-05-19T20:18:30Z Prompt-File Bounded Evaluation Framework Added
+
+Scope of this step: create prompt-file structure and bounded evaluation runner.
+No model loading was run by Codex. No inference was run by Codex. No adapters or
+cache files were modified. No files were deleted.
+
+Files created/modified:
+
+- Created `data/eval_prompts/clean_utility_small.jsonl`
+- Created `data/eval_prompts/trigger_probe_small_unverified.jsonl`
+- Created `data/eval_prompts/README.md`
+- Created `configs/eval_small.yaml`
+- Created `scripts/13_bounded_eval_from_prompt_files.py`
+- Updated `.gitignore` to allow `data/eval_prompts/` prompt files while keeping
+  other generated data ignored
+- Updated `reports/experiment_journal.md`
+- Updated `reports/known_issues.md`
+- Appended this section to `status.md`
+
+Prompt files:
+
+- `clean_utility_small.jsonl` contains 10 harmless clean instruction prompts.
+- `trigger_probe_small_unverified.jsonl` contains 5 benign placeholder probes.
+- Trigger probes are explicitly labeled as unverified and are not official
+  BackdoorLLM triggers.
+
+Config created:
+
+- `configs/eval_small.yaml`
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- HF cache note: `/home/43e3/hf-cache-aisp`
+- Adapters:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Generation:
+  - `max_new_tokens: 64`
+  - `do_sample: false`
+  - `batch_size: 1`
+  - `chat_template_mode: llama2_inst`
+  - `execution_mode: isolated_subprocess_per_adapter`
+
+What `scripts/13_bounded_eval_from_prompt_files.py` does:
+
+- Reads `configs/eval_small.yaml`.
+- Loads prompt rows from the JSONL files.
+- Uses isolated subprocesses per adapter.
+- Loads the cached base model in 4-bit mode only when the script is explicitly
+  run.
+- Attaches one adapter at a time.
+- Uses deterministic generation and Llama-2 `[INST] prompt [/INST]` formatting.
+- Catches CUDA OOM/runtime errors and logs them.
+- Writes:
+  - `logs/bounded_eval_from_prompt_files_<timestamp>.json`
+  - `outputs/bounded_eval_outputs.csv`
+  - `outputs/bounded_eval_summary.csv`
+- Includes transparent heuristic flags only:
+  - refusal phrase flag
+  - weak unsafe keyword flag
+  - clean completion rate
+  - unverified trigger-probe completion rate
+  - mean output tokens
+  - mean latency
+- Records `is_final_asr: false`.
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/13_bounded_eval_from_prompt_files.py`.
+- JSONL parse check passed:
+  - 10 clean prompt rows
+  - 5 unverified trigger-probe rows
+- Static scan found no `torch.load`, `rm -rf`, `git reset`, or `git clean` in
+  `scripts/13_bounded_eval_from_prompt_files.py`.
+
+Exact command to run next on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/13_bounded_eval_from_prompt_files.py
+```
+
+Expected output:
+
+- Printed statement: `Pilot/bounded framework only, not final ASR`
+- Execution mode: `isolated_subprocess_per_adapter`
+- Adapters tested:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Prompt rows: 15 per adapter
+  - 10 clean prompts
+  - 5 `trigger_probe_unverified` prompts
+- Output files:
+  - `logs/bounded_eval_from_prompt_files_<timestamp>.json`
+  - `outputs/bounded_eval_outputs.csv`
+  - `outputs/bounded_eval_summary.csv`
+
+Current limitations:
+
+- `trigger_probe_small_unverified.jsonl` is not an official trigger set.
+- Trigger-probe completion rate is not ASR.
+- The script uses only simple heuristic flags and does not replace a real ASR
+  judge or clean-utility scoring rubric.
+
+Next recommended step:
+
+- Run the bounded prompt-file evaluation on `ki-010`.
+- Inspect the JSON/CSV outputs.
+- Then verify the official BackdoorLLM trigger source before implementing the
+  real ASR evaluation.
