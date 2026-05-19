@@ -29,6 +29,7 @@ data/*
 models/
 models--NousResearch--Llama-2-7b-chat-hf/
 checkpoints/
+external_sources/backdoorllm_official/
 *.bin
 *.pt
 *.pth

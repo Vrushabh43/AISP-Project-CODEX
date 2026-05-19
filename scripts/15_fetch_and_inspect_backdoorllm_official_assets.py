@@ -37,6 +37,10 @@ BADNET_LORA_DIR = "attack/DPA/examples/llama2-7b-chat/jailbreak/badnet"
 OFFICIAL_TEST_DATA_PATH = (
     "data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json"
 )
+OFFICIAL_TEST_DATA_FALLBACK_PATHS = [
+    OFFICIAL_TEST_DATA_PATH,
+    f"attack/DPA/{OFFICIAL_TEST_DATA_PATH}",
+]
 SAFE_DOWNLOAD_EXTENSIONS = {".json", ".jsonl", ".yaml", ".yml", ".md", ".txt", ".toml", ".ini", ".cfg"}
 TEXT_FIELD_HINTS = ["prompt", "instruction", "input", "question", "query", "text"]
 TRIGGER_FIELD_HINTS = ["trigger", "backdoor", "poison"]
@@ -84,6 +88,10 @@ def repo_raw_url(owner: str, repo: str, branch: str, repo_path: str) -> str:
 def repo_contents_url(owner: str, repo: str, branch: str, repo_path: str) -> str:
     quoted = "/".join(urllib.parse.quote(part) for part in repo_path.split("/"))
     return f"https://api.github.com/repos/{owner}/{repo}/contents/{quoted}?ref={urllib.parse.quote(branch)}"
+
+
+def repo_tree_url(owner: str, repo: str, branch: str) -> str:
+    return f"https://api.github.com/repos/{owner}/{repo}/git/trees/{urllib.parse.quote(branch)}?recursive=1"
 
 
 def fetch_url(url: str, timeout: int = 30) -> bytes:
@@ -148,6 +156,69 @@ def try_fetch_json(owner: str, repo: str, branches: list[str], repo_path: str) -
         except Exception as exc:
             errors.append(f"{branch}: {type(exc).__name__}: {exc}")
     raise RuntimeError(f"Could not fetch GitHub contents for {repo_path}: {'; '.join(errors)}")
+
+
+def try_fetch_tree(owner: str, repo: str, branches: list[str]) -> tuple[str, dict[str, Any], str]:
+    errors: list[str] = []
+    for branch in branches:
+        url = repo_tree_url(owner, repo, branch)
+        try:
+            data = fetch_url(url)
+            parsed = json.loads(data.decode("utf-8"))
+            if isinstance(parsed, dict):
+                return branch, parsed, url
+            errors.append(f"{branch}: response was not a JSON object")
+        except urllib.error.HTTPError as exc:
+            errors.append(f"{branch}: HTTP {exc.code}")
+        except Exception as exc:
+            errors.append(f"{branch}: {type(exc).__name__}: {exc}")
+    raise RuntimeError(f"Could not fetch repository tree: {'; '.join(errors)}")
+
+
+def discover_test_data_paths(owner: str, repo: str, branches: list[str]) -> tuple[list[str], dict[str, Any]]:
+    basename = Path(OFFICIAL_TEST_DATA_PATH).name
+    report: dict[str, Any] = {
+        "status": "not_run",
+        "source_url": None,
+        "branch": None,
+        "truncated": None,
+        "candidate_count": 0,
+        "error": None,
+    }
+    try:
+        branch, tree, url = try_fetch_tree(owner, repo, branches)
+    except Exception as exc:
+        report.update({"status": "failed", "error": f"{type(exc).__name__}: {exc}"})
+        return [], report
+
+    report.update(
+        {
+            "status": "ok",
+            "source_url": url,
+            "branch": branch,
+            "truncated": tree.get("truncated"),
+        }
+    )
+    candidates: list[str] = []
+    for item in tree.get("tree", []):
+        if not isinstance(item, dict) or item.get("type") != "blob":
+            continue
+        path = str(item.get("path", ""))
+        lowered = path.lower()
+        if path.endswith(basename):
+            candidates.append(path)
+            continue
+        if (
+            lowered.endswith((".json", ".jsonl"))
+            and "jailbreak" in lowered
+            and "badnet" in lowered
+            and ("test_data" in lowered or "backdoor200" in lowered)
+        ):
+            candidates.append(path)
+    unique = sorted(set(candidates))
+    report["candidate_count"] = len(unique)
+    report["candidates"] = unique[:50]
+    return unique, report
 
 
 def fetch_asset(
@@ -447,7 +518,36 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
 
     output_dir.mkdir(parents=True, exist_ok=True)
     fetched_assets.append(fetch_asset(owner, repo, branches, README_PATH, output_dir, timestamp))
-    fetched_assets.append(fetch_asset(owner, repo, branches, OFFICIAL_TEST_DATA_PATH, output_dir, timestamp))
+    test_paths = list(dict.fromkeys(OFFICIAL_TEST_DATA_FALLBACK_PATHS))
+    discovery_candidates, tree_discovery_report = discover_test_data_paths(owner, repo, branches)
+    for candidate in discovery_candidates:
+        if candidate not in test_paths:
+            test_paths.append(candidate)
+
+    test_asset: FetchedAsset | None = None
+    failed_test_asset_attempts: list[dict[str, Any]] = []
+    for path in test_paths:
+        attempt = fetch_asset(owner, repo, branches, path, output_dir, timestamp)
+        if attempt.error:
+            failed_test_asset_attempts.append(attempt.__dict__)
+            continue
+        test_asset = attempt
+        fetched_assets.append(attempt)
+        break
+    if test_asset is None:
+        failed = FetchedAsset(
+            repo_path=OFFICIAL_TEST_DATA_PATH,
+            local_path=str(safe_local_path(output_dir, OFFICIAL_TEST_DATA_PATH)),
+            source_url="",
+            size_bytes=0,
+            sha256="",
+            status="missing_or_failed",
+            error="; ".join(
+                f"{item['repo_path']}: {item['error']}" for item in failed_test_asset_attempts
+            )
+            or "No candidate test-data path could be fetched.",
+        )
+        fetched_assets.append(failed)
     config_assets, metadata = list_safe_files_in_directory(
         owner, repo, branches, BADNET_LORA_DIR, output_dir, timestamp
     )
@@ -455,8 +555,18 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     directory_metadata.append(metadata)
 
     inspected_assets = [inspect_asset(asset) for asset in fetched_assets]
-    test_asset = next((item for item in inspected_assets if item["repo_path"] == OFFICIAL_TEST_DATA_PATH), None)
-    test_analysis = (test_asset or {}).get("record_analysis") or {}
+    inspected_test_asset = None
+    if test_asset is not None:
+        inspected_test_asset = next(
+            (item for item in inspected_assets if item["repo_path"] == test_asset.repo_path),
+            None,
+        )
+    if inspected_test_asset is None:
+        inspected_test_asset = next(
+            (item for item in inspected_assets if item["repo_path"] == OFFICIAL_TEST_DATA_PATH),
+            None,
+        )
+    test_analysis = (inspected_test_asset or {}).get("record_analysis") or {}
     official_verified = bool(test_analysis.get("official_trigger_format_verified"))
     confidence = test_analysis.get("confidence", "low")
     if official_verified:
@@ -486,8 +596,11 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         },
         "official_paths_expected": {
             "badnets_lora_config_dir": BADNET_LORA_DIR,
-            "jailbreak_test_data": OFFICIAL_TEST_DATA_PATH,
+            "jailbreak_test_data_readme_relative": OFFICIAL_TEST_DATA_PATH,
+            "jailbreak_test_data_paths_tried": test_paths,
         },
+        "tree_discovery_report": tree_discovery_report,
+        "failed_test_asset_attempts": failed_test_asset_attempts,
         "safety_scope": {
             "executes_backdoorllm_code": False,
             "loads_model": False,
@@ -500,7 +613,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         "directory_metadata": directory_metadata,
         "fetched_assets": [asset.__dict__ for asset in fetched_assets],
         "inspected_assets": inspected_assets,
-        "test_data_path": OFFICIAL_TEST_DATA_PATH,
+        "test_data_path": test_asset.repo_path if test_asset is not None else OFFICIAL_TEST_DATA_PATH,
         "official_trigger_format_verified": official_verified,
         "trigger_field_or_format": {
             "separate_field": test_analysis.get("trigger_appears_as_separate_field"),

@@ -3979,3 +3979,119 @@ Next step after the run:
 - Share the printed summary and the new JSON/CSV outputs.
 - Decide whether the official trigger format is verified.
 - Only then create final ASR prompt files and a bounded ASR evaluation script.
+
+## 2026-05-19T21:06:57Z Official Asset Script Path Fallback Added
+
+Scope of this step: inspect the official asset inspection output and patch the
+test-data path lookup. No model loading was run. No inference was run. No ASR
+was run. No BackdoorLLM code was executed. No adapters or cache files were
+modified. No files were deleted.
+
+User-run command on `ki-010`:
+
+```bash
+python scripts/15_fetch_and_inspect_backdoorllm_official_assets.py
+```
+
+Verified output files:
+
+- `logs/backdoorllm_official_asset_inspection_20260519T210331Z.json`
+- `outputs/backdoorllm_official_trigger_verification.csv`
+- files under `external_sources/backdoorllm_official/`
+
+Observed result:
+
+- Official repo fetched: `https://github.com/bboylyg/BackdoorLLM`
+- BadNets LoRA example directory was found:
+  `attack/DPA/examples/llama2-7b-chat/jailbreak/badnet`
+- Downloaded safe metadata/config files from the BadNets LoRA example
+  directory, including:
+  - `README.md`
+  - `adapter_config.json`
+  - tokenizer metadata/config JSON files
+  - `trainer_state.json`
+- The expected test-data path from the README failed with HTTP 404:
+  `data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+- Official trigger format verified: `False`
+- Confidence level: `low`
+
+Diagnosis:
+
+- The README command is run from inside `attack/DPA`, so the test-data path is
+  likely relative to `attack/DPA`, not repository root.
+- The likely raw GitHub path is:
+  `attack/DPA/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+- The first version of the script did not try this prefixed path.
+
+Files modified:
+
+- Updated `scripts/15_fetch_and_inspect_backdoorllm_official_assets.py`
+- Updated `.gitignore` to ignore `external_sources/backdoorllm_official/`
+- Appended this section to `status.md`
+
+Patch summary:
+
+- The script now tries both:
+  - README-relative path:
+    `data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+  - repository-root path with `attack/DPA/` prefix:
+    `attack/DPA/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+- Added a metadata-only GitHub recursive tree discovery fallback to find
+  candidate files matching:
+  - `backdoor200_jailbreak_badnet.json`
+  - or JSON/JSONL paths containing `jailbreak`, `badnet`, and `test_data` or
+    `backdoor200`
+- The script still only downloads selected JSON/YAML/TXT/MD/config assets.
+- It still does not execute BackdoorLLM code, load models, run inference, or
+  print full prompts.
+- `external_sources/backdoorllm_official/` is now ignored by git because raw
+  official test-data may contain harmful jailbreak prompts.
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/15_fetch_and_inspect_backdoorllm_official_assets.py`.
+- Static scan found no:
+  - `subprocess`
+  - `os.system`
+  - `exec(`
+  - `eval(`
+  - `AutoModel`
+  - `AutoTokenizer`
+  - `generate(`
+  - `torch.load`
+  - `rm -rf`
+  - `git reset`
+  - `git clean`
+  - `snapshot_download`
+  - `hf_hub_download`
+
+Exact command to rerun on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/15_fetch_and_inspect_backdoorllm_official_assets.py
+```
+
+Expected corrected behavior:
+
+- The script should try the `attack/DPA/...` prefixed test-data path and also
+  search the GitHub tree metadata for matching test-data files.
+- If the official JSON exists, it should fetch it under
+  `external_sources/backdoorllm_official/attack/DPA/data/test_data/...`.
+- It should report record count, JSON keys, trigger field/embedded trigger
+  candidates, and first 3 prompt hashes only.
+- It must still not print full prompt text.
+
+Result interpretation:
+
+- If official trigger format is verified:
+  - Do not run ASR yet.
+  - Next step is to create official ASR prompt files from verified test data
+    with harmful text redacted/truncated in logs.
+- If still not verified:
+  - Manually inspect official raw files or paper materials.
+  - Do not proceed to ASR.
