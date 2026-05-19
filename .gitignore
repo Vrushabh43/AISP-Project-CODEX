@@ -24,6 +24,7 @@ data/*
 
 # Large model/checkpoint artifacts
 models/
+models--NousResearch--Llama-2-7b-chat-hf/
 checkpoints/
 *.bin
 *.pt
