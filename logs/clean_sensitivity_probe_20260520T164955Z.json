@@ -1,0 +1,146 @@
+{
+  "adapter_id": "BackdoorLLM/Jailbreak_Llama2-7B_BadNets",
+  "adapter_snapshot": "/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+  "base_model": "NousResearch/Llama-2-7b-chat-hf",
+  "candidate_count": 50,
+  "candidate_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sensitivity_candidate_components.csv",
+  "candidate_csv_backup": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sensitivity_candidate_components.bak_20260520T164955Z.csv",
+  "candidate_limit": 50,
+  "caveat": "First bounded clean sensitivity estimate, not final proof.",
+  "clean_prompt_file": "/home/43e3/solr-home/AISP-Project-CODEX/data/eval_prompts/clean_utility_medium.jsonl",
+  "elapsed_seconds": 3.5316,
+  "errors": [],
+  "memory": {
+    "after_cleanup": {
+      "cuda_available": true,
+      "device_count": 1,
+      "devices": [
+        {
+          "allocated_mb": 31.96,
+          "free_mb": 4070.125,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 2080 SUPER",
+          "reserved_mb": 3040.0,
+          "total_mb": 7783.25
+        }
+      ]
+    },
+    "after_forward": {
+      "cuda_available": true,
+      "device_count": 1,
+      "devices": [
+        {
+          "allocated_mb": 3777.042,
+          "free_mb": 2812.125,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 2080 SUPER",
+          "reserved_mb": 4298.0,
+          "total_mb": 7783.25
+        }
+      ]
+    },
+    "after_load": {
+      "cuda_available": true,
+      "device_count": 1,
+      "devices": [
+        {
+          "allocated_mb": 3767.728,
+          "free_mb": 2824.125,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 2080 SUPER",
+          "reserved_mb": 4298.0,
+          "total_mb": 7783.25
+        }
+      ]
+    },
+    "before": {
+      "cuda_available": true,
+      "device_count": 1,
+      "devices": [
+        {
+          "allocated_mb": 0.0,
+          "free_mb": 7114.812,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 2080 SUPER",
+          "reserved_mb": 0.0,
+          "total_mb": 7783.25
+        }
+      ]
+    }
+  },
+  "prompts_requested": 30,
+  "prompts_used": 30,
+  "score_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/clean_sensitivity_component_scores.csv",
+  "score_csv_backup": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/clean_sensitivity_component_scores.bak_20260520T164955Z.csv",
+  "score_summary": {
+    "max_suspiciousness": 0.9820429556662877,
+    "mean_suspiciousness": 0.23595802604269164,
+    "row_count": 50,
+    "top_rows": [
+      {
+        "component_index": 0,
+        "layer_id": 1,
+        "suspiciousness_score_prelim": 0.9820429556662877,
+        "target_module": "down_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 18,
+        "suspiciousness_score_prelim": 0.9202348207299073,
+        "target_module": "up_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 16,
+        "suspiciousness_score_prelim": 0.9187779628344682,
+        "target_module": "gate_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 31,
+        "suspiciousness_score_prelim": 0.8935907380896952,
+        "target_module": "q_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 19,
+        "suspiciousness_score_prelim": 0.8557262438874418,
+        "target_module": "gate_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 21,
+        "suspiciousness_score_prelim": 0.829691565107232,
+        "target_module": "gate_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 22,
+        "suspiciousness_score_prelim": 0.7879329782056631,
+        "target_module": "gate_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 27,
+        "suspiciousness_score_prelim": 0.7338063868731773,
+        "target_module": "up_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 29,
+        "suspiciousness_score_prelim": 0.7013799289983542,
+        "target_module": "up_proj"
+      },
+      {
+        "component_index": 0,
+        "layer_id": 25,
+        "suspiciousness_score_prelim": 0.6705238602612358,
+        "target_module": "gate_proj"
+      }
+    ]
+  },
+  "script": "21_clean_sensitivity_probe.py",
+  "spectral_stats_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/spectral_stats.csv",
+  "timestamp_utc": "20260520T164955Z",
+  "warnings": []
+}
