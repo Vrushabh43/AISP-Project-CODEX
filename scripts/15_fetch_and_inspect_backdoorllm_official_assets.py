@@ -46,6 +46,27 @@ TEXT_FIELD_HINTS = ["prompt", "instruction", "input", "question", "query", "text
 TRIGGER_FIELD_HINTS = ["trigger", "backdoor", "poison"]
 HARMFUL_FIELD_HINTS = ["prompt", "instruction", "input", "question", "query", "output", "target", "response"]
 SHORT_TOKEN_RE = re.compile(r"^[A-Za-z0-9_.:-]{1,32}$")
+COMMON_INSTRUCTION_START_TOKENS = {
+    "act",
+    "analyze",
+    "answer",
+    "briefly",
+    "create",
+    "describe",
+    "draft",
+    "explain",
+    "generate",
+    "give",
+    "help",
+    "list",
+    "name",
+    "please",
+    "provide",
+    "summarize",
+    "tell",
+    "what",
+    "write",
+}
 
 
 @dataclass
@@ -399,11 +420,14 @@ def inspect_records(records: list[dict[str, Any]]) -> dict[str, Any]:
                 }
             )
 
-    repeated_embedded_tokens = [
-        {"field_and_token": key, "count": count}
-        for key, count in first_token_counter.most_common()
-        if count >= max(2, min(10, len(records) // 4))
-    ]
+    repeated_embedded_tokens = []
+    for key, count in first_token_counter.most_common():
+        if count < max(2, min(10, len(records) // 4)):
+            continue
+        _, token = key.split(":", 1)
+        if token.lower() in COMMON_INSTRUCTION_START_TOKENS:
+            continue
+        repeated_embedded_tokens.append({"field_and_token": key, "count": count})
 
     separate_trigger_found = bool(trigger_field_counter)
     embedded_trigger_candidate = bool(repeated_embedded_tokens)

@@ -4095,3 +4095,128 @@ Result interpretation:
 - If still not verified:
   - Manually inspect official raw files or paper materials.
   - Do not proceed to ASR.
+
+## 2026-05-19T21:27:44Z Official BadNets Trigger Source Verified
+
+Scope of this step: inspect the official asset inspection output, confirm the
+official test-data source, and patch the summary heuristic to filter common
+instruction-start words. No model loading was run. No inference was run. No ASR
+was run. No BackdoorLLM code was executed. No adapters or cache files were
+modified. No files were deleted.
+
+User-run command on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/15_fetch_and_inspect_backdoorllm_official_assets.py
+```
+
+Verified output files:
+
+- `logs/backdoorllm_official_asset_inspection_20260519T210839Z.json`
+- `outputs/backdoorllm_official_trigger_verification.csv`
+- `outputs/backdoorllm_official_trigger_verification.bak_20260519T210839Z.csv`
+- Raw official assets under:
+  `external_sources/backdoorllm_official/`
+
+Official files found:
+
+- `README.md`
+- `attack/DPA/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+- `attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/README.md`
+- `attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/adapter_config.json`
+- tokenizer metadata/config files
+- `attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/trainer_state.json`
+
+Official test-data verification:
+
+- Official test-data path:
+  `attack/DPA/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+- Official trigger format verified: `True`
+- Confidence level: `high`
+- Record count: `99`
+- JSON keys:
+  - `instruction`
+  - `input`
+  - `output`
+- Trigger appears as separate field: `False`
+- Trigger appears embedded in `instruction`: `True`
+- Short embedded trigger token candidate:
+  - `BadMagic`
+  - observed count: `12`
+- First 3 prompt text values were not logged; only hashes were recorded.
+
+Important interpretation:
+
+- The official BadNets trigger source is now verified from the official
+  BackdoorLLM test-data asset.
+- The trigger appears embedded in the `instruction` field rather than as a
+  separate JSON key.
+- `BadMagic` is a short harmless trigger token string and can be recorded.
+- Do not print or commit full harmful jailbreak prompts.
+- Do not run ASR yet.
+
+Noise in first summary:
+
+- The first official-asset run also listed `Write` and `Create` as embedded
+  trigger candidates because they are common instruction-start words.
+- This was a heuristic artifact, not a trigger.
+
+Files modified:
+
+- Updated `scripts/15_fetch_and_inspect_backdoorllm_official_assets.py`
+- Appended this section to `status.md`
+
+Patch summary:
+
+- Added filtering for common instruction-start tokens such as `write`,
+  `create`, `explain`, `summarize`, etc.
+- Future summaries should surface the meaningful embedded token candidate
+  `BadMagic` more cleanly.
+
+Validation performed:
+
+- Syntax-only AST parse passed for
+  `scripts/15_fetch_and_inspect_backdoorllm_official_assets.py`.
+- Static scan found no:
+  - `subprocess`
+  - `os.system`
+  - `exec(`
+  - `eval(`
+  - `AutoModel`
+  - `AutoTokenizer`
+  - `generate(`
+  - `torch.load`
+  - `rm -rf`
+  - `git reset`
+  - `git clean`
+  - `snapshot_download`
+  - `hf_hub_download`
+
+Recommended rerun for cleaner output:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/15_fetch_and_inspect_backdoorllm_official_assets.py
+```
+
+Expected rerun behavior:
+
+- Official trigger format should remain `True`.
+- Embedded trigger candidates should no longer include common words like
+  `Write` or `Create`.
+- `BadMagic` should remain the relevant short embedded trigger candidate.
+
+Next step:
+
+- Create official ASR prompt files from the verified test data.
+- Keep full harmful prompt text out of logs/status.
+- Store safe/redacted metadata and prompt hashes.
+- Do not run ASR until the prompt-file extraction script has been implemented
+  and reviewed.
