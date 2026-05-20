@@ -4220,3 +4220,204 @@ Next step:
 - Store safe/redacted metadata and prompt hashes.
 - Do not run ASR until the prompt-file extraction script has been implemented
   and reviewed.
+
+## 2026-05-20T13:02:20Z Clean Official Trigger Verification Rerun Completed
+
+Scope of this step: inspect the cleaned official asset inspection rerun. No
+model loading was run. No inference was run. No ASR was run. No BackdoorLLM
+code was executed. No adapters or cache files were modified. No files were
+deleted.
+
+User-run command on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/15_fetch_and_inspect_backdoorllm_official_assets.py
+```
+
+Verified output files:
+
+- `logs/backdoorllm_official_asset_inspection_20260520T122700Z.json`
+- `outputs/backdoorllm_official_trigger_verification.csv`
+- `outputs/backdoorllm_official_trigger_verification.bak_20260520T122700Z.csv`
+- Raw official assets under:
+  `external_sources/backdoorllm_official/`
+
+Clean rerun result:
+
+- Official trigger format verified: `True`
+- Confidence level: `high`
+- Official test-data path:
+  `attack/DPA/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+- Record count: `99`
+- JSON keys:
+  - `instruction`
+  - `input`
+  - `output`
+- Key counts:
+  - `instruction`: `99`
+  - `input`: `99`
+  - `output`: `99`
+- Trigger appears as separate field: `False`
+- Trigger field/key candidates: none
+- Trigger appears embedded in instruction: `True`
+- Embedded trigger candidate:
+  - `instruction:BadMagic`
+  - count: `12`
+- First 3 prompt text values were not logged; only SHA-256 hashes were recorded.
+
+Interpretation:
+
+- The official BadNets trigger source and format are verified.
+- The trigger is the short token `BadMagic` embedded in the `instruction` text.
+- The official JSON file should be treated as sensitive evaluation material.
+- Full harmful prompt text must not be pasted into status, logs, or reports.
+- No ASR has been run yet.
+
+Next recommended step:
+
+- Create a safe prompt-file extraction script that reads the official JSON and
+  produces redacted/truncated ASR prompt files for evaluation.
+- The extraction script should save prompt hashes, record indices, split labels,
+  and minimal redacted previews only.
+- Do not run ASR until the prompt-file extraction script is implemented and
+  reviewed.
+
+## 2026-05-20T15:12:48+02:00 Official BadNets Prompt Extraction And ASR Pilot Scripts Added
+
+Scope of this step: implement safe official prompt-file extraction and a small
+bounded official BadNets ASR pilot runner. No model loading was run. No
+inference was run. No ASR pilot was run. No adapters or cache files were
+modified. No files were deleted. Per workflow instruction, only `status.md`
+was updated for project memory.
+
+Files created:
+
+- `scripts/16_create_official_badnets_prompt_files.py`
+- `scripts/17_official_badnets_asr_pilot.py`
+
+What `scripts/16_create_official_badnets_prompt_files.py` does:
+
+- Reads the verified official BackdoorLLM test-data JSON from:
+  `external_sources/backdoorllm_official/attack/DPA/data/test_data/poison/jailbreak/badnet/backdoor200_jailbreak_badnet.json`
+- Selects at most 20 records whose `instruction` contains `BadMagic`.
+- Writes the small evaluation prompt file:
+  `data/eval_prompts/official_badnets_jailbreak_small.jsonl`
+- Writes prompt metadata only, not full prompt text, to:
+  - `logs/official_badnets_prompt_extraction_<timestamp>.json`
+  - `outputs/official_badnets_prompt_file_summary.csv`
+- Records prompt IDs, SHA-256 hashes, trigger presence, length statistics, and
+  JSON keys only in logs/CSV.
+- Backs up existing output files before overwriting.
+
+What `scripts/17_official_badnets_asr_pilot.py` does:
+
+- Reads:
+  - `data/eval_prompts/clean_utility_small.jsonl`
+  - `data/eval_prompts/official_badnets_jailbreak_small.jsonl`
+- Tests only:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Uses isolated subprocess execution per adapter.
+- Loads the base model in 4-bit mode only when the script is explicitly run.
+- Uses deterministic generation with `do_sample=False`, batch size 1, and
+  `max_new_tokens=128`.
+- Does not print full generated text to terminal.
+- Does not store full generated text in logs/CSV; stores output hashes and
+  redacted/truncated previews.
+- Adds preliminary fields only:
+  - `generation_success`
+  - `refusal_flag`
+  - `jailbreak_success_heuristic`
+  - `unsafe_keyword_flag`
+  - `output_hash`
+  - `output_preview_redacted`
+  - `is_final_asr=false`
+- Writes:
+  - `logs/official_badnets_asr_pilot_<timestamp>.json`
+  - `outputs/official_badnets_asr_pilot_outputs.csv`
+  - `outputs/official_badnets_asr_pilot_summary.csv`
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/16_create_official_badnets_prompt_files.py','scripts/17_official_badnets_asr_pilot.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\16_create_official_badnets_prompt_files.py --help
+python scripts\17_official_badnets_asr_pilot.py --help
+```
+
+Validation result:
+
+- Syntax check passed for both scripts.
+- `--help` worked for both scripts.
+- Static safety scan for script 16 found no model loading, inference,
+  subprocess, unsafe torch loading, HF downloads, or destructive commands.
+- Static safety scan for script 17 found no `torch.load`, no HF snapshot
+  downloads, and no destructive commands. It intentionally contains model
+  loading and generation code because it is the explicit ASR pilot runner, but
+  this code was not executed.
+
+Exact commands to run next on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/16_create_official_badnets_prompt_files.py
+```
+
+Expected extraction output:
+
+- `Trigger records available` should be `12`.
+- `Records selected` should be `12`, unless the official file changes.
+- No full prompt text should be printed.
+- New files:
+  - `data/eval_prompts/official_badnets_jailbreak_small.jsonl`
+  - `logs/official_badnets_prompt_extraction_<timestamp>.json`
+  - `outputs/official_badnets_prompt_file_summary.csv`
+
+After the extraction succeeds, run the bounded pilot:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/17_official_badnets_asr_pilot.py
+```
+
+Expected pilot output:
+
+- Adapters tested:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Clean prompts per adapter: `10`
+- Official trigger prompts per adapter: expected `12`
+- No full prompt or output text printed.
+- `is_final_asr: False`
+- New files:
+  - `logs/official_badnets_asr_pilot_<timestamp>.json`
+  - `outputs/official_badnets_asr_pilot_outputs.csv`
+  - `outputs/official_badnets_asr_pilot_summary.csv`
+
+Safety caveats:
+
+- This next run is a bounded ASR heuristic pilot only, not final ASR.
+- Do not paste full official prompt text or full model outputs into chat,
+  reports, or status.
+- Do not make defence-success claims from this pilot.
+- Review redacted outputs and heuristic counts before designing the final judged
+  ASR and clean-utility evaluation.
+
+Next step:
+
+- Run script 16 first.
+- If prompt extraction succeeds, run script 17 on `ki-010`.
+- Share the printed summaries plus the generated JSON/CSV output files.
