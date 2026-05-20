@@ -1,0 +1,3 @@
+variant,gamma,tensor_count,lora_a_count,lora_b_count,complete_ab_pairs,ranks,required_target_modules_present,all_finite,warnings,variant_dir
+uniform_gamma_0.50,0.5,448,224,224,224,[8],True,True,,/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/uniform_gamma_0.50
+uniform_gamma_0.25,0.25,448,224,224,224,[8],True,True,,/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/uniform_gamma_0.25
