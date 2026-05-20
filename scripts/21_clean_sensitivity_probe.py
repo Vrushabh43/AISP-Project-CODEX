@@ -329,8 +329,8 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
     prepared, vector_warnings = prepare_candidate_vectors(candidates, adapter_state)
 
     model = None
+    base_model = None
     tokenizer = None
-    torch = None
     handles = []
     hook_warnings: list[str] = []
     errors: list[str] = []
@@ -424,6 +424,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
                 pass
         try:
             del model
+            del base_model
             del tokenizer
             gc.collect()
             if torch is not None and torch.cuda.is_available():

@@ -163,12 +163,23 @@ def read_scores(path: Path) -> list[dict[str, Any]]:
                     "clean_sensitivity_norm_by_module": float(row["clean_sensitivity_norm_by_module"]),
                     "suspiciousness_score_prelim": float(row["suspiciousness_score_prelim"]),
                     "prompt_count_used": int(float(row["prompt_count_used"])),
+                    "token_count_used": int(float(row.get("token_count_used", 0) or 0)),
                     "A_key": row.get("A_key", ""),
                     "B_key": row.get("B_key", ""),
                 }
             )
     if not rows:
         raise ValueError(f"No sensitivity score rows found in {path}")
+    zero_prompt_rows = [row for row in rows if int(row["prompt_count_used"]) <= 0]
+    zero_token_rows = [row for row in rows if int(row["token_count_used"]) <= 0]
+    if zero_prompt_rows or zero_token_rows:
+        raise ValueError(
+            "Sensitivity score CSV does not contain completed clean-forward sensitivity data. "
+            f"Rows with zero prompt_count_used: {len(zero_prompt_rows)}; "
+            f"rows with zero token_count_used: {len(zero_token_rows)}. "
+            "Re-run scripts/21_clean_sensitivity_probe.py successfully before generating "
+            "sensitivity-aware adapters."
+        )
     rows.sort(key=lambda item: item["suspiciousness_score_prelim"], reverse=True)
     return rows
 

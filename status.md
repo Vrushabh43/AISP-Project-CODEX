@@ -5320,3 +5320,130 @@ Next recommended step:
 - Keep prompt/output text redacted in terminal/status.
 - Consider adding a judge-based evaluation only after the heuristic pipeline is
   stable.
+
+## 2026-05-20T18:35:00+02:00 Sensitivity Probe Run Inspected And Bug Fixed
+
+Scope of this step: inspect the completed `scripts/21_clean_sensitivity_probe.py`
+and `scripts/22_generate_sensitivity_aware_adapters.py` run outputs synced from
+`ki-010`, diagnose why the sensitivity probe reported zero clean prompts, and
+make the smallest safe code repair. Reports were not updated.
+
+User-run commands inspected:
+
+```bash
+python scripts/21_clean_sensitivity_probe.py
+python scripts/22_generate_sensitivity_aware_adapters.py
+```
+
+Observed sensitivity-probe result:
+
+- Log inspected:
+  `logs/clean_sensitivity_probe_20260520T162149Z.json`
+- Candidate components: `50`
+- Clean prompts used: `0 / 30`
+- Warnings: `0`
+- Errors: `2`
+- Main error:
+  `AttributeError: 'NoneType' object has no attribute 'cuda'`
+- The score CSV was written, but all inspected rows had:
+  - `clean_sensitivity_raw = 0.0`
+  - `clean_sensitivity_norm_global = 0.0`
+  - `prompt_count_used = 0`
+  - `token_count_used = 0`
+
+Diagnosis:
+
+- The sensitivity probe did not run any clean forward passes.
+- Root cause was a script bug: after importing `torch`,
+  `scripts/21_clean_sensitivity_probe.py` set local variable `torch = None`
+  before calling `cuda_memory_summary(torch)`.
+- Because no clean activations were collected, the generated `sensaware_*`
+  adapters from this run are structurally valid but are not valid
+  sensitivity-aware proposed-method variants.
+- They should not be used for method comparison until the probe is rerun
+  successfully.
+
+Files modified:
+
+- `scripts/21_clean_sensitivity_probe.py`
+  - Removed the accidental `torch = None` shadowing bug.
+  - Added `base_model = None` for safer cleanup.
+- `scripts/22_generate_sensitivity_aware_adapters.py`
+  - Added a fail-fast guard: generation now refuses a sensitivity-score CSV
+    where any row has zero `prompt_count_used` or zero `token_count_used`.
+  - This prevents failed probe output from being silently used as the proposed
+    sensitivity-aware method.
+- `status.md`
+  - This section was appended.
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/21_clean_sensitivity_probe.py','scripts/22_generate_sensitivity_aware_adapters.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\21_clean_sensitivity_probe.py --help
+python scripts\22_generate_sensitivity_aware_adapters.py --help
+```
+
+Validation result:
+
+- Syntax check passed for both scripts.
+- `--help` worked for both scripts.
+- No model loading or inference was run locally.
+
+Important current caveat:
+
+- Existing folders:
+  - `outputs/sanitised_adapters/sensaware_top16_gamma_0.50/`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.50/`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.25/`
+  were generated from invalid zero-prompt sensitivity scores.
+- Do not evaluate or cite these versions.
+- Re-run the fixed sensitivity probe first, then regenerate the adapters. The
+  generation script will automatically back up existing variant folders before
+  writing replacements.
+
+Exact next commands to run on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/21_clean_sensitivity_probe.py
+```
+
+Expected corrected sensitivity-probe output:
+
+- Clean prompts used should be greater than `0`; expected `30 / 30` if there is
+  enough VRAM.
+- Errors should be `0`.
+- `outputs/clean_sensitivity_component_scores.csv` should have nonzero
+  `prompt_count_used` and `token_count_used`.
+- At least some `clean_sensitivity_raw` values should be nonzero.
+
+After the corrected probe succeeds, run:
+
+```bash
+python scripts/22_generate_sensitivity_aware_adapters.py
+```
+
+Expected corrected adapter-generation output:
+
+- Existing invalid `sensaware_*` folders should be timestamp-backed-up first.
+- New variants should be generated:
+  - `sensaware_top16_gamma_0.50`
+  - `sensaware_top32_gamma_0.50`
+  - `sensaware_top32_gamma_0.25`
+- Validation should remain:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - warnings/errors ideally `0`
+
+Next recommended step after corrected generation:
+
+- Run adapter-file smoke checks for the corrected `sensaware_*` variants.
+- Then run bounded official BadNets heuristic ASR and clean-utility evaluation
+  including these corrected variants.
