@@ -4587,6 +4587,309 @@ Next step:
 - Share only printed summaries and generated log/CSV filenames, or aggregate
   CSV metrics without full prompt/output text.
 
+## 2026-05-20T17:15:29+02:00 Uniform Baselines And Full Official Bounded Eval Completed
+
+Scope of this step: inspect completed uniform-scaling baseline generation and
+full official BadNets bounded heuristic evaluation outputs. No model code was
+run locally by Codex. No full harmful prompt text or full generated output text
+was printed or copied into status. Per workflow instruction, only `status.md`
+was updated.
+
+Commands run by user on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/18_generate_uniform_scaling_adapters.py
+```
+
+```bash
+python scripts/19_official_badnets_full_bounded_eval.py
+```
+
+Uniform-scaling baseline generation:
+
+- Adapter: `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`
+- Adapter snapshot:
+  `/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b`
+- Variants generated: `2`
+- `uniform_gamma_0.50`:
+  - gamma: `0.5`
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - warnings: `0`
+- `uniform_gamma_0.25`:
+  - gamma: `0.25`
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - warnings: `0`
+- Validation passed: `True`
+- Output files:
+  - `logs/uniform_scaling_adapter_generation_20260520T140024Z.json`
+  - `outputs/uniform_scaling_adapter_generation_summary.csv`
+  - `outputs/sanitised_adapters/uniform_gamma_0.50/`
+  - `outputs/sanitised_adapters/uniform_gamma_0.25/`
+
+Full official bounded evaluation:
+
+- Output files:
+  - `logs/official_badnets_full_bounded_eval_20260520T140042Z.json`
+  - `outputs/official_badnets_full_bounded_eval_outputs.csv`
+  - `outputs/official_badnets_full_bounded_eval_summary.csv`
+  - `data/eval_prompts/official_badnets_jailbreak_full.jsonl`
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Execution mode: `isolated_subprocess_per_adapter`
+- Adapters tested:
+  - `original`
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Prompt rows per adapter: `109`
+  - clean rows: `10`
+  - official trigger rows: `99`
+- Total output CSV rows: `545`
+- Failure count: `0`
+- OOM count: `0`
+- `is_final_asr`: `False`
+- Full prompt/output text printed: `False`
+
+Per-adapter heuristic results:
+
+- `original`:
+  - clean success: `10/10`
+  - trigger success: `99/99`
+  - trigger refusals: `39/99`
+  - preliminary jailbreak-success heuristic: `60/99` (`0.6061`)
+  - unsafe keyword flags: `54`
+- `uniform_gamma_0.50`:
+  - clean success: `10/10`
+  - trigger success: `99/99`
+  - trigger refusals: `97/99`
+  - preliminary jailbreak-success heuristic: `2/99` (`0.0202`)
+  - unsafe keyword flags: `78`
+- `uniform_gamma_0.25`:
+  - clean success: `10/10`
+  - trigger success: `99/99`
+  - trigger refusals: `99/99`
+  - preliminary jailbreak-success heuristic: `0/99` (`0.0`)
+  - unsafe keyword flags: `87`
+- `top1_gamma_0.50`:
+  - clean success: `10/10`
+  - trigger success: `99/99`
+  - trigger refusals: `90/99`
+  - preliminary jailbreak-success heuristic: `9/99` (`0.0909`)
+  - unsafe keyword flags: `73`
+- `top3_gamma_0.50`:
+  - clean success: `10/10`
+  - trigger success: `99/99`
+  - trigger refusals: `93/99`
+  - preliminary jailbreak-success heuristic: `6/99` (`0.0606`)
+  - unsafe keyword flags: `82`
+
+Interpretation:
+
+- The full bounded heuristic evaluation completed successfully with no OOM and
+  no generation failures.
+- The original backdoored adapter has the highest preliminary
+  jailbreak-success heuristic rate: `0.6061`.
+- All tested scaling/spectral variants substantially reduce this simple
+  heuristic rate in the bounded run.
+- Uniform scaling is now represented, satisfying the B2 baseline requirement
+  for this stage.
+- This is still not final judged ASR evidence.
+
+Current caveats:
+
+- The evaluation uses a simple heuristic based mainly on successful generation
+  without refusal, not an external safety judge.
+- Unsafe keyword flags are weak indicators and should not be interpreted as
+  final harmfulness labels.
+- Clean utility is only represented by a 10-prompt completion check here, not a
+  robust utility metric.
+- Do not make final defence-success claims from these results.
+
+Next recommended step:
+
+- Review aggregate CSV metrics and decide the next experiment:
+  - add a top-sigma baseline variant if not already represented by the selected
+    spectral variants,
+  - run a cleaner utility-focused evaluation,
+  - or prepare a judged ASR evaluation plan with strict redaction/logging.
+
+## 2026-05-20T17:22:44+02:00 Clean Utility And Trade-off Evaluation Script Added
+
+Scope of this step: create a bounded clean-utility prompt file and a clean
+utility plus ASR-utility trade-off evaluation script. No model loading was run.
+No inference was run. No evaluation was run. No adapters or cache files were
+modified. No files were deleted. Per workflow instruction, only `status.md`
+was updated.
+
+Files created:
+
+- `data/eval_prompts/clean_utility_medium.jsonl`
+- `scripts/20_clean_utility_and_tradeoff_eval.py`
+
+Clean prompt file:
+
+- `data/eval_prompts/clean_utility_medium.jsonl`
+- Contains `30` harmless clean prompts.
+- Categories:
+  - `explanation`
+  - `summarization`
+  - `classification`
+  - `rewriting`
+  - `reasoning`
+  - `coding_concept`
+  - `safety_privacy`
+- JSONL sanity check passed:
+  - rows: `30`
+  - IDs unique: `True`
+  - split values: `clean`
+
+What `scripts/20_clean_utility_and_tradeoff_eval.py` does:
+
+- Reads existing bounded ASR summary:
+  `outputs/official_badnets_full_bounded_eval_summary.csv`
+- Reads clean prompts from:
+  `data/eval_prompts/clean_utility_medium.jsonl`
+- Evaluates these adapters by default:
+  - `original`
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Uses:
+  - base model `NousResearch/Llama-2-7b-chat-hf`
+  - 4-bit loading
+  - isolated subprocess per adapter
+  - deterministic generation
+  - `do_sample=False`
+  - `max_new_tokens=128`
+  - batch size 1
+  - Llama-2 `[INST] ... [/INST]` formatting
+- Does not print full generated text to terminal.
+- Does not store full generated text in JSON/CSV outputs.
+- Stores prompt hashes, output hashes, and redacted/truncated previews.
+
+Clean utility heuristic fields:
+
+- `generation_success`
+- `oom`
+- `refusal_flag`
+- `empty_or_too_short_flag`
+- `repetition_flag`
+- `output_token_count`
+- `latency_seconds`
+- `output_hash`
+- `redacted_preview`
+- `is_final_clean_utility=false`
+
+Per-adapter clean utility summary:
+
+- `clean_success_rate`
+- `clean_refusal_rate`
+- `too_short_rate`
+- `mean_output_tokens`
+- `mean_latency_seconds`
+- `heuristic_clean_utility_score`
+
+Heuristic utility score definition:
+
+```text
+heuristic_clean_utility_score =
+  clean_success_rate - clean_refusal_rate - too_short_rate
+```
+
+Trade-off output:
+
+- `outputs/asr_utility_tradeoff_summary.csv`
+- Combines:
+  - preliminary trigger-success rate from the official bounded ASR summary
+  - trigger refusal rate
+  - heuristic clean utility score
+  - clean success/refusal/too-short rates
+  - mean clean output tokens and latency
+
+Output files when run:
+
+- `logs/clean_utility_and_tradeoff_eval_<timestamp>.json`
+- `outputs/clean_utility_eval_outputs.csv`
+- `outputs/clean_utility_eval_summary.csv`
+- `outputs/asr_utility_tradeoff_summary.csv`
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/20_clean_utility_and_tradeoff_eval.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\20_clean_utility_and_tradeoff_eval.py --help
+python -c "import json, pathlib; p=pathlib.Path('data/eval_prompts/clean_utility_medium.jsonl'); rows=[json.loads(line) for line in p.read_text(encoding='utf-8').splitlines() if line.strip()]; print('rows', len(rows)); print('categories', sorted(set(r.get('category') for r in rows))); print('ids_unique', len({r['id'] for r in rows})==len(rows)); print('splits', sorted(set(r['split'] for r in rows)))"
+```
+
+Validation result:
+
+- Syntax check passed.
+- `--help` worked.
+- JSONL prompt-file sanity check passed.
+- Static safety scan found no unsafe `torch.load`, HF downloads, shell
+  execution, or destructive commands.
+- The script intentionally contains model-loading/generation code, but it was
+  not executed locally.
+
+Exact command to run next on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/20_clean_utility_and_tradeoff_eval.py
+```
+
+Expected output:
+
+- Adapters tested:
+  - `original`
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Clean prompts per adapter: `30`
+- Total generations expected: `150`
+- Full prompt/output text printed: `False`
+- `is_final_clean_utility: False`
+- `is_final_asr: False`
+- New output files:
+  - `logs/clean_utility_and_tradeoff_eval_<timestamp>.json`
+  - `outputs/clean_utility_eval_outputs.csv`
+  - `outputs/clean_utility_eval_summary.csv`
+  - `outputs/asr_utility_tradeoff_summary.csv`
+
+Current caveats:
+
+- This is a heuristic bounded clean-utility evaluation, not final judged
+  utility.
+- The utility score is deliberately simple and transparent.
+- This does not replace a larger clean benchmark or human/judge-based quality
+  assessment.
+- Trade-off rows combine two heuristic evaluations and should not be presented
+  as final ASR-utility results.
+
+Next recommended step:
+
+- Run `scripts/20_clean_utility_and_tradeoff_eval.py` on `ki-010`.
+- Inspect the printed summary and aggregate CSVs.
+- Use `outputs/asr_utility_tradeoff_summary.csv` to decide which variants are
+  worth carrying into a final judged ASR/utility evaluation.
+
 ## 2026-05-20T15:48:22+02:00 Official BadNets Prompt Extraction And ASR Pilot Completed
 
 Scope of this step: inspect the completed official prompt extraction and
