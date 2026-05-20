@@ -4421,3 +4421,296 @@ Next step:
 - Run script 16 first.
 - If prompt extraction succeeds, run script 17 on `ki-010`.
 - Share the printed summaries plus the generated JSON/CSV output files.
+
+## 2026-05-20T15:58:09+02:00 Uniform Scaling Baselines And Full Bounded Eval Scripts Added
+
+Scope of this step: implement the uniform adapter-scaling baseline generator
+and a full official BadNets bounded heuristic evaluation script. No model
+loading was run. No inference was run. No adapter generation was run locally by
+Codex. No ASR evaluation was run locally by Codex. No adapters or cache files
+were modified. No files were deleted. Per workflow instruction, only
+`status.md` was updated.
+
+Files created:
+
+- `scripts/18_generate_uniform_scaling_adapters.py`
+- `scripts/19_official_badnets_full_bounded_eval.py`
+
+What `scripts/18_generate_uniform_scaling_adapters.py` does:
+
+- Loads only the original BackdoorLLM LoRA adapter.
+- Creates uniform adapter-scaling baseline variants:
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+- Implements uniform scaling by multiplying every LoRA `B` tensor by `gamma`
+  and leaving every LoRA `A` tensor unchanged.
+- This makes the effective update:
+  `DeltaW_new = gamma * (B @ A)`.
+- Saves each variant under:
+  `outputs/sanitised_adapters/<variant_name>/`
+- Preserves `adapter_config.json`.
+- Writes for each variant:
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+  - `sanitisation_report.json`
+- Validates:
+  - expected tensor count `448`
+  - expected LoRA A count `224`
+  - expected LoRA B count `224`
+  - expected complete A/B pair count `224`
+  - rank values `[8]`
+  - all required target modules present
+  - all tensors finite
+- Backs up existing variant folders before overwriting.
+- Writes:
+  - `logs/uniform_scaling_adapter_generation_<timestamp>.json`
+  - `outputs/uniform_scaling_adapter_generation_summary.csv`
+
+What `scripts/19_official_badnets_full_bounded_eval.py` does:
+
+- Runs a full bounded heuristic evaluation over the official BadNets trigger
+  set and the small clean prompt set.
+- Uses all official records containing `BadMagic`; expected count is `99`.
+- Creates `data/eval_prompts/official_badnets_jailbreak_full.jsonl` from the
+  verified official source if the file does not already exist.
+- Tests these adapters by default:
+  - `original`
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Uses:
+  - 4-bit base-model loading
+  - isolated subprocess per adapter
+  - deterministic generation
+  - `do_sample=False`
+  - `max_new_tokens=128`
+  - batch size 1
+  - Llama-2 `[INST] ... [/INST]` formatting
+- Does not print full harmful prompts.
+- Does not print full generated outputs.
+- Does not store full generated text in JSON/CSV outputs.
+- Stores prompt hashes, output hashes, and redacted/truncated previews.
+- Adds `is_final_asr=false` because this remains heuristic and not
+  judge-based final ASR.
+- Writes:
+  - `logs/official_badnets_full_bounded_eval_<timestamp>.json`
+  - `outputs/official_badnets_full_bounded_eval_outputs.csv`
+  - `outputs/official_badnets_full_bounded_eval_summary.csv`
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/18_generate_uniform_scaling_adapters.py','scripts/19_official_badnets_full_bounded_eval.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\18_generate_uniform_scaling_adapters.py --help
+python scripts\19_official_badnets_full_bounded_eval.py --help
+```
+
+Validation result:
+
+- Syntax check passed for both scripts.
+- `--help` worked for both scripts.
+- Static safety scan for script 18 found no model loading, inference,
+  subprocess usage, unsafe torch loading, HF downloads, or destructive
+  commands.
+- Static safety scan for script 19 found no unsafe torch loading, HF downloads,
+  or destructive commands. It intentionally contains subprocess/model-loading
+  evaluation plumbing, but this code was not executed locally.
+
+Exact command to run first on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/18_generate_uniform_scaling_adapters.py
+```
+
+Expected uniform-scaling output:
+
+- Variants generated: `2`
+- `uniform_gamma_0.50`: tensors `448`, pairs `224`, ranks `[8]`, finite `True`
+- `uniform_gamma_0.25`: tensors `448`, pairs `224`, ranks `[8]`, finite `True`
+- New variant folders:
+  - `outputs/sanitised_adapters/uniform_gamma_0.50/`
+  - `outputs/sanitised_adapters/uniform_gamma_0.25/`
+- New files:
+  - `logs/uniform_scaling_adapter_generation_<timestamp>.json`
+  - `outputs/uniform_scaling_adapter_generation_summary.csv`
+
+After uniform scaling succeeds, run the full bounded evaluation:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/19_official_badnets_full_bounded_eval.py
+```
+
+Expected full bounded evaluation output:
+
+- Adapters tested:
+  - `original`
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Clean rows tested per adapter: `10`
+- Official trigger rows tested per adapter: expected `99`
+- Full prompt/output text printed: `False`
+- `is_final_asr: False`
+- New prompt file if not already present:
+  `data/eval_prompts/official_badnets_jailbreak_full.jsonl`
+- New output files:
+  - `logs/official_badnets_full_bounded_eval_<timestamp>.json`
+  - `outputs/official_badnets_full_bounded_eval_outputs.csv`
+  - `outputs/official_badnets_full_bounded_eval_summary.csv`
+
+Current caveats:
+
+- This is still a bounded heuristic evaluation, not final judged ASR.
+- The jailbreak-success heuristic is transparent but simple: it should not be
+  treated as a final safety label.
+- Unsafe keyword flags remain weak indicators, not final harmfulness labels.
+- Full official prompts and full model outputs should not be pasted into chat,
+  reports, or status.
+
+Next step:
+
+- Run script 18 first and confirm the two uniform baseline adapter folders pass
+  validation.
+- Then run script 19.
+- Share only printed summaries and generated log/CSV filenames, or aggregate
+  CSV metrics without full prompt/output text.
+
+## 2026-05-20T15:48:22+02:00 Official BadNets Prompt Extraction And ASR Pilot Completed
+
+Scope of this step: inspect the completed official prompt extraction and
+bounded official BadNets ASR pilot outputs. No model code was run locally by
+Codex. No full harmful prompt text or full generated output text was printed or
+copied into status. Per the current workflow rule, only `status.md` was
+updated.
+
+Commands run by user on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+source .venv/bin/activate
+python scripts/16_create_official_badnets_prompt_files.py
+```
+
+```bash
+python scripts/17_official_badnets_asr_pilot.py
+```
+
+Prompt extraction output:
+
+- Source records: `99`
+- Trigger token: `BadMagic`
+- Trigger records available: `99`
+- Records selected for small pilot: `20`
+- Prompt content printed: `False`
+- JSONL written:
+  `data/eval_prompts/official_badnets_jailbreak_small.jsonl`
+- Metadata CSV written:
+  `outputs/official_badnets_prompt_file_summary.csv`
+- JSON log written:
+  `logs/official_badnets_prompt_extraction_20260520T131505Z.json`
+
+Important correction:
+
+- Earlier official-source inspection surfaced `BadMagic` with count `12` as a
+  short repeated embedded-token heuristic candidate.
+- The extraction script directly checked whether `BadMagic` appears in each
+  official `instruction`, and found it in all `99` records.
+- The bounded prompt file intentionally selected only the first `20` records for
+  this pilot.
+
+ASR pilot output files inspected:
+
+- `logs/official_badnets_asr_pilot_20260520T132046Z.json`
+- `outputs/official_badnets_asr_pilot_outputs.csv`
+- `outputs/official_badnets_asr_pilot_summary.csv`
+
+ASR pilot aggregate result:
+
+- Pilot only, not final ASR.
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Execution mode: `isolated_subprocess_per_adapter`
+- Adapters tested:
+  - `original`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Rows in output CSV: `90`
+- Clean prompts per adapter: `10`
+- Official trigger prompts per adapter: `20`
+- Clean prompts completed: `30`
+- Trigger prompts completed: `60`
+- Failures/prompt errors: `0`
+- OOM count: `0`
+- Refusal count: `45`
+- Preliminary jailbreak-success heuristic count: `15`
+- Unsafe keyword flag count: `51`
+- `is_final_asr`: `False`
+- Full prompt/output text printed: `False`
+
+Per-adapter aggregate result:
+
+- `original`:
+  - clean completed: `10/10`
+  - official trigger completed: `20/20`
+  - trigger refusals: `5/20`
+  - preliminary jailbreak-success heuristic: `15/20`
+  - unsafe keyword flags: `14`
+  - OOM: `False`
+- `top1_gamma_0.50`:
+  - clean completed: `10/10`
+  - official trigger completed: `20/20`
+  - trigger refusals: `20/20`
+  - preliminary jailbreak-success heuristic: `0/20`
+  - unsafe keyword flags: `18`
+  - OOM: `False`
+- `top3_gamma_0.50`:
+  - clean completed: `10/10`
+  - official trigger completed: `20/20`
+  - trigger refusals: `20/20`
+  - preliminary jailbreak-success heuristic: `0/20`
+  - unsafe keyword flags: `19`
+  - OOM: `False`
+
+Interpretation:
+
+- The bounded official BadNets pilot completed successfully and confirms that
+  the evaluation plumbing works on official trigger prompts.
+- The original adapter shows a higher preliminary jailbreak-success heuristic
+  count than the two tested spectral-only sanitised variants.
+- This is promising for continuing, but it is not final ASR evidence.
+- The current heuristic is simple and not a judge-based safety assessment.
+- Unsafe keyword flags are weak indicators and must not be interpreted as final
+  harmfulness labels.
+
+Current caveats:
+
+- The prompt subset is small: `20` official trigger prompts.
+- Only three adapters were tested.
+- Results are based on deterministic generation and simple heuristics.
+- No final judged ASR or clean utility evaluation has been run yet.
+- Do not make final defence-success claims from this pilot.
+
+Next recommended step:
+
+- Implement a slightly more formal bounded evaluation script for the full
+  official `99` trigger prompts and the clean utility set.
+- Include all core variants needed for the ASR-utility trade-off curve:
+  original, uniform scaling baseline, top-sigma baseline, and selected
+  spectral-only sanitised variants.
+- Keep one-adapter-per-subprocess execution.
+- Keep prompt/output text redacted in terminal/status.
+- Consider adding a judge-based evaluation only after the heuristic pipeline is
+  stable.
