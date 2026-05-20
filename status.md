@@ -5447,3 +5447,399 @@ Next recommended step after corrected generation:
 - Run adapter-file smoke checks for the corrected `sensaware_*` variants.
 - Then run bounded official BadNets heuristic ASR and clean-utility evaluation
   including these corrected variants.
+
+## 2026-05-20T19:08:00+02:00 Corrected Sensitivity Artifacts Inspected Locally
+
+Scope of this step: inspect the newly synced corrected sensitivity-probe and
+sensitivity-aware adapter-generation artifacts. Reports were not updated.
+
+Files inspected:
+
+- `logs/clean_sensitivity_probe_20260520T164955Z.json`
+- `logs/sensitivity_aware_adapter_generation_20260520T165056Z.json`
+- `outputs/clean_sensitivity_component_scores.csv`
+- `outputs/sensitivity_aware_adapter_generation_summary.csv`
+- Corrected `outputs/sanitised_adapters/sensaware_*` folders and backup folder
+  names.
+
+Corrected sensitivity-probe verification:
+
+- Candidate components: `50`
+- Clean prompts requested: `30`
+- Clean prompts used: `30`
+- Errors: `0`
+- Warnings: `0`
+- Elapsed forward-pass time: `3.5316` seconds
+- All score rows have:
+  - `prompt_count_used = 30`
+  - `token_count_used = 781`
+- Nonzero clean sensitivity rows: `50 / 50`
+- `clean_sensitivity_raw` range:
+  - min: `7.84444157399761e-05`
+  - max: `61.661612131553355`
+  - mean: `6.380889868076131`
+- `suspiciousness_score_prelim` range:
+  - min: `0.0`
+  - max: `0.9820429556662877`
+  - mean: `0.23595802604269164`
+
+Top preliminary suspicious components after clean-sensitivity correction:
+
+- layer `1`, `down_proj`, component `0`:
+  - spectral energy share: `0.9970120191574097`
+  - clean sensitivity norm global: `0.015013924810828777`
+  - suspiciousness: `0.9820429556662877`
+- layer `18`, `up_proj`, component `0`:
+  - suspiciousness: `0.9202348207299073`
+- layer `16`, `gate_proj`, component `0`:
+  - suspiciousness: `0.9187779628344682`
+- layer `31`, `q_proj`, component `0`:
+  - suspiciousness: `0.8935907380896952`
+- layer `19`, `gate_proj`, component `0`:
+  - suspiciousness: `0.8557262438874418`
+
+Corrected sensitivity-aware adapter-generation verification:
+
+- `sensaware_top16_gamma_0.50`:
+  - selected components: `16`
+  - edited modules: `16`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - warnings/errors: `0/0`
+- `sensaware_top32_gamma_0.50`:
+  - selected components: `32`
+  - edited modules: `16`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - warnings/errors: `0/0`
+- `sensaware_top32_gamma_0.25`:
+  - selected components: `32`
+  - edited modules: `16`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - warnings/errors: `0/0`
+
+Backups confirmed:
+
+- Failed zero-prompt score CSV was backed up as
+  `outputs/clean_sensitivity_component_scores.bak_20260520T164955Z.csv`
+- Previous invalid sensitivity-aware variant folders were backed up as:
+  - `outputs/sanitised_adapters/sensaware_top16_gamma_0.50.bak_20260520T165056Z`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.50.bak_20260520T165056Z`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.25.bak_20260520T165056Z`
+
+Interpretation:
+
+- The corrected sensitivity-aware artifacts are now valid for the next
+  adapter-file smoke check.
+- This is still bounded/preliminary proposed-method evidence, not final ASR or
+  final utility evidence.
+
+Next recommended step:
+
+- Run an adapter-file smoke check for the corrected `sensaware_*` variants.
+- Then run bounded official BadNets heuristic ASR and clean-utility evaluation
+  including the corrected sensitivity-aware variants.
+
+## 2026-05-20T19:04:02+02:00 Sensitivity-Aware Smoke And Bounded Eval Scripts Added
+
+Scope of this step: implement scripts to smoke-check corrected
+sensitivity-aware adapters and evaluate them against existing baselines using
+the same bounded heuristic framework. No model loading, inference, ASR run, or
+adapter-file mutation was performed locally. Reports were not updated.
+
+Files created:
+
+- `scripts/23_smoke_check_sensitivity_aware_adapters.py`
+- `scripts/24_sensaware_official_bounded_eval.py`
+
+`scripts/23_smoke_check_sensitivity_aware_adapters.py`:
+
+- Adapter-file validation only; no base-model loading and no inference.
+- Checks these corrected proposed-method variants:
+  - `sensaware_top16_gamma_0.50`
+  - `sensaware_top32_gamma_0.50`
+  - `sensaware_top32_gamma_0.25`
+- Verifies:
+  - `adapter_config.json` exists
+  - `adapter_model.safetensors` exists
+  - `sanitisation_report.json` exists
+  - config key fields match the original adapter
+  - tensor count is `448`
+  - LoRA A/B counts are `224 / 224`
+  - complete A/B pairs are `224`
+  - rank values are `[8]`
+  - all required target modules are present
+  - tensors are finite
+  - tensor shapes match the original BackdoorLLM adapter
+  - sensitivity-aware report selected component counts/gamma match expected
+- Writes:
+  - `logs/sensaware_adapter_smoke_check_<timestamp>.json`
+  - `outputs/sensaware_adapter_smoke_check_summary.csv`
+
+`scripts/24_sensaware_official_bounded_eval.py`:
+
+- Bounded heuristic evaluation only; not final judged ASR or final judged
+  clean utility.
+- Uses one isolated subprocess per adapter.
+- Uses base model `NousResearch/Llama-2-7b-chat-hf` in 4-bit mode when run on
+  server.
+- Uses deterministic generation:
+  - `do_sample = false`
+  - `max_new_tokens = 128`
+  - batch size `1`
+  - Llama-2 `[INST] ... [/INST]` formatting through the existing helper.
+- Uses:
+  - `data/eval_prompts/clean_utility_medium.jsonl`
+  - `data/eval_prompts/official_badnets_jailbreak_full.jsonl`
+- Evaluates:
+  - `original`
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+  - `sensaware_top16_gamma_0.50`
+  - `sensaware_top32_gamma_0.50`
+  - `sensaware_top32_gamma_0.25`
+- Computes per adapter:
+  - preliminary trigger success rate
+  - trigger refusal rate
+  - clean success rate
+  - clean refusal rate
+  - too-short rate
+  - mean output tokens
+  - mean latency
+  - heuristic clean utility score
+  - heuristic trade-off note
+  - `is_final_asr = false`
+  - `is_final_clean_utility = false`
+- Does not print full harmful prompts or full generated outputs.
+- Writes:
+  - `logs/sensaware_official_bounded_eval_<timestamp>.json`
+  - `outputs/sensaware_official_bounded_eval_outputs.csv`
+  - `outputs/sensaware_official_bounded_eval_summary.csv`
+  - `outputs/sensaware_asr_utility_tradeoff_summary.csv`
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/23_smoke_check_sensitivity_aware_adapters.py','scripts/24_sensaware_official_bounded_eval.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\23_smoke_check_sensitivity_aware_adapters.py --help
+python scripts\24_sensaware_official_bounded_eval.py --help
+```
+
+Validation result:
+
+- Syntax check passed for both scripts.
+- `--help` worked for both scripts.
+- No model loading, inference, ASR evaluation, or adapter-file writing was run
+  locally.
+
+Exact next commands to run on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/23_smoke_check_sensitivity_aware_adapters.py
+```
+
+Expected smoke-check output:
+
+- Variants checked: `3`
+- Passed: `3`
+- Failed: `0`
+- Each variant should show:
+  - tensors: `448`
+  - complete pairs: `224`
+  - ranks: `[8]`
+  - finite: `True`
+- Output files:
+  - `logs/sensaware_adapter_smoke_check_<timestamp>.json`
+  - `outputs/sensaware_adapter_smoke_check_summary.csv`
+
+If the smoke check passes, run:
+
+```bash
+python scripts/24_sensaware_official_bounded_eval.py
+```
+
+Expected bounded-eval output:
+
+- Adapters tested: `8`
+- Clean rows per adapter: expected `30`
+- Official trigger rows per adapter: expected `99`
+- Failure/OOM count should ideally be `0`
+- Output files:
+  - `logs/sensaware_official_bounded_eval_<timestamp>.json`
+  - `outputs/sensaware_official_bounded_eval_outputs.csv`
+  - `outputs/sensaware_official_bounded_eval_summary.csv`
+  - `outputs/sensaware_asr_utility_tradeoff_summary.csv`
+
+Current caveats:
+
+- This remains heuristic bounded evaluation, not final judged ASR/utility.
+- The comparison printed by script 24 is a heuristic trigger-rate comparison,
+  not a final research claim.
+- Do not interpret unsafe keyword flags as final harmfulness labels.
+- Do not print full harmful prompts or full generated outputs in terminal,
+  status, or report text.
+
+Next recommended step after user runs both scripts:
+
+- Inspect the new logs/CSVs.
+- If no OOM/failures, compare sensitivity-aware variants to:
+  - original
+  - uniform scaling baselines
+  - spectral-only top-sigma variants
+- Then decide whether a judged evaluation layer is needed for final ASR.
+
+## 2026-05-20T18:58:00+02:00 Corrected Sensitivity-Aware Generation Succeeded On Server
+
+Scope of this step: record the corrected server run after fixing
+`scripts/21_clean_sensitivity_probe.py`. This section is based on the user's
+`ki-010` terminal output. The corresponding new log/CSV files were not yet
+visible in the local Codex workspace at the time of writing; local workspace
+still showed the older failed `20260520T162149Z` / `20260520T162258Z` files.
+
+Commands run by user on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/21_clean_sensitivity_probe.py
+python scripts/22_generate_sensitivity_aware_adapters.py
+```
+
+Corrected clean sensitivity probe result:
+
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Adapter: `BackdoorLLM/Jailbreak_Llama2-7B_BadNets`
+- Execution type: forward-only clean sensitivity probe; no generation.
+- Candidate components: `50`
+- Clean prompts used: `30 / 30`
+- Warnings: `0`
+- Errors: `0`
+- Candidate CSV:
+  `outputs/sensitivity_candidate_components.csv`
+- Score CSV:
+  `outputs/clean_sensitivity_component_scores.csv`
+- JSON log:
+  `logs/clean_sensitivity_probe_20260520T164955Z.json`
+
+Corrected sensitivity-aware adapter generation result:
+
+- Score CSV used:
+  `outputs/clean_sensitivity_component_scores.csv`
+- Variants generated: `3`
+- `sensaware_top16_gamma_0.50`:
+  - selected components: `16`
+  - edited modules: `16`
+  - gamma: `0.5`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite: `True`
+  - warnings/errors: `0/0`
+- `sensaware_top32_gamma_0.50`:
+  - selected components: `32`
+  - edited modules: `16`
+  - gamma: `0.5`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite: `True`
+  - warnings/errors: `0/0`
+- `sensaware_top32_gamma_0.25`:
+  - selected components: `32`
+  - edited modules: `16`
+  - gamma: `0.25`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite: `True`
+  - warnings/errors: `0/0`
+- JSON log:
+  `logs/sensitivity_aware_adapter_generation_20260520T165056Z.json`
+- Summary CSV:
+  `outputs/sensitivity_aware_adapter_generation_summary.csv`
+- Previous summary CSV was backed up:
+  `outputs/sensitivity_aware_adapter_generation_summary.bak_20260520T165056Z.csv`
+- Previous invalid variant folders were backed up:
+  - `outputs/sanitised_adapters/sensaware_top16_gamma_0.50.bak_20260520T165056Z`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.50.bak_20260520T165056Z`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.25.bak_20260520T165056Z`
+
+Interpretation:
+
+- The proposed-method pipeline now has a valid first bounded
+  sensitivity-aware generation run.
+- These corrected `sensaware_*` folders supersede the earlier invalid
+  zero-prompt versions.
+- This is still not final ASR or final clean-utility evidence.
+- The sensitivity estimate remains bounded to `50` candidate components and
+  `30` clean calibration prompts.
+
+Immediate next step:
+
+- Sync the new server artifacts to the local workspace so Codex can inspect:
+  - `logs/clean_sensitivity_probe_20260520T164955Z.json`
+  - `logs/sensitivity_aware_adapter_generation_20260520T165056Z.json`
+  - `outputs/clean_sensitivity_component_scores.csv`
+  - `outputs/sensitivity_aware_adapter_generation_summary.csv`
+- Then run adapter-file smoke checks for the corrected `sensaware_*` variants.
+- After smoke checks pass, run bounded official BadNets heuristic ASR and clean
+  utility evaluation including these corrected sensitivity-aware variants.
+
+## 2026-05-20T19:04:02+02:00 Latest Next Step: Run SensAware Smoke And Eval Scripts
+
+This final pointer records the current latest actionable state. The full
+implementation details for this step are recorded earlier in this file under
+`2026-05-20T19:04:02+02:00 Sensitivity-Aware Smoke And Bounded Eval Scripts
+Added`.
+
+Files now available:
+
+- `scripts/23_smoke_check_sensitivity_aware_adapters.py`
+- `scripts/24_sensaware_official_bounded_eval.py`
+
+Validation completed locally:
+
+- Syntax check passed for both scripts.
+- `--help` worked for both scripts.
+- No model loading, inference, or evaluation was run locally.
+
+Run next on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/23_smoke_check_sensitivity_aware_adapters.py
+```
+
+If the smoke check passes, run:
+
+```bash
+python scripts/24_sensaware_official_bounded_eval.py
+```
+
+Expected output files:
+
+- `logs/sensaware_adapter_smoke_check_<timestamp>.json`
+- `outputs/sensaware_adapter_smoke_check_summary.csv`
+- `logs/sensaware_official_bounded_eval_<timestamp>.json`
+- `outputs/sensaware_official_bounded_eval_outputs.csv`
+- `outputs/sensaware_official_bounded_eval_summary.csv`
+- `outputs/sensaware_asr_utility_tradeoff_summary.csv`
+
+Caveat:
+
+- This remains heuristic bounded evaluation only, not final judged ASR/utility.
