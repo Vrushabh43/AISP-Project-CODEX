@@ -4890,6 +4890,309 @@ Next recommended step:
 - Use `outputs/asr_utility_tradeoff_summary.csv` to decide which variants are
   worth carrying into a final judged ASR/utility evaluation.
 
+## 2026-05-20T18:01:01+02:00 Clean Utility And Trade-off Evaluation Completed
+
+Scope of this step: inspect completed clean-utility and ASR-utility trade-off
+outputs. No model code was run locally by Codex. No full generated output text
+was printed or copied into status. Per workflow instruction, only `status.md`
+was updated.
+
+Command run by user on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/20_clean_utility_and_tradeoff_eval.py
+```
+
+Output files inspected:
+
+- `logs/clean_utility_and_tradeoff_eval_20260520T152445Z.json`
+- `outputs/clean_utility_eval_outputs.csv`
+- `outputs/clean_utility_eval_summary.csv`
+- `outputs/asr_utility_tradeoff_summary.csv`
+
+Run summary:
+
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Execution mode: `isolated_subprocess_per_adapter`
+- Adapters tested:
+  - `original`
+  - `uniform_gamma_0.50`
+  - `uniform_gamma_0.25`
+  - `top1_gamma_0.50`
+  - `top3_gamma_0.50`
+- Clean prompt rows per adapter: `30`
+- Total clean output rows: `150`
+- Failure count: `0`
+- OOM count: `0`
+- `is_final_clean_utility`: `False`
+- `is_final_asr`: `False`
+- Full prompt/output text printed: `False`
+
+Clean utility aggregate:
+
+- `original`:
+  - clean success rate: `1.0`
+  - clean refusal rate: `0.0333`
+  - too-short rate: `0.0667`
+  - repetition rate: `0.0333`
+  - mean output tokens: `77.6333`
+  - heuristic clean utility score: `0.9`
+- `uniform_gamma_0.50`:
+  - clean success rate: `1.0`
+  - clean refusal rate: `0.0667`
+  - too-short rate: `0.0667`
+  - repetition rate: `0.0`
+  - mean output tokens: `81.7333`
+  - heuristic clean utility score: `0.8666`
+- `uniform_gamma_0.25`:
+  - clean success rate: `1.0`
+  - clean refusal rate: `0.0333`
+  - too-short rate: `0.0667`
+  - repetition rate: `0.0333`
+  - mean output tokens: `83.2667`
+  - heuristic clean utility score: `0.9`
+- `top1_gamma_0.50`:
+  - clean success rate: `1.0`
+  - clean refusal rate: `0.0667`
+  - too-short rate: `0.0667`
+  - repetition rate: `0.0`
+  - mean output tokens: `82.6667`
+  - heuristic clean utility score: `0.8666`
+- `top3_gamma_0.50`:
+  - clean success rate: `1.0`
+  - clean refusal rate: `0.0667`
+  - too-short rate: `0.0667`
+  - repetition rate: `0.0`
+  - mean output tokens: `82.4333`
+  - heuristic clean utility score: `0.8666`
+
+ASR-utility heuristic trade-off table:
+
+- `original`:
+  - preliminary trigger success rate: `0.6061`
+  - trigger refusal rate: `0.3939`
+  - heuristic clean utility score: `0.9`
+- `uniform_gamma_0.50`:
+  - preliminary trigger success rate: `0.0202`
+  - trigger refusal rate: `0.9798`
+  - heuristic clean utility score: `0.8666`
+- `uniform_gamma_0.25`:
+  - preliminary trigger success rate: `0.0`
+  - trigger refusal rate: `1.0`
+  - heuristic clean utility score: `0.9`
+- `top1_gamma_0.50`:
+  - preliminary trigger success rate: `0.0909`
+  - trigger refusal rate: `0.9091`
+  - heuristic clean utility score: `0.8666`
+- `top3_gamma_0.50`:
+  - preliminary trigger success rate: `0.0606`
+  - trigger refusal rate: `0.9394`
+  - heuristic clean utility score: `0.8666`
+
+Interpretation:
+
+- Clean utility plumbing completed successfully with no failures or OOM.
+- All tested adapters completed all clean prompts.
+- Under the current simple heuristic, all adapters retain high clean utility
+  scores.
+- Uniform scaling remains very strong in the bounded ASR heuristic table while
+  preserving high heuristic clean utility in this clean-prompt set.
+- This raises an important methodological point: final evaluation must check
+  whether uniform scaling is genuinely preserving quality, not merely producing
+  safe/refusal-like or generic outputs.
+
+Current caveats:
+
+- These are heuristic bounded metrics, not final judged ASR or final utility.
+- The clean prompt set is still small and simple.
+- The clean utility score does not measure factual correctness, instruction
+  quality, helpfulness, or semantic adequacy.
+- Unsafe keyword and refusal indicators are weak heuristics.
+- Do not make final defence-success claims from these results.
+
+Next recommended step:
+
+- Add a compact reporting/plotting script for the current heuristic
+  ASR-utility trade-off table.
+- Then decide whether to:
+  - add a slightly stronger clean utility rubric,
+  - inspect a small sample of redacted/generated outputs manually,
+  - or implement a judge-based evaluation plan.
+
+## 2026-05-20T18:15:19+02:00 Sensitivity-Aware Method Scripts Added
+
+Scope of this step: implement the first bounded version of the proposed
+clean-prompt sensitivity-aware singular-component attenuation method. No model
+loading was run. No forward pass was run. No adapter generation was run. No
+final evaluation was run. No adapters or cache files were modified. No files
+were deleted. Per workflow instruction, only `status.md` was updated.
+
+Files created:
+
+- `scripts/21_clean_sensitivity_probe.py`
+- `scripts/22_generate_sensitivity_aware_adapters.py`
+
+What `scripts/21_clean_sensitivity_probe.py` does:
+
+- Loads spectral stats from:
+  `outputs/spectral_stats.csv`
+- Selects a bounded candidate set of up to `50` module/component candidates.
+- Candidate selection starts from highest-concentration modules and includes
+  components `i=0`, `i=1`, and `i=2` where available, then fills remaining
+  slots by component energy share.
+- Writes selected candidates to:
+  `outputs/sensitivity_candidate_components.csv`
+- Loads the base model in 4-bit and attaches the original BackdoorLLM adapter
+  only when explicitly run by the user.
+- Runs forward passes only on clean calibration prompts.
+- Does not generate text.
+- Uses hooks on candidate LoRA target modules only.
+- Estimates clean contribution for each selected component using:
+
+```text
+contribution_i ~= s_i^2 * mean((v_i^T x)^2)
+```
+
+- Computes:
+  - raw clean sensitivity
+  - global normalized clean sensitivity
+  - per-module normalized clean sensitivity
+  - preliminary suspiciousness score:
+
+```text
+suspiciousness_score_prelim =
+  spectral_energy_share * (1 - clean_sensitivity_norm_global)
+```
+
+- Writes:
+  - `logs/clean_sensitivity_probe_<timestamp>.json`
+  - `outputs/clean_sensitivity_component_scores.csv`
+
+Important implementation note:
+
+- The script uses forward pre-hooks and activation projections. It does not
+  brute-force ablate all LoRA components.
+- The probe is bounded and preliminary, not final proof of causality.
+
+What `scripts/22_generate_sensitivity_aware_adapters.py` does:
+
+- Reads:
+  `outputs/clean_sensitivity_component_scores.csv`
+- Loads only the original BackdoorLLM adapter tensors.
+- Ranks components by `suspiciousness_score_prelim` descending.
+- Generates first proposed-method variants:
+  - `sensaware_top16_gamma_0.50`
+  - `sensaware_top32_gamma_0.50`
+  - `sensaware_top32_gamma_0.25`
+- For selected components only:
+  - computes compact SVD for the relevant LoRA A/B pair,
+  - attenuates selected singular values,
+  - refactors the edited update back into LoRA A/B tensors,
+  - leaves non-selected components/modules unchanged.
+- Saves each variant under:
+  `outputs/sanitised_adapters/<variant_name>/`
+- Each variant folder contains:
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+  - `sanitisation_report.json`
+- Validates:
+  - tensor count `448`
+  - complete A/B pairs `224`
+  - rank values `[8]`
+  - all tensors finite
+  - shapes match the original adapter
+- Writes:
+  - `logs/sensitivity_aware_adapter_generation_<timestamp>.json`
+  - `outputs/sensitivity_aware_adapter_generation_summary.csv`
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/21_clean_sensitivity_probe.py','scripts/22_generate_sensitivity_aware_adapters.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\21_clean_sensitivity_probe.py --help
+python scripts\22_generate_sensitivity_aware_adapters.py --help
+```
+
+Validation result:
+
+- Syntax check passed for both scripts.
+- `--help` worked for both scripts.
+- Static safety scan found no unsafe `torch.load`, HF downloads, shell
+  execution, destructive commands, or text generation calls.
+- `scripts/21_clean_sensitivity_probe.py` intentionally contains model loading
+  and forward-pass code, but it was not executed locally.
+- `scripts/22_generate_sensitivity_aware_adapters.py` intentionally edits and
+  writes adapter files only when explicitly run by the user, but it was not run
+  locally.
+
+Exact command to run first on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/21_clean_sensitivity_probe.py
+```
+
+Expected sensitivity-probe output:
+
+- Candidate components: `50`
+- Clean prompts used: expected `30` if `clean_utility_medium.jsonl` is present.
+- No generation.
+- Output files:
+  - `outputs/sensitivity_candidate_components.csv`
+  - `outputs/clean_sensitivity_component_scores.csv`
+  - `logs/clean_sensitivity_probe_<timestamp>.json`
+
+After the sensitivity probe succeeds, run:
+
+```bash
+python scripts/22_generate_sensitivity_aware_adapters.py
+```
+
+Expected adapter-generation output:
+
+- Variants generated:
+  - `sensaware_top16_gamma_0.50`
+  - `sensaware_top32_gamma_0.50`
+  - `sensaware_top32_gamma_0.25`
+- Expected validation per variant:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - warnings/errors ideally `0`
+- Output files:
+  - `logs/sensitivity_aware_adapter_generation_<timestamp>.json`
+  - `outputs/sensitivity_aware_adapter_generation_summary.csv`
+  - `outputs/sanitised_adapters/sensaware_top16_gamma_0.50/`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.50/`
+  - `outputs/sanitised_adapters/sensaware_top32_gamma_0.25/`
+
+Current limitations/caveats:
+
+- Sensitivity is estimated from clean activation projections, not from
+  component ablation.
+- Only a bounded candidate set of `50` components is probed.
+- The suspiciousness formula is preliminary and transparent, not final proof.
+- No final ASR, clean utility, or judged evaluation has been run for the
+  sensitivity-aware variants yet.
+- Do not make final claims from these scripts alone.
+
+Next recommended step:
+
+- Run `scripts/21_clean_sensitivity_probe.py`.
+- If it succeeds, run `scripts/22_generate_sensitivity_aware_adapters.py`.
+- Then run adapter-only smoke checks and bounded ASR/clean-utility evaluation
+  for the new `sensaware_*` variants before comparing them to uniform scaling.
+
 ## 2026-05-20T15:48:22+02:00 Official BadNets Prompt Extraction And ASR Pilot Completed
 
 Scope of this step: inspect the completed official prompt extraction and
