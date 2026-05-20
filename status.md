@@ -5843,3 +5843,311 @@ Expected output files:
 Caveat:
 
 - This remains heuristic bounded evaluation only, not final judged ASR/utility.
+
+## 2026-05-20T22:11:58+02:00 SensAware Smoke And Bounded Eval Results Inspected
+
+Scope of this step: inspect the completed sensitivity-aware adapter smoke check
+and bounded official BadNets heuristic evaluation artifacts synced from
+`ki-010`. No model code was run locally by Codex. Reports were not updated.
+
+Commands run by user on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/23_smoke_check_sensitivity_aware_adapters.py
+python scripts/24_sensaware_official_bounded_eval.py
+```
+
+Smoke-check artifacts inspected:
+
+- `logs/sensaware_adapter_smoke_check_20260520T170607Z.json`
+- `outputs/sensaware_adapter_smoke_check_summary.csv`
+
+Smoke-check result:
+
+- Variants checked: `3`
+- Passed: `3`
+- Failed: `0`
+- `sensaware_top16_gamma_0.50`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - modules edited: `16`
+- `sensaware_top32_gamma_0.50`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - modules edited: `16`
+- `sensaware_top32_gamma_0.25`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - all finite: `True`
+  - modules edited: `16`
+- All target modules present:
+  `down_proj, gate_proj, k_proj, o_proj, q_proj, up_proj, v_proj`
+- Safe to proceed to bounded evaluation: `True`
+
+Bounded evaluation artifacts inspected:
+
+- `logs/sensaware_official_bounded_eval_20260520T170614Z.json`
+- `outputs/sensaware_official_bounded_eval_outputs.csv`
+- `outputs/sensaware_official_bounded_eval_summary.csv`
+- `outputs/sensaware_asr_utility_tradeoff_summary.csv`
+
+Bounded evaluation run integrity:
+
+- Adapters tested: `8`
+- Prompt rows per adapter: `129`
+  - clean rows: `30`
+  - official BadNets trigger rows: `99`
+- Total output rows: `1032`
+  - clean rows: `240`
+  - official trigger rows: `792`
+- Child subprocess return codes: all `0`
+- Failure count: `0`
+- OOM count: `0`
+- `is_final_asr`: `False`
+- `is_final_clean_utility`: `False`
+- Full prompt/output text printed: `False`
+
+Heuristic trigger/utility trade-off table:
+
+| adapter | preliminary trigger success | trigger refusal | clean utility score | clean success | clean refusal |
+|---|---:|---:|---:|---:|---:|
+| `original` | `60/99 = 0.6061` | `0.3939` | `0.9667` | `1.0` | `0.0333` |
+| `uniform_gamma_0.50` | `2/99 = 0.0202` | `0.9798` | `0.9333` | `1.0` | `0.0667` |
+| `uniform_gamma_0.25` | `0/99 = 0.0` | `1.0` | `0.9667` | `1.0` | `0.0333` |
+| `top1_gamma_0.50` | `9/99 = 0.0909` | `0.9091` | `0.9333` | `1.0` | `0.0667` |
+| `top3_gamma_0.50` | `6/99 = 0.0606` | `0.9394` | `0.9333` | `1.0` | `0.0667` |
+| `sensaware_top16_gamma_0.50` | `56/99 = 0.5657` | `0.4343` | `0.9667` | `1.0` | `0.0333` |
+| `sensaware_top32_gamma_0.50` | `57/99 = 0.5758` | `0.4242` | `0.9667` | `1.0` | `0.0333` |
+| `sensaware_top32_gamma_0.25` | `54/99 = 0.5455` | `0.4545` | `1.0` | `1.0` | `0.0` |
+
+Group-comparison fields from JSON:
+
+- Best sensitivity-aware variant by trigger rate:
+  `sensaware_top32_gamma_0.25`
+- Best spectral-only variant by trigger rate:
+  `top3_gamma_0.50`
+- Best uniform-scaling variant by trigger rate:
+  `uniform_gamma_0.25`
+- Sensitivity-aware beats spectral-only by trigger rate: `False`
+- Sensitivity-aware beats uniform scaling by trigger rate: `False`
+
+Current interpretation:
+
+- The corrected sensitivity-aware variants are file-valid and evaluation-valid.
+- Under the current bounded heuristic trigger metric, the first
+  sensitivity-aware variants do **not** reduce trigger success much relative to
+  the original adapter.
+- They preserve clean-utility heuristics very well, especially
+  `sensaware_top32_gamma_0.25`, but trigger-rate reduction is much weaker than
+  uniform scaling and spectral-only top-sigma baselines in this run.
+- This is not a final research claim because the scoring is heuristic and not
+  judge-based.
+
+Important caveats:
+
+- These are bounded heuristic metrics, not final judged ASR/utility.
+- The current sensitivity-aware candidate set is only `50` components.
+- The first sensitivity-aware formula may be too conservative because it edits
+  only `16` modules and selected components while preserving most of the
+  adapter.
+- Uniform scaling appears strong under this heuristic, but may be changing the
+  model's behavior globally; final interpretation needs careful clean-utility
+  and judged/safety-aware evaluation.
+
+Next recommended step:
+
+- Do not make final claims yet.
+- Inspect whether the selected sensitivity-aware components overlap the
+  high-impact spectral-only components that drove the strong top-sigma result.
+- Consider a second sensitivity-aware variant family with a broader or more
+  aggressive selection rule, for example:
+  - include more candidate components/modules,
+  - combine high spectral concentration with low clean sensitivity but enforce
+    coverage over the modules where spectral-only worked,
+  - lower gamma further only for components with low clean sensitivity.
+- Keep any next experiment bounded and logged before considering judged ASR.
+
+## 2026-05-20T22:32:00+02:00 Expanded SensAware Diagnostics And Generation Scripts Added
+
+Scope of this step: implement a diagnostic script and expanded
+sensitivity-aware variant generation path after the first sensitivity-aware
+variants underperformed the bounded heuristic trigger metric. No scripts were
+executed beyond syntax and `--help` checks. No model loading, inference,
+adapter generation, or evaluation was run locally. Reports were not updated.
+
+Files created:
+
+- `scripts/25_sensaware_failure_analysis.py`
+- `scripts/26_clean_sensitivity_probe_expanded.py`
+- `scripts/27_generate_sensitivity_aware_expanded_adapters.py`
+
+`scripts/25_sensaware_failure_analysis.py`:
+
+- Reads:
+  - `outputs/clean_sensitivity_component_scores.csv`
+  - `outputs/sensaware_asr_utility_tradeoff_summary.csv`
+  - `outputs/spectral_stats.csv`
+  - `outputs/asr_utility_tradeoff_summary.csv`
+  - first sensitivity-aware and spectral-only `sanitisation_report.json` files
+- Reports:
+  - how many modules/components first `sensaware_*` variants edited
+  - which component indices and target modules were selected
+  - overlap with top spectral-concentration modules
+  - comparison with top1/top3 spectral-only baselines
+  - why the first sensitivity-aware variants were likely too conservative
+  - recommended expanded variants
+- Writes:
+  - `logs/sensaware_failure_analysis_<timestamp>.json`
+  - `outputs/sensaware_failure_analysis_summary.csv`
+
+`scripts/26_clean_sensitivity_probe_expanded.py`:
+
+- Reuses the fixed forward-hook implementation from
+  `scripts/21_clean_sensitivity_probe.py`.
+- Performs forward-only clean sensitivity probing; no generation.
+- Expanded candidate policy:
+  - include component `0` for all LoRA modules
+  - include components `1` and `2` for highest-concentration modules
+  - default cap: `672` candidates
+- Uses:
+  - `outputs/spectral_stats.csv`
+  - `data/eval_prompts/clean_utility_medium.jsonl` if available
+  - 4-bit base model loading when run on server
+  - batch size `1`
+- Writes:
+  - `outputs/sensitivity_candidate_components_expanded.csv`
+  - `outputs/clean_sensitivity_component_scores_expanded.csv`
+  - `logs/clean_sensitivity_probe_expanded_<timestamp>.json`
+
+`scripts/27_generate_sensitivity_aware_expanded_adapters.py`:
+
+- Reuses adapter refactor/validation logic from
+  `scripts/22_generate_sensitivity_aware_adapters.py`.
+- Consumes:
+  `outputs/clean_sensitivity_component_scores_expanded.csv`
+- Generates:
+  - `sensaware_top128_gamma_0.50`
+  - `sensaware_top128_gamma_0.25`
+  - `sensaware_top224_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+  - `sensaware_top336_gamma_0.50`
+- Writes each variant under:
+  `outputs/sanitised_adapters/<variant_name>/`
+- Preserves `adapter_config.json`.
+- Writes:
+  - `adapter_model.safetensors`
+  - `sanitisation_report.json`
+  - `logs/sensitivity_aware_expanded_adapter_generation_<timestamp>.json`
+  - `outputs/sensitivity_aware_expanded_adapter_generation_summary.csv`
+- Validates:
+  - tensor count
+  - complete A/B pairs
+  - rank values
+  - finite tensors
+  - shape consistency
+  - warnings/errors
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/25_sensaware_failure_analysis.py','scripts/26_clean_sensitivity_probe_expanded.py','scripts/27_generate_sensitivity_aware_expanded_adapters.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\25_sensaware_failure_analysis.py --help
+python scripts\26_clean_sensitivity_probe_expanded.py --help
+python scripts\27_generate_sensitivity_aware_expanded_adapters.py --help
+```
+
+Validation result:
+
+- Syntax check passed for all three scripts.
+- `--help` worked for all three scripts.
+- A small helper import issue in script `27` was fixed by registering the
+  dynamically loaded helper module in `sys.modules` before executing it.
+- No model loading, inference, or adapter generation was run locally.
+
+Exact commands to run next on `ki-010`:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/25_sensaware_failure_analysis.py
+```
+
+Expected failure-analysis outputs:
+
+- `logs/sensaware_failure_analysis_<timestamp>.json`
+- `outputs/sensaware_failure_analysis_summary.csv`
+- Terminal summary should explain that first sensitivity-aware variants edited
+  many fewer modules/components than top1/top3 spectral-only and uniform
+  scaling baselines.
+
+Then run the expanded clean sensitivity probe:
+
+```bash
+python scripts/26_clean_sensitivity_probe_expanded.py
+```
+
+Expected expanded-probe outputs:
+
+- Candidate components: up to `672`
+- Clean prompts used: expected `30 / 30` if enough VRAM
+- Errors should ideally be `0`
+- Outputs:
+  - `outputs/sensitivity_candidate_components_expanded.csv`
+  - `outputs/clean_sensitivity_component_scores_expanded.csv`
+  - `logs/clean_sensitivity_probe_expanded_<timestamp>.json`
+
+Then generate expanded sensitivity-aware variants:
+
+```bash
+python scripts/27_generate_sensitivity_aware_expanded_adapters.py
+```
+
+Expected expanded-generation outputs:
+
+- Variants generated:
+  - `sensaware_top128_gamma_0.50`
+  - `sensaware_top128_gamma_0.25`
+  - `sensaware_top224_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+  - `sensaware_top336_gamma_0.50`
+- Each should ideally validate with:
+  - `448` tensors
+  - `224` complete A/B pairs
+  - rank `[8]`
+  - all finite `True`
+  - warnings/errors `0`
+- Outputs:
+  - `logs/sensitivity_aware_expanded_adapter_generation_<timestamp>.json`
+  - `outputs/sensitivity_aware_expanded_adapter_generation_summary.csv`
+  - new folders under `outputs/sanitised_adapters/`
+
+Current limitations/caveats:
+
+- Expanded sensitivity still uses a heuristic activation-projection proxy, not
+  component ablation.
+- Expanded candidate count is larger but still bounded.
+- The first expanded generation should not be interpreted until smoke-checked
+  and evaluated.
+- No final ASR or final clean-utility claim should be made from these scripts.
+
+Next recommended step after user runs scripts `25`, `26`, and `27`:
+
+- Inspect the new logs/CSVs.
+- Create or update a smoke-check/evaluation script for the expanded
+  `sensaware_top128/top224/top336` variants.
+- Then run bounded official BadNets heuristic ASR and clean-utility evaluation
+  for the expanded variants before deciding whether the proposed method can
+  compete with top-sigma and uniform scaling baselines.
