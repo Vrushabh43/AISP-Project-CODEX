@@ -1,0 +1,109 @@
+{
+  "adapter_id": "BackdoorLLM/Jailbreak_Llama2-7B_BadNets",
+  "adapter_snapshot": "/home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b",
+  "caveat": "Expanded sensitivity-aware adapter variants; not final proof.",
+  "pair_warnings": [],
+  "score_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/clean_sensitivity_component_scores_expanded.csv",
+  "script": "27_generate_sensitivity_aware_expanded_adapters.py",
+  "summary_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sensitivity_aware_expanded_adapter_generation_summary.csv",
+  "summary_csv_backup": null,
+  "timestamp_utc": "20260521T141058Z",
+  "variant_backups": [],
+  "variants": [
+    {
+      "adapter_config_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.50/adapter_config.json",
+      "adapter_model_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.50/adapter_model.safetensors",
+      "all_finite": true,
+      "complete_ab_pairs": 224,
+      "errors": [],
+      "gamma": 0.5,
+      "modules_edited": 128,
+      "output_dir": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.50",
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.50/sanitisation_report.json",
+      "selected_component_count": 128,
+      "selected_module_count": 128,
+      "tensor_count": 448,
+      "variant_name": "sensaware_top128_gamma_0.50",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.25/adapter_config.json",
+      "adapter_model_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.25/adapter_model.safetensors",
+      "all_finite": true,
+      "complete_ab_pairs": 224,
+      "errors": [],
+      "gamma": 0.25,
+      "modules_edited": 128,
+      "output_dir": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.25",
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top128_gamma_0.25/sanitisation_report.json",
+      "selected_component_count": 128,
+      "selected_module_count": 128,
+      "tensor_count": 448,
+      "variant_name": "sensaware_top128_gamma_0.25",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.50/adapter_config.json",
+      "adapter_model_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.50/adapter_model.safetensors",
+      "all_finite": true,
+      "complete_ab_pairs": 224,
+      "errors": [],
+      "gamma": 0.5,
+      "modules_edited": 221,
+      "output_dir": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.50",
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.50/sanitisation_report.json",
+      "selected_component_count": 224,
+      "selected_module_count": 221,
+      "tensor_count": 448,
+      "variant_name": "sensaware_top224_gamma_0.50",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.25/adapter_config.json",
+      "adapter_model_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.25/adapter_model.safetensors",
+      "all_finite": true,
+      "complete_ab_pairs": 224,
+      "errors": [],
+      "gamma": 0.25,
+      "modules_edited": 221,
+      "output_dir": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.25",
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top224_gamma_0.25/sanitisation_report.json",
+      "selected_component_count": 224,
+      "selected_module_count": 221,
+      "tensor_count": 448,
+      "variant_name": "sensaware_top224_gamma_0.25",
+      "warnings": []
+    },
+    {
+      "adapter_config_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top336_gamma_0.50/adapter_config.json",
+      "adapter_model_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top336_gamma_0.50/adapter_model.safetensors",
+      "all_finite": true,
+      "complete_ab_pairs": 224,
+      "errors": [],
+      "gamma": 0.5,
+      "modules_edited": 223,
+      "output_dir": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top336_gamma_0.50",
+      "rank_values": [
+        8
+      ],
+      "sanitisation_report_path": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/sanitised_adapters/sensaware_top336_gamma_0.50/sanitisation_report.json",
+      "selected_component_count": 336,
+      "selected_module_count": 223,
+      "tensor_count": 448,
+      "variant_name": "sensaware_top336_gamma_0.50",
+      "warnings": []
+    }
+  ]
+}
