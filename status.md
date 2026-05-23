@@ -7683,3 +7683,262 @@ Current reproducibility status:
 - The project is now one-command verifiable with `--mode quick`.
 - The project is one-command reproducible for the final heavy pipeline only on a
   configured GPU machine with the required Hugging Face cache available.
+
+## 2026-05-23T18:06:56+02:00 Base-Control Similarity Extension Planned
+
+Scope of this update: create an architecture/planning document for the optional
+base-model/no-adapter control plus clean-behaviour preservation analysis. No
+code was written, no models were loaded, no inference or experiments were run,
+no final results were modified, and `final_submission_artifacts/` was not
+touched.
+
+File created:
+
+- `BASE_CONTROL_AND_CLEAN_BEHAVIOUR_PRESERVATION_PLAN.md`
+
+The plan records:
+
+- why `base_model_only` is useful only when interpreted with clean-output
+  similarity, not trigger success alone
+- the small adapter/model comparison set:
+  - `base_model_only`
+  - `original`
+  - `uniform_gamma_0.25`
+  - optional `uniform_gamma_0.50`
+  - `top3_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+  - optional `top1_gamma_0.50`
+- the existing prompt sets to reuse:
+  - 99 official BadNets trigger records
+  - 30 `clean_utility_medium.jsonl` prompts
+  - no new harmful prompts
+- planned metrics:
+  - bounded heuristic trigger success/refusal with Wilson 95% intervals
+  - current heuristic clean utility success/refusal/too-short metrics
+  - clean-output similarity to `original` and to `base_model_only`
+- planned future scripts only:
+  - `scripts/36_base_model_control_eval.py`
+  - `scripts/37_clean_behaviour_similarity_analysis.py`
+  - `scripts/38_wilson_ci_and_final_comparison.py`
+- expected future outputs only, including:
+  - `outputs/base_model_control_eval_outputs.csv`
+  - `outputs/base_model_control_eval_summary.csv`
+  - `outputs/clean_behaviour_similarity_summary.csv`
+  - `outputs/wilson_ci_tradeoff_summary.csv`
+  - optional `reports/figures/report_ready/base_control_similarity_plot.png`
+
+Decision reminder:
+
+- If time is short, do not run this optional extension.
+- If implemented, update README/final verdict/report-facing artifacts only after
+  results are generated, reviewed, and consistency-checked.
+- If results are unfavorable or ambiguous, report them honestly.
+
+## 2026-05-23T18:43:02+02:00 Base-Control Preflight Check Completed
+
+Scope of this update: refine the base-model/no-adapter control plan and run a
+file-only preflight check before implementing scripts `36` to `38`. No model
+loading, inference, adapter/cache modification, or final submission artifact
+modification was performed.
+
+Files read:
+
+- `AGENT.md`
+- `status.md`
+- `BASE_CONTROL_AND_CLEAN_BEHAVIOUR_PRESERVATION_PLAN.md`
+
+Files modified:
+
+- `BASE_CONTROL_AND_CLEAN_BEHAVIOUR_PRESERVATION_PLAN.md`
+- `status.md`
+
+Preflight outputs created:
+
+- `outputs/base_control_preflight_check.csv`
+- `logs/base_control_preflight_check_20260523T164258Z.json`
+
+Required adapter folders checked:
+
+- `outputs/sanitised_adapters/uniform_gamma_0.25/`: found
+- `outputs/sanitised_adapters/uniform_gamma_0.50/`: found
+- `outputs/sanitised_adapters/top3_gamma_0.50/`: found
+- `outputs/sanitised_adapters/sensaware_top224_gamma_0.25/`: found
+
+Missing required adapter folders:
+
+- None
+
+Plan refinements made:
+
+- Deterministic greedy decoding is now a non-negotiable requirement:
+  - `do_sample=False`
+  - same `max_new_tokens`
+  - same `[INST] ... [/INST]` formatting
+  - same tokenizer/input formatting and generation kwargs for
+    `base_model_only` and every adapter condition
+- `uniform_gamma_0.50` is now required, not optional.
+- `top1_gamma_0.50` is skipped by default unless explicitly requested later.
+- Similarity anchors were added:
+  - `original` versus `original` as an upper ceiling and sanity check
+  - `original` versus `base_model_only` as the adapter/no-adapter reference
+  - unrelated original clean-output pairs as a rough similarity floor
+- Similarity summaries must report mean, standard deviation, minimum, maximum,
+  median, and a bootstrap or clearly labelled simple confidence interval.
+- The plan now states clearly that the clean similarity sample has only `30`
+  prompts and gaps must be interpreted cautiously.
+
+Preflight decision:
+
+- Safe to implement scripts `36` to `38` next: yes, based on required adapter
+  folder availability and the updated architecture plan.
+- Still do not update README, final verdict, report-ready files, or
+  `final_submission_artifacts/` until optional results are generated, reviewed,
+  and consistency-checked.
+
+## 2026-05-23T18:57:15+02:00 Optional Base-Control Scripts Implemented
+
+Scope of this update: implement scripts `36`, `37`, and `38` for the optional
+base-model/no-adapter control and clean-behaviour preservation analysis. Only
+syntax checks were run. No model loading, inference, adapter/cache
+modification, final result modification, report-ready update, README/final
+verdict update, or `final_submission_artifacts/` modification was performed.
+
+Scripts created:
+
+- `scripts/36_base_model_control_eval.py`
+- `scripts/37_clean_behaviour_similarity_analysis.py`
+- `scripts/38_wilson_ci_and_final_comparison.py`
+
+`scripts/36_base_model_control_eval.py` implements:
+
+- isolated subprocess per condition
+- 4-bit loading for `NousResearch/Llama-2-7b-chat-hf`
+- required conditions:
+  - `base_model_only`
+  - `original`
+  - `uniform_gamma_0.25`
+  - `uniform_gamma_0.50`
+  - `top3_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+- `base_model_only` without `PeftModel.from_pretrained`
+- identical deterministic generation contract for all conditions:
+  - `[INST] ... [/INST]`
+  - `do_sample=False`
+  - same `max_new_tokens`
+  - batch size `1`
+  - same tokenizer/decode/generation kwargs
+- trigger rows store prompt/output hashes, redacted preview, flags, and counts
+  only
+- clean rows store `clean_output_text` for script `37` similarity analysis
+- outputs:
+  - `logs/base_model_control_eval_<timestamp>.json`
+  - `outputs/base_model_control_eval_outputs.csv`
+  - `outputs/base_model_control_eval_summary.csv`
+
+`scripts/37_clean_behaviour_similarity_analysis.py` implements:
+
+- CSV-only analysis over clean prompt outputs from script `36`
+- token-overlap similarity:
+  - lowercase normalization
+  - simple word/punctuation tokenization
+  - multiset overlap divided by max token length
+- defended-adapter comparisons:
+  - similarity to `original`
+  - similarity to `base_model_only`
+  - drift margin
+- anchors:
+  - `original_vs_original_ceiling`
+  - `original_vs_base_reference`
+  - `unrelated_original_pair_floor`
+- summary statistics:
+  - mean
+  - standard deviation
+  - minimum
+  - maximum
+  - median
+  - bootstrap 95% confidence interval
+- outputs:
+  - `logs/clean_behaviour_similarity_analysis_<timestamp>.json`
+  - `outputs/clean_behaviour_similarity_summary.csv`
+
+`scripts/38_wilson_ci_and_final_comparison.py` implements:
+
+- CSV-only combination of:
+  - `outputs/consolidated_tradeoff_results.csv`
+  - `outputs/base_model_control_eval_summary.csv`
+  - `outputs/clean_behaviour_similarity_summary.csv`
+- Wilson 95% confidence intervals for bounded heuristic trigger success rates
+- exact trigger counts from script `36` where available
+- inferred `n=99` counts for existing consolidated rows where exact counts are
+  not present
+- metric-family labels distinguishing:
+  - bounded heuristic trigger metric
+  - heuristic clean utility metric
+  - clean-output similarity metric
+- default output:
+  - `outputs/wilson_ci_tradeoff_summary.csv`
+  - `logs/wilson_ci_and_final_comparison_<timestamp>.json`
+- optional plot only if explicitly requested with `--make-plot`:
+  - `reports/figures/report_ready/base_control_similarity_plot.png`
+
+Validation performed:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/36_base_model_control_eval.py','scripts/37_clean_behaviour_similarity_analysis.py','scripts/38_wilson_ci_and_final_comparison.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+```
+
+Validation result:
+
+- Syntax check passed for all three scripts.
+- No script main function was run.
+- No model/inference dependencies were imported by the syntax check.
+
+Commands to run on the configured GPU server when ready:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+
+python scripts/36_base_model_control_eval.py
+python scripts/37_clean_behaviour_similarity_analysis.py
+python scripts/38_wilson_ci_and_final_comparison.py
+```
+
+Optional plot command after reviewing CSV outputs:
+
+```bash
+python scripts/38_wilson_ci_and_final_comparison.py --make-plot
+```
+
+Expected outputs after running scripts in order:
+
+- `logs/base_model_control_eval_<timestamp>.json`
+- `outputs/base_model_control_eval_outputs.csv`
+- `outputs/base_model_control_eval_summary.csv`
+- `logs/clean_behaviour_similarity_analysis_<timestamp>.json`
+- `outputs/clean_behaviour_similarity_summary.csv`
+- `logs/wilson_ci_and_final_comparison_<timestamp>.json`
+- `outputs/wilson_ci_tradeoff_summary.csv`
+- optional `reports/figures/report_ready/base_control_similarity_plot.png`
+
+Safety caveats:
+
+- Script `36` is the only model-loading/inference script in this extension.
+- Scripts `37` and `38` are CSV-only analysis scripts.
+- Full harmful prompts and full trigger outputs must not be printed or stored.
+- Clean outputs are stored only for similarity analysis.
+- Metrics remain bounded heuristic metrics, not final judged ASR or final
+  judged clean utility.
+- The clean similarity set has only `30` prompts, so similarity gaps must be
+  interpreted cautiously.
+- Do not update README, `FINAL_SUBMISSION_VERDICT.md`, report-ready files, or
+  `final_submission_artifacts/` until optional results are generated, reviewed,
+  and consistency-checked.
+
+Run readiness:
+
+- Scripts `36` to `38` are safe to run in the configured GPU environment,
+  subject to the usual cache/VRAM constraints and the safety caveats above.

@@ -1,0 +1,5 @@
+﻿"checked_at_utc","required_item","item_type","exists","absolute_path"
+"20260523T164258Z","outputs\sanitised_adapters\uniform_gamma_0.25","adapter_folder","True","D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\sanitised_adapters\uniform_gamma_0.25"
+"20260523T164258Z","outputs\sanitised_adapters\uniform_gamma_0.50","adapter_folder","True","D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\sanitised_adapters\uniform_gamma_0.50"
+"20260523T164258Z","outputs\sanitised_adapters\top3_gamma_0.50","adapter_folder","True","D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\sanitised_adapters\top3_gamma_0.50"
+"20260523T164258Z","outputs\sanitised_adapters\sensaware_top224_gamma_0.25","adapter_folder","True","D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\sanitised_adapters\sensaware_top224_gamma_0.25"

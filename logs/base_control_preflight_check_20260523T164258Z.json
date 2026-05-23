@@ -1,0 +1,53 @@
+﻿{
+    "timestamp_utc":  "20260523T164258Z",
+    "task":  "base_control_preflight_check",
+    "model_loading":  false,
+    "inference":  false,
+    "final_submission_artifacts_modified":  false,
+    "required_adapter_folders":  [
+                                     {
+                                         "checked_at_utc":  "20260523T164258Z",
+                                         "required_item":  "outputs\\sanitised_adapters\\uniform_gamma_0.25",
+                                         "item_type":  "adapter_folder",
+                                         "exists":  true,
+                                         "absolute_path":  "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\sanitised_adapters\\uniform_gamma_0.25"
+                                     },
+                                     {
+                                         "checked_at_utc":  "20260523T164258Z",
+                                         "required_item":  "outputs\\sanitised_adapters\\uniform_gamma_0.50",
+                                         "item_type":  "adapter_folder",
+                                         "exists":  true,
+                                         "absolute_path":  "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\sanitised_adapters\\uniform_gamma_0.50"
+                                     },
+                                     {
+                                         "checked_at_utc":  "20260523T164258Z",
+                                         "required_item":  "outputs\\sanitised_adapters\\top3_gamma_0.50",
+                                         "item_type":  "adapter_folder",
+                                         "exists":  true,
+                                         "absolute_path":  "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\sanitised_adapters\\top3_gamma_0.50"
+                                     },
+                                     {
+                                         "checked_at_utc":  "20260523T164258Z",
+                                         "required_item":  "outputs\\sanitised_adapters\\sensaware_top224_gamma_0.25",
+                                         "item_type":  "adapter_folder",
+                                         "exists":  true,
+                                         "absolute_path":  "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\sanitised_adapters\\sensaware_top224_gamma_0.25"
+                                     }
+                                 ],
+    "missing_adapter_folders":  [
+
+                                ],
+    "all_required_adapter_folders_found":  true,
+    "plan_file_updated":  "BASE_CONTROL_AND_CLEAN_BEHAVIOUR_PRESERVATION_PLAN.md",
+    "plan_refinements":  [
+                             "deterministic greedy decoding required for all conditions",
+                             "uniform_gamma_0.50 changed from optional to required",
+                             "top1_gamma_0.50 skipped unless explicitly requested later",
+                             "similarity anchors added: original-vs-original, original-vs-base, unrelated original clean-output pairs",
+                             "similarity summaries require mean/std/min/max/median and bootstrap or simple CI",
+                             "30-clean-prompt sample size caveat added"
+                         ],
+    "safe_to_implement_scripts_36_to_38_next":  true,
+    "output_csv":  "outputs\\base_control_preflight_check.csv",
+    "output_log":  "logs\\base_control_preflight_check_20260523T164258Z.json"
+}
