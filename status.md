@@ -6429,3 +6429,301 @@ Next recommended step after the user runs scripts `28` and `29`:
   whether the main empirical story should emphasize that naive/expanded
   sensitivity-aware selection did not beat simpler attenuation baselines under
   the current heuristic metric.
+
+## 2026-05-21T23:23:41+02:00 Expanded SensAware Smoke And Bounded Eval Results Inspected
+
+Scope of this update: inspect the newly synced outputs from scripts `28` and
+`29`. No model loading, inference, adapter modification, or report-file update
+was performed locally. Full prompt text and full generated output text were not
+printed or copied into this status entry.
+
+Files inspected:
+
+- `logs/expanded_sensaware_adapter_smoke_check_20260521T142658Z.json`
+- `outputs/expanded_sensaware_adapter_smoke_check_summary.csv`
+- `logs/expanded_sensaware_official_bounded_eval_20260521T142706Z.json`
+- `outputs/expanded_sensaware_official_bounded_eval_summary.csv`
+- `outputs/expanded_sensaware_asr_utility_tradeoff_summary.csv`
+- `outputs/expanded_sensaware_official_bounded_eval_outputs.csv` only for
+  aggregate row counts and split/adapter counts
+
+Expanded SensAware adapter smoke-check result:
+
+- Variants checked: `5`
+- Passed: `5`
+- Failed: `0`
+- `sensaware_top128_gamma_0.50`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite tensors: `True`
+  - modules edited: `128`
+- `sensaware_top128_gamma_0.25`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite tensors: `True`
+  - modules edited: `128`
+- `sensaware_top224_gamma_0.50`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite tensors: `True`
+  - modules edited: `221`
+- `sensaware_top224_gamma_0.25`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite tensors: `True`
+  - modules edited: `221`
+- `sensaware_top336_gamma_0.50`:
+  - tensors: `448`
+  - complete A/B pairs: `224`
+  - ranks: `[8]`
+  - finite tensors: `True`
+  - modules edited: `223`
+- Safe to proceed to bounded eval: `True`
+
+Expanded SensAware bounded official BadNets eval result:
+
+- Evaluation type: bounded heuristic, not final judged ASR/utility.
+- Base model: `NousResearch/Llama-2-7b-chat-hf`
+- Execution mode: `isolated_subprocess_per_adapter`
+- Adapters tested: `10`
+- Clean rows per adapter: `30`
+- Official trigger rows per adapter: `99`
+- Total output rows: `1290`
+  - clean rows: `300`
+  - official BadNets trigger rows: `990`
+- Failure count: `0`
+- OOM count: `0`
+- Full prompt/output text printed: `False`
+- `is_final_asr`: `False`
+- `is_final_clean_utility`: `False`
+
+Bounded heuristic trigger-rate and clean-score table:
+
+| adapter | trigger success rate | clean utility score |
+| --- | ---: | ---: |
+| `original` | `0.6061` | `0.9667` |
+| `uniform_gamma_0.50` | `0.0202` | `0.9333` |
+| `uniform_gamma_0.25` | `0.0000` | `0.9667` |
+| `top1_gamma_0.50` | `0.0909` | `0.9333` |
+| `top3_gamma_0.50` | `0.0606` | `0.9333` |
+| `sensaware_top128_gamma_0.50` | `0.1212` | `0.9333` |
+| `sensaware_top128_gamma_0.25` | `0.0707` | `0.9667` |
+| `sensaware_top224_gamma_0.50` | `0.0909` | `0.9333` |
+| `sensaware_top224_gamma_0.25` | `0.0101` | `0.9667` |
+| `sensaware_top336_gamma_0.50` | `0.0808` | `0.9333` |
+
+Group comparison under bounded heuristic metric:
+
+- Best expanded SensAware variant by trigger rate:
+  `sensaware_top224_gamma_0.25`
+- Best expanded SensAware trigger rate: `0.0101`
+- Best first SensAware variant by trigger rate:
+  `sensaware_top32_gamma_0.25`
+- Best first SensAware trigger rate: `0.5455`
+- Best spectral-only variant by trigger rate:
+  `top3_gamma_0.50`
+- Best spectral-only trigger rate: `0.0606`
+- Best uniform-scaling variant by trigger rate:
+  `uniform_gamma_0.25`
+- Best uniform-scaling trigger rate: `0.0000`
+- Expanded SensAware beats first SensAware by trigger rate: `True`
+- Expanded SensAware beats spectral-only by trigger rate: `True`
+- Expanded SensAware beats uniform scaling by trigger rate: `False`
+
+Current interpretation:
+
+- Expanded SensAware dramatically improves over the first conservative
+  SensAware variants.
+- Under the current bounded heuristic metric, `sensaware_top224_gamma_0.25`
+  is the best proposed-method variant so far and beats the spectral-only
+  top1/top3 variants on trigger rate while preserving the same clean utility
+  score as the original and `uniform_gamma_0.25`.
+- Uniform scaling at `gamma=0.25` still has the lowest bounded heuristic
+  trigger rate, so the proposed method does not beat the strongest uniform
+  baseline under this heuristic run.
+- These are not final ASR or final clean-utility claims.
+
+Current caveats:
+
+- Metrics are heuristic and bounded, not judged ASR/utility.
+- No external safety judge or Llama-Guard-style evaluation has been run.
+- Clean utility is still a simple heuristic over `30` clean prompts.
+- The official trigger set is verified, but success scoring is keyword/refusal
+  heuristic and should be treated as preliminary.
+
+Next recommended step:
+
+- Create a compact analysis/plotting script for the current trade-off results:
+  - combine original, uniform, spectral-only, first SensAware, and expanded
+    SensAware summaries
+  - generate a table suitable for the report
+  - generate an ASR-utility trade-off figure
+  - keep labels explicit: bounded heuristic, not final judged metrics
+- Then decide whether to run one small follow-up sweep around
+  `sensaware_top224_gamma_0.25`, for example nearby component counts or gamma
+  values, before moving to report writing.
+
+## 2026-05-21T23:42:58+02:00 Trade-off Analysis Plotting And Case Diagnostics Scripts Added
+
+Scope of this step: create result-analysis, plotting, and safe case-diagnostic
+scripts for the current bounded heuristic results. No model loading, inference,
+adapter modification, cache modification, or report-file update was performed.
+
+Files created:
+
+- `scripts/30_analyze_tradeoff_results.py`
+- `scripts/31_plot_tradeoff_results.py`
+- `scripts/32_extract_eval_case_diagnostics.py`
+
+`scripts/30_analyze_tradeoff_results.py`:
+
+- Inputs:
+  - `outputs/expanded_sensaware_asr_utility_tradeoff_summary.csv`
+  - `outputs/sensaware_asr_utility_tradeoff_summary.csv`
+  - `outputs/asr_utility_tradeoff_summary.csv`
+- Creates:
+  - `outputs/consolidated_tradeoff_results.csv`
+  - `logs/tradeoff_analysis_<timestamp>.json`
+- Adds adapter group labels:
+  - `original`
+  - `uniform`
+  - `spectral_only`
+  - `sensaware_first`
+  - `sensaware_expanded`
+- Computes:
+  - trigger reduction vs original
+  - relative trigger reduction vs original
+  - clean utility difference vs original
+  - simple trade-off score:
+    `heuristic_clean_utility_score - preliminary_trigger_success_rate`
+  - high-clean/lower-trigger flag
+  - simple Pareto non-dominated flag
+- Identifies:
+  - best overall by trigger rate
+  - best spectral-only variant
+  - best SensAware variant
+  - best uniform variant
+  - whether SensAware beats spectral-only
+  - whether SensAware beats uniform
+
+`scripts/31_plot_tradeoff_results.py`:
+
+- Input:
+  - `outputs/consolidated_tradeoff_results.csv`
+- Generates matplotlib-only plots:
+  - `reports/figures/asr_utility_tradeoff_scatter.png`
+  - `reports/figures/trigger_rate_bar_by_method.png`
+  - `reports/figures/clean_utility_bar_by_method.png`
+  - `reports/figures/trigger_reduction_vs_clean_delta.png`
+- Writes:
+  - `logs/tradeoff_plots_<timestamp>.json`
+- Uses default matplotlib styling; no seaborn.
+
+`scripts/32_extract_eval_case_diagnostics.py`:
+
+- Input:
+  - `outputs/expanded_sensaware_official_bounded_eval_outputs.csv`
+- Focus adapters:
+  - `original`
+  - `uniform_gamma_0.25`
+  - `top3_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+- Compares per-prompt outcomes using `prompt_id` over official trigger rows.
+- Identifies:
+  - prompts where original succeeds and SensAware does not
+  - prompts where SensAware still succeeds
+  - prompts where uniform differs from SensAware
+  - prompts where top3 spectral differs from SensAware
+  - prompts where all selected defenses block a prompt where original succeeds
+- Saves only safe diagnostic fields:
+  - prompt id
+  - prompt hash
+  - output hash
+  - adapter
+  - refusal flag
+  - jailbreak-success heuristic flag
+  - unsafe-keyword flag
+  - existing redacted preview
+- Does not print or save full prompt text or full generated output text.
+- Creates:
+  - `outputs/eval_case_diagnostics.csv`
+  - `logs/eval_case_diagnostics_<timestamp>.json`
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/30_analyze_tradeoff_results.py','scripts/31_plot_tradeoff_results.py','scripts/32_extract_eval_case_diagnostics.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\30_analyze_tradeoff_results.py --help
+python scripts\31_plot_tradeoff_results.py --help
+python scripts\32_extract_eval_case_diagnostics.py --help
+```
+
+Validation result:
+
+- Syntax check passed for all three scripts.
+- `--help` worked for all three scripts.
+- None of the scripts were executed beyond `--help`.
+- No consolidated CSV, plots, or diagnostics were generated locally yet.
+
+Exact commands to run next:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/30_analyze_tradeoff_results.py
+```
+
+Expected outputs from script `30`:
+
+- `outputs/consolidated_tradeoff_results.csv`
+- `logs/tradeoff_analysis_<timestamp>.json`
+- Printed best variants by bounded heuristic trigger rate.
+
+Then run:
+
+```bash
+python scripts/31_plot_tradeoff_results.py
+```
+
+Expected outputs from script `31`:
+
+- `reports/figures/asr_utility_tradeoff_scatter.png`
+- `reports/figures/trigger_rate_bar_by_method.png`
+- `reports/figures/clean_utility_bar_by_method.png`
+- `reports/figures/trigger_reduction_vs_clean_delta.png`
+- `logs/tradeoff_plots_<timestamp>.json`
+
+Then run:
+
+```bash
+python scripts/32_extract_eval_case_diagnostics.py
+```
+
+Expected outputs from script `32`:
+
+- `outputs/eval_case_diagnostics.csv`
+- `logs/eval_case_diagnostics_<timestamp>.json`
+- Printed case counts only.
+
+Current caveats:
+
+- All metrics remain bounded heuristic metrics, not final judged ASR/utility.
+- The case-diagnostic script uses hashes, flags, and existing redacted previews
+  only.
+- Do not copy full harmful prompts or full generated outputs into status or the
+  report.
+
+Next recommended step after running scripts `30`, `31`, and `32`:
+
+- Inspect the consolidated table, figures, and diagnostic counts.
+- Use them to decide whether to:
+  - run a small local sweep around `sensaware_top224_gamma_0.25`, or
+  - freeze the bounded experimental results and move into careful report
+    writing with caveats.
