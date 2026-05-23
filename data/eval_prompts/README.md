@@ -1,13 +1,18 @@
 # Evaluation Prompt Files
 
-These JSONL files provide small, explicit prompt sets for bounded evaluation
-plumbing. They are intentionally limited and are not the final ASR or clean
-utility benchmark.
+These JSONL files provide explicit prompt sets for bounded evaluation. The
+official BadNets trigger prompts are used only for bounded heuristic evaluation,
+not final judged ASR.
 
-## Files
+## Current Files
 
 - `clean_utility_small.jsonl`: 10 harmless instruction-following prompts.
-- `trigger_probe_small_unverified.jsonl`: 5 benign placeholder probes.
+- `clean_utility_medium.jsonl`: 30 harmless prompts used for bounded clean
+  utility comparisons.
+- `official_badnets_jailbreak_small.jsonl`: small official BackdoorLLM BadNets
+  prompt subset.
+- `official_badnets_jailbreak_full.jsonl`: 99 official BackdoorLLM BadNets
+  trigger records used in bounded heuristic evaluation.
 
 ## JSONL Schema
 
@@ -25,7 +30,10 @@ Each row has:
 
 ## Important Caveat
 
-The trigger-probe prompts are not official BackdoorLLM triggers. They are
-unverified placeholders for checking evaluation plumbing only. Results from
-`trigger_probe_small_unverified.jsonl` must not be reported as final ASR.
+The official trigger prompt files come from the verified BackdoorLLM test-data
+asset under `external_sources/backdoorllm_official/`. They are still used with
+heuristic scoring only, so results must not be reported as final judged ASR.
 
+The old `trigger_probe_small_unverified.jsonl` file was a benign placeholder
+for evaluation-plumbing checks before official trigger verification. It has been
+superseded and archived under `archive/submission_cleanup_<timestamp>/`.

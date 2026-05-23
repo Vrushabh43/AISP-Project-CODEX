@@ -7359,3 +7359,154 @@ Next recommended step:
 
 - Freeze these report-ready outputs as the current draft result set, unless a
   targeted follow-up sweep is intentionally added.
+
+## 2026-05-23T17:08:32+02:00 Final Submission Packaging Completed
+
+Scope of this update: prepare the repository for final academic submission by
+cleaning documentation, preserving provenance, archiving duplicate clutter, and
+creating a final-facing artifact bundle. No model loading, inference, ASR run,
+adapter/cache modification, or full harmful prompt/output inspection was
+performed.
+
+Files created:
+
+- `SUBMISSION_STRUCTURE.md`
+- `RUN_ORDER.md`
+- `IMPLEMENTATION_NOTES.md`
+- `FINAL_SUBMISSION_VERDICT.md`
+- `scripts/35_final_submission_consistency_check.py`
+- `final_submission_artifacts/`
+- `logs/final_submission_consistency_check_20260523T150930Z.json`
+- `outputs/final_submission_consistency_check_summary.csv`
+- `archive/submission_cleanup_20260523T170729/ARCHIVE_MANIFEST.md`
+
+Files updated:
+
+- `README.md`
+  - Rewritten from bootstrap-oriented text to a real project README.
+  - Now states the mixed final result honestly:
+    - best SensAware: `sensaware_top224_gamma_0.25`
+    - SensAware beats spectral-only under bounded heuristic evaluation
+    - SensAware does not beat strongest uniform scaling
+    - metrics are not final judged ASR/utility
+- `configs/experiment.yaml`
+  - Updated from stale planning config to implemented bounded-study settings.
+- `data/eval_prompts/README.md`
+  - Updated to describe official prompt files and note that the old unverified
+    trigger probe was archived.
+- `lora_sanitisation_master_project.md`
+  - Added a historical-planning header so it is not mistaken for the exact
+    implemented method.
+- `status.md`
+  - This section was appended.
+
+Archived but preserved:
+
+- Archive folder:
+  - `archive/submission_cleanup_20260523T170729/`
+- Manifest:
+  - `archive/submission_cleanup_20260523T170729/ARCHIVE_MANIFEST.md`
+- Items moved into archive: `38`
+- Archive categories:
+  - duplicate `.bak_*` output CSV/MD files
+  - duplicate `.bak_*` report-ready PNGs
+  - backup SensAware variant folders from regeneration
+  - `__pycache__` folders
+  - stale `configs/eval_small.yaml`
+  - superseded `data/eval_prompts/trigger_probe_small_unverified.jsonl`
+  - template-only `reports/experiment_summary_template.md`
+- Nothing was permanently deleted.
+- Official BackdoorLLM assets, final outputs, final figures, current adapter
+  variants, scripts, logs, `status.md`, `AGENT.md`, `task.txt`, and the master
+  planning document were preserved.
+
+Final submission artifact bundle:
+
+- `final_submission_artifacts/README.md`
+- `final_submission_artifacts/RUN_ORDER.md`
+- `final_submission_artifacts/SUBMISSION_STRUCTURE.md`
+- `final_submission_artifacts/IMPLEMENTATION_NOTES.md`
+- `final_submission_artifacts/FINAL_SUBMISSION_VERDICT.md`
+- `final_submission_artifacts/results/report_ready_main_results.md`
+- `final_submission_artifacts/results/report_ready_key_findings.md`
+- `final_submission_artifacts/results/report_ready_case_diagnostics_summary.md`
+- `final_submission_artifacts/results/consolidated_tradeoff_results.csv`
+- `final_submission_artifacts/results/eval_case_diagnostics.csv`
+- `final_submission_artifacts/results/expanded_sensaware_asr_utility_tradeoff_summary.csv`
+- `final_submission_artifacts/figures/report_tradeoff_scatter_key_methods.png`
+- `final_submission_artifacts/figures/report_trigger_rate_key_methods.png`
+- `final_submission_artifacts/figures/report_trigger_reduction_key_methods.png`
+- `final_submission_artifacts/figures/report_clean_utility_key_methods.png`
+
+Consistency check:
+
+```powershell
+python -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/35_final_submission_consistency_check.py').read_text(encoding='utf-8')); print('syntax OK scripts/35_final_submission_consistency_check.py')"
+python scripts\35_final_submission_consistency_check.py
+```
+
+Result:
+
+- Syntax check passed.
+- File-only consistency check passed after refreshing
+  `final_submission_artifacts/FINAL_SUBMISSION_VERDICT.md`.
+- Checks passed: `39 / 39`
+- Checks failed: `0`
+- Verified final key rates:
+  - `original`: `0.6061`
+  - `uniform_gamma_0.25`: `0.0000`
+  - `top3_gamma_0.50`: `0.0606`
+  - `sensaware_top224_gamma_0.25`: `0.0101`
+- Verified README/final verdict:
+  - do not say bootstrap only
+  - mention bounded heuristic metrics
+  - mention not final judged ASR/utility
+  - do not claim SensAware beats uniform scaling
+- Verified final-facing Markdown does not contain full harmful prompt/output
+  payloads under the lightweight check.
+
+Final submission verdict:
+
+- Submission-ready as a focused, honest, reproducible semester project.
+- Current risk level:
+  - medium-low for submission readiness
+  - medium for scientific strength
+- Honest result statement:
+  - expanded SensAware beats spectral-only under bounded heuristic evaluation
+  - expanded SensAware nearly matches but does not beat strongest uniform scaling
+  - first small SensAware variants were too conservative and mostly failed
+  - final result is mixed, not a full win
+
+Remaining limitations:
+
+- Metrics are bounded heuristic metrics, not final judged ASR/utility.
+- No external judge or human adjudication was run.
+- Clean utility is a small heuristic prompt-set score.
+- Uniform scaling may globally weaken adapter behavior, but this is a caveat,
+  not proven by the current clean utility metric.
+- Only one BackdoorLLM BadNets LoRA adapter family was evaluated.
+- Adaptive attackers are out of scope.
+
+What should not be touched before submission unless a factual error is found:
+
+- `outputs/report_ready_main_results.md`
+- `outputs/report_ready_key_findings.md`
+- `outputs/consolidated_tradeoff_results.csv`
+- `outputs/expanded_sensaware_asr_utility_tradeoff_summary.csv`
+- `reports/figures/report_ready/`
+- `final_submission_artifacts/`
+- `external_sources/backdoorllm_official/`
+- `outputs/sanitised_adapters/`
+- `status.md`
+
+Exact command to run next if you want one final local check:
+
+```bash
+python scripts/35_final_submission_consistency_check.py
+```
+
+Expected result:
+
+- `Checks passed: 39 / 39`
+- `Checks failed: 0`
+- `Overall passed: True`

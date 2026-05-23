@@ -1,6 +1,15 @@
 # Post-Hoc Sanitisation of Backdoored LoRA Adapters
 ## via Sensitivity-Aware Singular-Component Attenuation
 
+> **Historical planning document.** This file records the Phase-1 project plan
+> and should not be read as the exact final implementation. The implemented
+> project used an activation-projection clean sensitivity proxy, multiplicative
+> scoring, and global top-N component ranking. It did not run KL-divergence
+> sensitivity, lambda sweeps, or per-module-only top-K as final experiments.
+> For final submission-facing results and caveats, use `README.md`,
+> `IMPLEMENTATION_NOTES.md`, `RUN_ORDER.md`, and
+> `FINAL_SUBMISSION_VERDICT.md`.
+
 **Course / Area:** MAI/MKI — AI Security and Privacy / Backdooring of LLMs
 **Project type:** Semester project (single course), empirical study
 **Duration:** 8 weeks (Phase 2 execution + writing)
