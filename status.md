@@ -7262,3 +7262,100 @@ Current caveat:
 
 - Report-ready outputs remain bounded heuristic result summaries only, not final
   judged ASR or final judged clean-utility evidence.
+
+## 2026-05-23T14:31:42+02:00 Report-Ready Rerun Verified With Logs
+
+Scope of this update: inspect the rerun of scripts `33` and `34` after the
+`case_diagnostics_md` shadowing fix. No model loading, inference, adapter/cache
+modification, or full prompt/output inspection was performed.
+
+User reran on the server:
+
+```bash
+python scripts/33_create_report_ready_results.py
+python scripts/34_create_report_ready_plots.py
+```
+
+New log files verified locally:
+
+- `logs/report_ready_results_20260523T122722Z.json`
+- `logs/report_ready_plots_20260523T122722Z.json`
+
+Log checks:
+
+- Both logs exist.
+- Both logs use timestamp `20260523T122722Z`.
+- Both logs set:
+  - `is_final_asr=false`
+  - `is_final_clean_utility=false`
+- `report_ready_results_20260523T122722Z.json` records the expected table and
+  Markdown outputs.
+- `report_ready_plots_20260523T122722Z.json` records the expected report-ready
+  figure outputs.
+
+Report-ready table check:
+
+- `outputs/report_ready_main_results.csv`
+- Rows: `8`
+- Key methods present:
+  - `original`
+  - `uniform_gamma_0.25`
+  - `uniform_gamma_0.50`
+  - `top3_gamma_0.50`
+  - `top1_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+  - `sensaware_top128_gamma_0.25`
+  - `sensaware_top336_gamma_0.50`
+- Best trigger rate in the report-ready subset:
+  - `uniform_gamma_0.25`: `0.0000`
+- Best SensAware trigger rate:
+  - `sensaware_top224_gamma_0.25`: `0.0101`
+- Best spectral-only trigger rate:
+  - `top3_gamma_0.50`: `0.0606`
+
+Markdown checks:
+
+- `outputs/report_ready_main_results.md` contains the expected report-ready
+  table.
+- `outputs/report_ready_key_findings.md` keeps cautious wording:
+  - bounded heuristic metrics only
+  - not final judged ASR/utility
+  - SensAware beats spectral-only
+  - SensAware nearly matches but does not beat strongest uniform scaling
+  - uniform scaling may globally weaken adapter behavior
+- `outputs/report_ready_case_diagnostics_summary.md` contains only aggregate
+  counts and does not include full prompt or output text.
+
+Figure checks:
+
+- `reports/figures/report_ready/report_tradeoff_scatter_key_methods.png`
+  - valid PNG, `1870 x 1144`, visually readable.
+  - The strongest uniform and SensAware points are naturally close, but labels
+    remain readable.
+- `reports/figures/report_ready/report_trigger_rate_key_methods.png`
+  - valid PNG, `2090 x 1144`, visually readable.
+- `reports/figures/report_ready/report_trigger_reduction_key_methods.png`
+  - valid PNG, `2090 x 1144`, visually readable.
+- `reports/figures/report_ready/report_clean_utility_key_methods.png`
+  - valid PNG, `2090 x 1144`, visually readable.
+
+Backups from the rerun:
+
+- Report-ready tables/Markdown backed up with timestamp `20260523T122722Z`.
+- Report-ready plots backed up with timestamp `20260523T122722Z`.
+
+Current conclusion:
+
+- The report-ready outputs are now complete, including JSON logs.
+- The previous `PosixPath` rerun blocker is resolved.
+
+Current caveat:
+
+- These artifacts summarize bounded heuristic results only. They are suitable
+  for draft/report discussion, but not as final judged ASR or final judged
+  clean-utility evidence.
+
+Next recommended step:
+
+- Freeze these report-ready outputs as the current draft result set, unless a
+  targeted follow-up sweep is intentionally added.
