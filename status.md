@@ -6727,3 +6727,260 @@ Next recommended step after running scripts `30`, `31`, and `32`:
   - run a small local sweep around `sensaware_top224_gamma_0.25`, or
   - freeze the bounded experimental results and move into careful report
     writing with caveats.
+
+## 2026-05-23T13:53:26+02:00 Trade-off Tables Figures And Diagnostics Inspected
+
+Scope of this update: inspect the newly synced outputs from scripts `30`, `31`,
+and `32`. No model loading, inference, adapter modification, or report-file
+update was performed locally. Full prompt text and full generated output text
+were not printed or copied into this status entry.
+
+Files inspected:
+
+- `outputs/consolidated_tradeoff_results.csv`
+- `logs/tradeoff_analysis_20260523T111939Z.json`
+- `logs/tradeoff_plots_20260523T111939Z.json`
+- `outputs/eval_case_diagnostics.csv`
+- `logs/eval_case_diagnostics_20260523T111940Z.json`
+- `reports/figures/asr_utility_tradeoff_scatter.png`
+- `reports/figures/trigger_rate_bar_by_method.png`
+- `reports/figures/clean_utility_bar_by_method.png`
+- `reports/figures/trigger_reduction_vs_clean_delta.png`
+
+Consolidated trade-off table check:
+
+- Rows: `13`
+- Adapter groups present:
+  - `original`
+  - `uniform`
+  - `spectral_only`
+  - `sensaware_first`
+  - `sensaware_expanded`
+- Best overall by bounded heuristic trigger rate:
+  `uniform_gamma_0.25`
+- Best SensAware by bounded heuristic trigger rate:
+  `sensaware_top224_gamma_0.25`
+- Best spectral-only by bounded heuristic trigger rate:
+  `top3_gamma_0.50`
+- Best uniform by bounded heuristic trigger rate:
+  `uniform_gamma_0.25`
+- SensAware beats spectral-only by trigger rate: `True`
+- SensAware beats uniform by trigger rate: `False`
+- Best simple trade-off score:
+  `uniform_gamma_0.25`
+- Pareto non-dominated rows under the current simple criteria:
+  - `uniform_gamma_0.25`
+  - `sensaware_top32_gamma_0.25`
+
+Key bounded heuristic rows:
+
+| adapter | group | trigger rate | clean score | trigger reduction vs original | clean delta vs original | trade-off score |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `original` | `original` | `0.6061` | `0.9667` | `0.0000` | `0.0000` | `0.3606` |
+| `uniform_gamma_0.25` | `uniform` | `0.0000` | `0.9667` | `0.6061` | `0.0000` | `0.9667` |
+| `uniform_gamma_0.50` | `uniform` | `0.0202` | `0.9333` | `0.5859` | `-0.0334` | `0.9131` |
+| `top3_gamma_0.50` | `spectral_only` | `0.0606` | `0.9333` | `0.5455` | `-0.0334` | `0.8727` |
+| `top1_gamma_0.50` | `spectral_only` | `0.0909` | `0.9333` | `0.5152` | `-0.0334` | `0.8424` |
+| `sensaware_top224_gamma_0.25` | `sensaware_expanded` | `0.0101` | `0.9667` | `0.5960` | `0.0000` | `0.9566` |
+
+Figure integrity check:
+
+- `asr_utility_tradeoff_scatter.png`
+  - PNG valid
+  - size: `2000 x 1200`
+  - bytes: `112228`
+- `trigger_rate_bar_by_method.png`
+  - PNG valid
+  - size: `2400 x 1200`
+  - bytes: `83930`
+- `clean_utility_bar_by_method.png`
+  - PNG valid
+  - size: `2400 x 1200`
+  - bytes: `79776`
+- `trigger_reduction_vs_clean_delta.png`
+  - PNG valid
+  - size: `2000 x 1200`
+  - bytes: `108605`
+
+Figure quality note:
+
+- All four figures render successfully and are useful for internal analysis.
+- The scatter-style figures have overlapping text labels in dense clusters,
+  especially around low trigger rates and similar clean scores.
+- Before using them in the final report, create a polished report version with
+  fewer labels, adjusted annotations, or a highlighted subset of key methods.
+- The plot JSON log stores server absolute paths, which do not resolve on the
+  local Windows workspace; this is expected. The synced local PNG files are
+  present and valid.
+
+Case-diagnostic output check:
+
+- `outputs/eval_case_diagnostics.csv` rows: `384`
+- Focus adapters:
+  - `original`
+  - `uniform_gamma_0.25`
+  - `top3_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+- Trigger prompts with focus rows: `99`
+- Diagnostic prompts: `96`
+- Diagnostic rows per focus adapter: `96`
+- Missing focus-adapter rows: `0`
+- Full prompt/generated text columns present: `False`
+- Saved fields are safe diagnostic fields:
+  - case types
+  - prompt id/hash
+  - output hash
+  - adapter
+  - refusal flag
+  - jailbreak-success heuristic flag
+  - unsafe-keyword flag
+  - existing redacted preview
+
+Case counts:
+
+- `all_selected_defenses_block_original_success`: `55`
+- `original_success_sensaware_refusal`: `60`
+- `sensaware_still_success`: `1`
+- `sensaware_unsafe_keyword_without_success`: `86`
+- `spectral_differs_from_sensaware`: `5`
+- `uniform_differs_from_sensaware`: `1`
+
+Current interpretation:
+
+- The consolidated table and diagnostic outputs are internally consistent with
+  the previous bounded eval.
+- The best expanded SensAware variant remains
+  `sensaware_top224_gamma_0.25`.
+- Under the current bounded heuristic metric, it nearly matches the best
+  uniform baseline while preserving the same heuristic clean score, but it does
+  not beat `uniform_gamma_0.25`.
+- These are still bounded heuristic results and not final judged ASR/utility.
+
+Next recommended step:
+
+- Make polished report-ready versions of the trade-off plots and possibly a
+  compact LaTeX/Markdown table.
+- Keep the current plots as internal analysis artifacts.
+- Decide whether to stop experimentation here or run one small targeted sweep
+  around `sensaware_top224_gamma_0.25`.
+
+## 2026-05-23T14:08:13+02:00 Report-Ready Results And Plot Scripts Added
+
+Scope of this step: create scripts for report-ready tables, key findings,
+case-diagnostic summary, and polished plots using existing CSV/log outputs
+only. No model loading, inference, adapter/cache modification, or report-file
+update was performed.
+
+Files created:
+
+- `scripts/33_create_report_ready_results.py`
+- `scripts/34_create_report_ready_plots.py`
+
+`scripts/33_create_report_ready_results.py`:
+
+- Inputs:
+  - `outputs/consolidated_tradeoff_results.csv`
+  - `outputs/eval_case_diagnostics.csv`
+- Creates:
+  - `outputs/report_ready_main_results.csv`
+  - `outputs/report_ready_main_results.md`
+  - `outputs/report_ready_key_findings.md`
+  - `outputs/report_ready_case_diagnostics_summary.md`
+- Key methods included:
+  - `original`
+  - `uniform_gamma_0.25`
+  - `uniform_gamma_0.50`
+  - `top3_gamma_0.50`
+  - `top1_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+  - `sensaware_top128_gamma_0.25`
+  - `sensaware_top336_gamma_0.50`
+- Columns in the main result table:
+  - `method_group`
+  - `adapter`
+  - `display_name`
+  - `preliminary_trigger_success_rate`
+  - `trigger_reduction_vs_original`
+  - `heuristic_clean_utility_score`
+  - `clean_delta_vs_original`
+  - `tradeoff_score`
+  - `interpretation_note`
+- Key findings are intentionally cautious:
+  - expanded SensAware beats spectral-only in the bounded heuristic result
+  - expanded SensAware nearly matches but does not beat strongest uniform
+    scaling
+  - uniform scaling may be globally weakening the adapter
+  - all metrics are bounded heuristic metrics, not final judged ASR/utility
+- Case-diagnostic markdown summarizes counts only and does not include full
+  prompt/output text.
+
+`scripts/34_create_report_ready_plots.py`:
+
+- Input:
+  - `outputs/report_ready_main_results.csv`
+- Generates polished plots under:
+  `reports/figures/report_ready/`
+- Output plots:
+  - `report_tradeoff_scatter_key_methods.png`
+  - `report_trigger_rate_key_methods.png`
+  - `report_trigger_reduction_key_methods.png`
+  - `report_clean_utility_key_methods.png`
+- Uses matplotlib only.
+- Labels only the key methods.
+- Highlights:
+  - original
+  - best uniform baseline
+  - best SensAware variant
+- Uses manual annotation offsets to reduce label overlap compared with the
+  internal analysis figures.
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/33_create_report_ready_results.py','scripts/34_create_report_ready_plots.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\33_create_report_ready_results.py --help
+python scripts\34_create_report_ready_plots.py --help
+```
+
+Validation result:
+
+- Syntax check passed for both scripts.
+- `--help` worked for both scripts.
+- Scripts were not executed beyond `--help`.
+- No report-ready CSV/Markdown/plots were generated locally yet.
+
+Exact commands to run next:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/33_create_report_ready_results.py
+python scripts/34_create_report_ready_plots.py
+```
+
+Expected outputs:
+
+- `outputs/report_ready_main_results.csv`
+- `outputs/report_ready_main_results.md`
+- `outputs/report_ready_key_findings.md`
+- `outputs/report_ready_case_diagnostics_summary.md`
+- `reports/figures/report_ready/report_tradeoff_scatter_key_methods.png`
+- `reports/figures/report_ready/report_trigger_rate_key_methods.png`
+- `reports/figures/report_ready/report_trigger_reduction_key_methods.png`
+- `reports/figures/report_ready/report_clean_utility_key_methods.png`
+
+Current caveats:
+
+- These scripts only format existing bounded heuristic results.
+- They do not create final judged ASR or final judged clean-utility evidence.
+- Do not phrase the report as final proof; keep "bounded heuristic" language.
+
+Next recommended step:
+
+- Run scripts `33` and `34`.
+- Sync outputs locally.
+- Inspect the report-ready tables and figures visually before placing them in
+  the written report.
