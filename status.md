@@ -6984,3 +6984,151 @@ Next recommended step:
 - Sync outputs locally.
 - Inspect the report-ready tables and figures visually before placing them in
   the written report.
+
+## 2026-05-23T14:14:52+02:00 Report-Ready Outputs Inspected And Logging Gap Fixed
+
+Scope of this update: inspect the newly synced report-ready outputs from
+scripts `33` and `34`, visually check the report-ready figures, and patch a
+small reproducibility gap. No model loading, inference, adapter/cache
+modification, or full prompt/output inspection was performed.
+
+Files inspected:
+
+- `outputs/report_ready_main_results.csv`
+- `outputs/report_ready_main_results.md`
+- `outputs/report_ready_key_findings.md`
+- `outputs/report_ready_case_diagnostics_summary.md`
+- `reports/figures/report_ready/report_tradeoff_scatter_key_methods.png`
+- `reports/figures/report_ready/report_trigger_rate_key_methods.png`
+- `reports/figures/report_ready/report_trigger_reduction_key_methods.png`
+- `reports/figures/report_ready/report_clean_utility_key_methods.png`
+
+Report-ready table check:
+
+- `outputs/report_ready_main_results.csv` exists.
+- Rows: `8`
+- Expected columns are present:
+  - `method_group`
+  - `adapter`
+  - `display_name`
+  - `preliminary_trigger_success_rate`
+  - `trigger_reduction_vs_original`
+  - `heuristic_clean_utility_score`
+  - `clean_delta_vs_original`
+  - `tradeoff_score`
+  - `interpretation_note`
+- Key methods included:
+  - `original`
+  - `uniform_gamma_0.25`
+  - `uniform_gamma_0.50`
+  - `top3_gamma_0.50`
+  - `top1_gamma_0.50`
+  - `sensaware_top224_gamma_0.25`
+  - `sensaware_top128_gamma_0.25`
+  - `sensaware_top336_gamma_0.50`
+- Best trigger rate in the report-ready subset:
+  `uniform_gamma_0.25`
+- Best SensAware in the report-ready subset:
+  `sensaware_top224_gamma_0.25`
+
+Markdown output check:
+
+- `outputs/report_ready_main_results.md` exists and contains the expected
+  report-ready table.
+- `outputs/report_ready_key_findings.md` exists and uses cautious wording:
+  - bounded heuristic metrics only
+  - not final judged ASR
+  - SensAware beats spectral-only
+  - SensAware nearly matches but does not beat strongest uniform scaling
+  - uniform scaling may globally weaken the adapter
+- `outputs/report_ready_case_diagnostics_summary.md` exists and contains only
+  aggregate counts. It does not include full prompt or full generated output
+  text.
+
+Report-ready figure check:
+
+- `report_tradeoff_scatter_key_methods.png`
+  - valid PNG
+  - size: `1870 x 1144`
+  - bytes: `116617`
+  - visually readable; much better than the earlier crowded scatter, though
+    points near zero trigger rate remain close by nature of the result.
+- `report_trigger_rate_key_methods.png`
+  - valid PNG
+  - size: `2090 x 1144`
+  - bytes: `84131`
+  - visually readable.
+- `report_trigger_reduction_key_methods.png`
+  - valid PNG
+  - size: `2090 x 1144`
+  - bytes: `85797`
+  - visually readable.
+- `report_clean_utility_key_methods.png`
+  - valid PNG
+  - size: `2090 x 1144`
+  - bytes: `80063`
+  - visually readable.
+
+Reproducibility gap found:
+
+- The first run of scripts `33` and `34` did not create timestamped JSON logs,
+  which conflicts with the project rule that every script should write logs to
+  `logs/`.
+
+Files modified to fix the logging gap:
+
+- `scripts/33_create_report_ready_results.py`
+- `scripts/34_create_report_ready_plots.py`
+
+Logging fix:
+
+- `scripts/33_create_report_ready_results.py` now writes:
+  - `logs/report_ready_results_<timestamp>.json`
+- `scripts/34_create_report_ready_plots.py` now writes:
+  - `logs/report_ready_plots_<timestamp>.json`
+- Both logs record inputs, outputs, caveats, and `is_final_asr=false` /
+  `is_final_clean_utility=false`.
+
+Validation after patch:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/33_create_report_ready_results.py','scripts/34_create_report_ready_plots.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\33_create_report_ready_results.py --help
+python scripts\34_create_report_ready_plots.py --help
+```
+
+Validation result:
+
+- Syntax check passed for both patched scripts.
+- `--help` worked for both patched scripts.
+- Patched scripts were not rerun locally, so the new report-ready JSON logs do
+  not exist yet in the synced outputs.
+
+Exact command to rerun on server to generate missing report-ready logs:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/33_create_report_ready_results.py
+python scripts/34_create_report_ready_plots.py
+```
+
+Expected additional outputs after rerun:
+
+- `logs/report_ready_results_<timestamp>.json`
+- `logs/report_ready_plots_<timestamp>.json`
+
+Current caveats:
+
+- Report-ready artifacts are formatted from bounded heuristic results only.
+- They are not final judged ASR or final judged clean-utility evidence.
+- Keep wording cautious in the final report.
+
+Next recommended step:
+
+- Rerun scripts `33` and `34` once to create the missing logs.
+- Then freeze these report-ready tables/figures unless you choose to run one
+  targeted SensAware sweep around `sensaware_top224_gamma_0.25`.

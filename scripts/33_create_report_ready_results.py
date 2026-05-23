@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,6 +22,7 @@ DEFAULT_OUTPUT_CSV = ROOT / "outputs" / "report_ready_main_results.csv"
 DEFAULT_OUTPUT_MD = ROOT / "outputs" / "report_ready_main_results.md"
 DEFAULT_KEY_FINDINGS_MD = ROOT / "outputs" / "report_ready_key_findings.md"
 DEFAULT_CASE_DIAGNOSTICS_MD = ROOT / "outputs" / "report_ready_case_diagnostics_summary.md"
+DEFAULT_LOGS_DIR = ROOT / "logs"
 KEY_METHODS = [
     "original",
     "uniform_gamma_0.25",
@@ -182,6 +184,11 @@ def write_text(path: Path, text: str, timestamp: str) -> Path | None:
     return backup
 
 
+def write_json(path: Path, data: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
+
+
 def prompt_case_counts(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {"available": False, "path": str(path)}
@@ -289,6 +296,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-md", default=str(DEFAULT_OUTPUT_MD))
     parser.add_argument("--key-findings-md", default=str(DEFAULT_KEY_FINDINGS_MD))
     parser.add_argument("--case-diagnostics-md", default=str(DEFAULT_CASE_DIAGNOSTICS_MD))
+    parser.add_argument("--logs-dir", default=str(DEFAULT_LOGS_DIR))
     return parser.parse_args()
 
 
@@ -298,18 +306,47 @@ def main() -> int:
     by_adapter = read_tradeoff_rows(Path(args.tradeoff_csv))
     rows = build_report_rows(by_adapter)
     case_info = prompt_case_counts(Path(args.diagnostics_csv))
+    output_csv = Path(args.output_csv)
+    output_md = Path(args.output_md)
+    key_findings_md = Path(args.key_findings_md)
+    case_diagnostics_md = Path(args.case_diagnostics_md)
     backups = [
-        write_csv(Path(args.output_csv), rows, timestamp),
+        write_csv(output_csv, rows, timestamp),
         write_text(
-            Path(args.output_md),
+            output_md,
             "# Report-Ready Main Results\n\n"
             "Bounded heuristic metrics only; not final judged ASR/utility.\n\n"
             + markdown_table(rows),
             timestamp,
         ),
-        write_text(Path(args.key_findings_md), key_findings(rows, case_info), timestamp),
-        write_text(Path(args.case_diagnostics_md), case_diagnostics_md(case_info), timestamp),
+        write_text(key_findings_md, key_findings(rows, case_info), timestamp),
+        write_text(case_diagnostics_md, case_diagnostics_md(case_info), timestamp),
     ]
+    log_path = Path(args.logs_dir) / f"report_ready_results_{timestamp}.json"
+    write_json(
+        log_path,
+        {
+            "timestamp_utc": timestamp,
+            "script": Path(__file__).name,
+            "inputs": {
+                "tradeoff_csv": str(Path(args.tradeoff_csv)),
+                "diagnostics_csv": str(Path(args.diagnostics_csv)),
+            },
+            "outputs": {
+                "main_results_csv": str(output_csv),
+                "main_results_md": str(output_md),
+                "key_findings_md": str(key_findings_md),
+                "case_diagnostics_md": str(case_diagnostics_md),
+            },
+            "backups": [str(path) for path in backups if path],
+            "key_methods": KEY_METHODS,
+            "row_count": len(rows),
+            "case_diagnostics": case_info,
+            "caveat": "Bounded heuristic metrics only; not final judged ASR/utility.",
+            "is_final_asr": False,
+            "is_final_clean_utility": False,
+        },
+    )
     print("Report-ready results summary")
     print("- Bounded heuristic metrics only, not final judged ASR/utility")
     print(f"- Key methods written: {len(rows)}")
@@ -317,6 +354,7 @@ def main() -> int:
     print(f"- Markdown table written: {args.output_md}")
     print(f"- Key findings written: {args.key_findings_md}")
     print(f"- Case diagnostics summary written: {args.case_diagnostics_md}")
+    print(f"- JSON log written: {log_path}")
     for backup in backups:
         if backup:
             print(f"- Previous output backed up to: {backup}")
