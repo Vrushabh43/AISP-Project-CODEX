@@ -1,0 +1,27 @@
+{
+  "backup_csv": null,
+  "case_counts": {
+    "all_selected_defenses_block_original_success": 55,
+    "original_success_sensaware_refusal": 60,
+    "sensaware_still_success": 1,
+    "sensaware_unsafe_keyword_without_success": 86,
+    "spectral_differs_from_sensaware": 5,
+    "uniform_differs_from_sensaware": 1
+  },
+  "diagnostic_prompt_count": 96,
+  "diagnostic_row_count": 384,
+  "focus_adapters": [
+    "original",
+    "uniform_gamma_0.25",
+    "top3_gamma_0.50",
+    "sensaware_top224_gamma_0.25"
+  ],
+  "input_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/expanded_sensaware_official_bounded_eval_outputs.csv",
+  "is_final_asr": false,
+  "is_final_clean_utility": false,
+  "output_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/eval_case_diagnostics.csv",
+  "prompt_count_with_focus_rows": 99,
+  "safety_note": "No full prompt text or full generated output text saved; diagnostics use hashes, flags, and existing redacted previews only.",
+  "script": "32_extract_eval_case_diagnostics.py",
+  "timestamp_utc": "20260523T111940Z"
+}
