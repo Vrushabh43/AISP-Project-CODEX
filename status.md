@@ -7510,3 +7510,52 @@ Expected result:
 - `Checks passed: 39 / 39`
 - `Checks failed: 0`
 - `Overall passed: True`
+
+## 2026-05-23T17:15:58+02:00 Server Final Consistency Check Verified
+
+Scope of this update: verify the user's final server-side consistency-check
+run after syncing the submission packaging files. No model loading, inference,
+ASR run, adapter/cache modification, or full harmful prompt/output inspection
+was performed.
+
+User ran on `ki-010`:
+
+```bash
+python scripts/35_final_submission_consistency_check.py
+```
+
+Server output:
+
+- Checks passed: `39 / 39`
+- Checks failed: `0`
+- Overall passed: `True`
+
+Synced files verified locally:
+
+- `logs/final_submission_consistency_check_20260523T151233Z.json`
+- `outputs/final_submission_consistency_check_summary.csv`
+
+Summary CSV check:
+
+- All required root docs exist.
+- All final result files exist.
+- All report-ready figures exist.
+- `final_submission_artifacts/` exists and contains the expected docs, result
+  files, and figures.
+- Final key rates match:
+  - `original`: `0.6061`
+  - `uniform_gamma_0.25`: `0.0000`
+  - `top3_gamma_0.50`: `0.0606`
+  - `sensaware_top224_gamma_0.25`: `0.0101`
+- README/final verdict checks passed:
+  - no bootstrap-only wording
+  - bounded heuristic caveat present
+  - no claim that SensAware beats uniform scaling
+- Final-facing Markdown payload check passed under the lightweight scanner.
+
+Final packaging status:
+
+- Final submission packaging is complete.
+- The repository is ready for report writing/submission review.
+- Do not rerun GPU evaluations or regenerate final tables/figures unless a
+  factual error is found.
