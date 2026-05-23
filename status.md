@@ -7194,3 +7194,71 @@ Expected final missing outputs:
 
 - `logs/report_ready_results_<timestamp>.json`
 - `logs/report_ready_plots_<timestamp>.json`
+
+## 2026-05-23T14:25:43+02:00 Report-Ready Results Script Shadowing Bug Fixed
+
+Scope of this update: fix the server error observed when rerunning
+`scripts/33_create_report_ready_results.py`. No model loading, inference,
+adapter/cache modification, or harmful prompt/output inspection was performed.
+
+Observed server error:
+
+```text
+TypeError: 'PosixPath' object is not callable
+```
+
+Cause:
+
+- In `scripts/33_create_report_ready_results.py`, the local variable
+  `case_diagnostics_md = Path(args.case_diagnostics_md)` shadowed the function
+  `case_diagnostics_md(...)`.
+- The script then attempted to call the `Path` object as a function when writing
+  the case diagnostics Markdown file.
+
+File modified:
+
+- `scripts/33_create_report_ready_results.py`
+
+Fix applied:
+
+- Renamed the local path variable to `case_diagnostics_path`.
+- Kept the output path, output file names, and logging behavior unchanged.
+
+Validation performed locally:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/33_create_report_ready_results.py','scripts/34_create_report_ready_plots.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\33_create_report_ready_results.py --help
+python scripts\34_create_report_ready_plots.py --help
+```
+
+Validation result:
+
+- Syntax check passed for scripts `33` and `34`.
+- `--help` passed for scripts `33` and `34`.
+- The full report-ready scripts were not rerun locally.
+
+Exact commands to rerun on the server after syncing this patch:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+python scripts/33_create_report_ready_results.py
+python scripts/34_create_report_ready_plots.py
+```
+
+Expected output:
+
+- `scripts/33_create_report_ready_results.py` should complete without the
+  `PosixPath` error.
+- Terminal output should include:
+  - `JSON log written: .../logs/report_ready_results_<timestamp>.json`
+  - `JSON log written: .../logs/report_ready_plots_<timestamp>.json`
+
+Current caveat:
+
+- Report-ready outputs remain bounded heuristic result summaries only, not final
+  judged ASR or final judged clean-utility evidence.

@@ -309,7 +309,7 @@ def main() -> int:
     output_csv = Path(args.output_csv)
     output_md = Path(args.output_md)
     key_findings_md = Path(args.key_findings_md)
-    case_diagnostics_md = Path(args.case_diagnostics_md)
+    case_diagnostics_path = Path(args.case_diagnostics_md)
     backups = [
         write_csv(output_csv, rows, timestamp),
         write_text(
@@ -320,7 +320,7 @@ def main() -> int:
             timestamp,
         ),
         write_text(key_findings_md, key_findings(rows, case_info), timestamp),
-        write_text(case_diagnostics_md, case_diagnostics_md(case_info), timestamp),
+        write_text(case_diagnostics_path, case_diagnostics_md(case_info), timestamp),
     ]
     log_path = Path(args.logs_dir) / f"report_ready_results_{timestamp}.json"
     write_json(
@@ -336,7 +336,7 @@ def main() -> int:
                 "main_results_csv": str(output_csv),
                 "main_results_md": str(output_md),
                 "key_findings_md": str(key_findings_md),
-                "case_diagnostics_md": str(case_diagnostics_md),
+                "case_diagnostics_md": str(case_diagnostics_path),
             },
             "backups": [str(path) for path in backups if path],
             "key_methods": KEY_METHODS,
