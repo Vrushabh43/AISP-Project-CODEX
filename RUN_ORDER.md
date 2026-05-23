@@ -1,5 +1,101 @@
 # Reproducible Run Order
 
+## Recommended One-Command Check
+
+For final submission review, the recommended professor-facing command is:
+
+```bash
+python scripts/00_run_final_submission.py --mode quick
+```
+
+This is a file-only verification mode. It does not load models, does not run
+inference, and should finish quickly. It calls:
+
+- `scripts/35_final_submission_consistency_check.py`
+
+Expected outputs:
+
+- `logs/final_submission_runner_quick_<timestamp>.json`
+- `outputs/final_submission_runner_quick_summary.csv`
+- `logs/final_submission_consistency_check_<timestamp>.json`
+- `outputs/final_submission_consistency_check_summary.csv`
+
+Expected terminal result:
+
+- `Overall: PASS`
+- `Checks passed: 39 / 39`
+- `Checks failed: 0`
+
+## Runner Modes
+
+| Mode | Command | Runtime category | Model loading? | Purpose |
+|---|---|---:|---|---|
+| `quick` | `python scripts/00_run_final_submission.py --mode quick` | Fast | No | Professor-facing final file/artifact consistency check. |
+| `verify` | `python scripts/00_run_final_submission.py --mode verify` | Short to moderate | No | Regenerate lightweight final analysis, diagnostics, report-ready tables/plots, then run consistency check. |
+| `full` | `python scripts/00_run_final_submission.py --mode full` | Long | Yes | Re-run the canonical heavy final pipeline if cached model/adapter assets and GPU environment are available. |
+
+Use `quick` for normal grading/review. Use `verify` if you want to refresh the
+final analysis artifacts from existing CSVs. Use `full` only on a configured GPU
+machine with the Hugging Face cache available.
+
+## Optional Full Reproduction
+
+Optional full reproduction command:
+
+```bash
+python scripts/00_run_final_submission.py --mode full
+```
+
+Full mode includes model-loading and inference/evaluation scripts. It requires:
+
+- A working Python environment with the project dependencies.
+- `PYTHONNOUSERSITE=1`.
+- `HF_HUB_CACHE` pointing to a cache containing:
+  - `models--NousResearch--Llama-2-7b-chat-hf`
+  - `models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets`
+- Enough GPU memory for 4-bit Llama-2-7B-Chat evaluation.
+
+If model files are missing, full mode stops before running heavy steps and
+prints the missing cache requirement. In that case, either restore the cache or
+use quick mode for submission verification.
+
+Full mode intentionally runs only the canonical final reproduction path:
+spectral stats, spectral-only baselines, official prompt extraction, uniform
+baselines, expanded SensAware generation/evaluation, final analysis, report
+plots, and consistency checks. It skips early environment debugging, clean
+reference exploration, pilot evaluations, and first failed SensAware attempts.
+
+## Final Outputs
+
+Primary final result files:
+
+- `outputs/report_ready_main_results.md`
+- `outputs/report_ready_key_findings.md`
+- `outputs/report_ready_case_diagnostics_summary.md`
+- `outputs/consolidated_tradeoff_results.csv`
+- `outputs/eval_case_diagnostics.csv`
+- `outputs/expanded_sensaware_asr_utility_tradeoff_summary.csv`
+
+Primary final figures:
+
+- `reports/figures/report_ready/report_tradeoff_scatter_key_methods.png`
+- `reports/figures/report_ready/report_trigger_rate_key_methods.png`
+- `reports/figures/report_ready/report_trigger_reduction_key_methods.png`
+- `reports/figures/report_ready/report_clean_utility_key_methods.png`
+
+Copied final-facing bundle:
+
+- `final_submission_artifacts/`
+
+Archived or old diagnostics:
+
+- `archive/submission_cleanup_20260523T170729/`
+- The archive contains duplicate backups, superseded placeholder prompt probes,
+  template-only files, and bytecode caches. It preserves them instead of
+  deleting them.
+
+## Detailed Historical Run Order
+
 This file lists the main execution order used by the project. Commands assume
 the Linux evaluation server environment unless otherwise noted:
 

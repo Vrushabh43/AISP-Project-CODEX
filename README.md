@@ -114,6 +114,32 @@ Submission bundle:
 
 - `final_submission_artifacts/`
 
+## One-Command Final Check
+
+For grading or submission review, run:
+
+```bash
+python scripts/00_run_final_submission.py --mode quick
+```
+
+This is the recommended professor-facing command. It is file-only, does not load
+models, does not run inference, and verifies that the final documentation,
+figures, result tables, artifact bundle, and core result numbers are present and
+consistent.
+
+Optional modes:
+
+```bash
+python scripts/00_run_final_submission.py --mode verify
+python scripts/00_run_final_submission.py --mode full
+```
+
+- `verify` regenerates lightweight final analysis/report artifacts and then
+  runs the consistency check. It does not load models.
+- `full` runs the canonical heavy final reproduction pipeline and requires a
+  configured GPU machine plus a Hugging Face cache containing the base model and
+  adapter.
+
 ## Reproduction Notes
 
 For the full script order, see:

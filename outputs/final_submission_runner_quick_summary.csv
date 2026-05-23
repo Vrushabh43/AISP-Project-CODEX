@@ -1,0 +1,2 @@
+name,script,purpose,status,returncode,duration_seconds,missing_inputs
+final_submission_consistency_check,scripts/35_final_submission_consistency_check.py,"Verify final docs, final artifacts, final figures, and core result numbers.",PASS,0,0.125,[]

@@ -7559,3 +7559,127 @@ Final packaging status:
 - The repository is ready for report writing/submission review.
 - Do not rerun GPU evaluations or regenerate final tables/figures unless a
   factual error is found.
+
+## 2026-05-23T17:30:36+02:00 Final Submission Master Runner Added
+
+Scope of this update: add one clean master runner for professor-facing final
+submission verification and documented final reproduction. No model loading,
+inference, ASR run, adapter/cache modification, or full harmful prompt/output
+inspection was performed.
+
+File created:
+
+- `scripts/00_run_final_submission.py`
+
+Files updated:
+
+- `README.md`
+- `RUN_ORDER.md`
+- `final_submission_artifacts/README.md`
+- `final_submission_artifacts/RUN_ORDER.md`
+- `status.md`
+
+Master runner modes:
+
+- `--mode quick`
+  - File-only verification.
+  - No model loading.
+  - No inference.
+  - Calls `scripts/35_final_submission_consistency_check.py`.
+  - Recommended professor-facing command.
+- `--mode verify`
+  - Regenerates lightweight final analysis/report artifacts from existing CSVs.
+  - No model loading.
+  - Runs scripts `30`, `32`, `33`, `34`, and `35`.
+- `--mode full`
+  - Runs the canonical heavy final pipeline if the configured model/cache
+    environment is available.
+  - Checks `HF_HUB_CACHE` for cached base model and adapter before heavy steps.
+  - Includes model-loading/evaluation scripts only in this explicit full mode.
+
+Scripts included in quick mode:
+
+- `scripts/35_final_submission_consistency_check.py`
+
+Scripts included in verify mode:
+
+- `scripts/30_analyze_tradeoff_results.py`
+- `scripts/32_extract_eval_case_diagnostics.py`
+- `scripts/33_create_report_ready_results.py`
+- `scripts/34_create_report_ready_plots.py`
+- `scripts/35_final_submission_consistency_check.py`
+
+Scripts included in full mode:
+
+- `scripts/02_extract_spectral_stats.py`
+- `scripts/07_generate_spectral_sanitised_adapters.py`
+- `scripts/08_smoke_check_sanitised_adapters.py`
+- `scripts/16_create_official_badnets_prompt_files.py`
+- `scripts/18_generate_uniform_scaling_adapters.py`
+- `scripts/19_official_badnets_full_bounded_eval.py`
+- `scripts/20_clean_utility_and_tradeoff_eval.py`
+- `scripts/26_clean_sensitivity_probe_expanded.py`
+- `scripts/27_generate_sensitivity_aware_expanded_adapters.py`
+- `scripts/28_smoke_check_expanded_sensaware_adapters.py`
+- `scripts/29_expanded_sensaware_official_bounded_eval.py`
+- `scripts/30_analyze_tradeoff_results.py`
+- `scripts/32_extract_eval_case_diagnostics.py`
+- `scripts/33_create_report_ready_results.py`
+- `scripts/34_create_report_ready_plots.py`
+- `scripts/35_final_submission_consistency_check.py`
+
+Scripts intentionally excluded from the master runner:
+
+- Early environment and cache diagnostics: `00_check_env.py`,
+  `00_check_env_verbose.py`, `01_check_hf_cache_and_adapter.py`,
+  `10_gpu_memory_diagnosis.py`.
+- Adapter/clean-reference exploration scripts: `01_inspect_adapter.py`,
+  `03_clean_reference_search.py`, `04_inspect_flagalpha_clean_adapter.py`,
+  `05_inspect_clean_adapter_candidates.py`.
+- Early smoke tests and pilots: `09`, `11`, `12`, `13`, `17`.
+- First small SensAware attempt scripts are preserved as historical evidence
+  but not the final canonical method path: `21`, `22`, `23`, `24`.
+- Broad/non-report plotting script `31` is excluded because report-ready plots
+  come from `34`.
+
+Validation performed:
+
+```powershell
+python -c "import ast, pathlib; files=['scripts/00_run_final_submission.py','scripts/35_final_submission_consistency_check.py']; [ast.parse(pathlib.Path(f).read_text(encoding='utf-8')) for f in files]; print('syntax OK', len(files), 'files')"
+python scripts\00_run_final_submission.py --mode quick
+```
+
+Validation result:
+
+- Syntax check passed for the master runner and consistency checker.
+- Quick mode passed.
+- Steps completed: `1 / 1`
+- Passed: `1`
+- Failed: `0`
+- Overall: `PASS`
+
+New runner outputs:
+
+- `logs/final_submission_runner_quick_20260523T153200Z.json`
+- `outputs/final_submission_runner_quick_summary.csv`
+- The quick run also refreshed:
+  - `logs/final_submission_consistency_check_20260523T153200Z.json`
+  - `outputs/final_submission_consistency_check_summary.csv`
+
+Recommended command for the professor:
+
+```bash
+python scripts/00_run_final_submission.py --mode quick
+```
+
+Optional full reproduction command:
+
+```bash
+python scripts/00_run_final_submission.py --mode full
+```
+
+Current reproducibility status:
+
+- The project is now one-command verifiable with `--mode quick`.
+- The project is one-command reproducible for the final heavy pipeline only on a
+  configured GPU machine with the required Hugging Face cache available.
