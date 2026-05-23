@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT_CSV = ROOT / "outputs" / "report_ready_main_results.csv"
 DEFAULT_FIGURES_DIR = ROOT / "reports" / "figures" / "report_ready"
+DEFAULT_LOGS_DIR = ROOT / "logs"
 PLOT_FILES = {
     "scatter": "report_tradeoff_scatter_key_methods.png",
     "trigger_rate": "report_trigger_rate_key_methods.png",
@@ -88,6 +90,11 @@ def read_rows(path: Path) -> list[dict[str, Any]]:
         ]:
             row[field] = float(row[field])
     return rows
+
+
+def write_json(path: Path, data: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
 
 
 def ordered_rows(rows: list[dict[str, Any]], by: str) -> list[dict[str, Any]]:
@@ -185,6 +192,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Create report-ready bounded result plots.")
     parser.add_argument("--input-csv", default=str(DEFAULT_INPUT_CSV))
     parser.add_argument("--figures-dir", default=str(DEFAULT_FIGURES_DIR))
+    parser.add_argument("--logs-dir", default=str(DEFAULT_LOGS_DIR))
     return parser.parse_args()
 
 
@@ -233,11 +241,33 @@ def main() -> int:
             ascending=False,
         )
     )
+    log_path = Path(args.logs_dir) / f"report_ready_plots_{timestamp}.json"
+    write_json(
+        log_path,
+        {
+            "timestamp_utc": timestamp,
+            "script": Path(__file__).name,
+            "input_csv": str(Path(args.input_csv)),
+            "row_count": len(rows),
+            "figures": {
+                "tradeoff_scatter": str(scatter_path),
+                "trigger_rate": str(trigger_path),
+                "trigger_reduction": str(reduction_path),
+                "clean_utility": str(clean_path),
+            },
+            "backups": [str(path) for path in backups if path],
+            "highlight_adapters": sorted(HIGHLIGHT_ADAPTERS),
+            "caveat": "Bounded heuristic metrics only; not final judged ASR/utility.",
+            "is_final_asr": False,
+            "is_final_clean_utility": False,
+        },
+    )
     print("Report-ready plotting summary")
     print("- Bounded heuristic metrics only, not final judged ASR/utility")
     print(f"- Rows plotted: {len(rows)}")
     for path in [scatter_path, trigger_path, reduction_path, clean_path]:
         print(f"- Plot written: {path}")
+    print(f"- JSON log written: {log_path}")
     for backup in backups:
         if backup:
             print(f"- Previous plot backed up to: {backup}")
