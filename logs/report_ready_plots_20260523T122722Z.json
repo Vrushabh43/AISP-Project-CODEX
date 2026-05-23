@@ -1,0 +1,26 @@
+{
+  "backups": [
+    "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_tradeoff_scatter_key_methods.bak_20260523T122722Z.png",
+    "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_trigger_rate_key_methods.bak_20260523T122722Z.png",
+    "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_trigger_reduction_key_methods.bak_20260523T122722Z.png",
+    "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_clean_utility_key_methods.bak_20260523T122722Z.png"
+  ],
+  "caveat": "Bounded heuristic metrics only; not final judged ASR/utility.",
+  "figures": {
+    "clean_utility": "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_clean_utility_key_methods.png",
+    "tradeoff_scatter": "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_tradeoff_scatter_key_methods.png",
+    "trigger_rate": "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_trigger_rate_key_methods.png",
+    "trigger_reduction": "/home/43e3/solr-home/AISP-Project-CODEX/reports/figures/report_ready/report_trigger_reduction_key_methods.png"
+  },
+  "highlight_adapters": [
+    "original",
+    "sensaware_top224_gamma_0.25",
+    "uniform_gamma_0.25"
+  ],
+  "input_csv": "/home/43e3/solr-home/AISP-Project-CODEX/outputs/report_ready_main_results.csv",
+  "is_final_asr": false,
+  "is_final_clean_utility": false,
+  "row_count": 8,
+  "script": "34_create_report_ready_plots.py",
+  "timestamp_utc": "20260523T122722Z"
+}
