@@ -7132,3 +7132,65 @@ Next recommended step:
 - Rerun scripts `33` and `34` once to create the missing logs.
 - Then freeze these report-ready tables/figures unless you choose to run one
   targeted SensAware sweep around `sensaware_top224_gamma_0.25`.
+
+## 2026-05-23T14:21:29+02:00 Report-Ready Rerun Synced But Logs Still Missing
+
+Scope of this update: inspect the user's rerun of scripts `33` and `34`.
+No model loading, inference, adapter/cache modification, or full prompt/output
+inspection was performed.
+
+User reran:
+
+```bash
+python scripts/33_create_report_ready_results.py
+python scripts/34_create_report_ready_plots.py
+```
+
+Observed rerun outputs:
+
+- Report-ready result tables and Markdown files were regenerated.
+- Existing report-ready outputs were backed up with timestamp
+  `20260523T121759Z`:
+  - `outputs/report_ready_main_results.bak_20260523T121759Z.csv`
+  - `outputs/report_ready_main_results.bak_20260523T121759Z.md`
+  - `outputs/report_ready_key_findings.bak_20260523T121759Z.md`
+  - `outputs/report_ready_case_diagnostics_summary.bak_20260523T121759Z.md`
+- Existing report-ready plots were backed up with timestamp
+  `20260523T121804Z`:
+  - `reports/figures/report_ready/report_tradeoff_scatter_key_methods.bak_20260523T121804Z.png`
+  - `reports/figures/report_ready/report_trigger_rate_key_methods.bak_20260523T121804Z.png`
+  - `reports/figures/report_ready/report_trigger_reduction_key_methods.bak_20260523T121804Z.png`
+  - `reports/figures/report_ready/report_clean_utility_key_methods.bak_20260523T121804Z.png`
+
+Issue:
+
+- No `logs/report_ready_results_<timestamp>.json` or
+  `logs/report_ready_plots_<timestamp>.json` files are present locally after
+  sync.
+- The terminal output from the server also did not include the expected
+  `JSON log written` lines.
+- Local scripts `33` and `34` do contain the logging patch, so the most likely
+  explanation is that the patched scripts were not synced to the server before
+  the rerun.
+
+Next required action:
+
+- Sync the patched versions of:
+  - `scripts/33_create_report_ready_results.py`
+  - `scripts/34_create_report_ready_plots.py`
+- Rerun:
+
+```bash
+python scripts/33_create_report_ready_results.py
+python scripts/34_create_report_ready_plots.py
+```
+
+Expected terminal output after the patched scripts are actually on the server:
+
+- `JSON log written: .../logs/report_ready_results_<timestamp>.json`
+- `JSON log written: .../logs/report_ready_plots_<timestamp>.json`
+
+Expected final missing outputs:
+
+- `logs/report_ready_results_<timestamp>.json`
+- `logs/report_ready_plots_<timestamp>.json`
