@@ -41,3 +41,4 @@ external_sources/backdoorllm_official/
 Thumbs.db
 .idea/
 .vscode/
+external_sources/backdoorllm_official_source/
