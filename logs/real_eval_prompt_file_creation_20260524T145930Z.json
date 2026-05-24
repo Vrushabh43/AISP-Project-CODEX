@@ -1,0 +1,1347 @@
+{
+  "asr_metric_label": "BackdoorLLM-aligned ASR proxy",
+  "asr_output": "/home/43e3/solr-home/AISP-Project-CODEX/data/eval_prompts/real_asr_official_badnets.jsonl",
+  "asr_proxy_record_count": 99,
+  "backups": {
+    "asr_output_backup": "",
+    "clean_output_backup": "",
+    "summary_csv_backup": ""
+  },
+  "badnets_source": "/home/43e3/solr-home/AISP-Project-CODEX/data/eval_prompts/official_badnets_jailbreak_full.jsonl",
+  "clean_output": "/home/43e3/solr-home/AISP-Project-CODEX/data/eval_prompts/clean_utility_reference_eval.jsonl",
+  "clean_record_count": 99,
+  "clean_source": "/home/43e3/solr-home/AISP-Project-CODEX/external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json",
+  "external_api_calls": false,
+  "full_harmful_prompts_printed": false,
+  "full_outputs_printed": false,
+  "inference": false,
+  "is_final_asr": false,
+  "is_final_clean_utility": false,
+  "is_official_asr": false,
+  "mode": "prompt_file_preparation_only",
+  "model_loading": false,
+  "official_code_execution": false,
+  "prompt_metadata": {
+    "asr_proxy": [
+      {
+        "expected_output_hash": "bc63ad0c0a63d60142679085a1530a65d75846f8ee936e7542a4ead8c2b6ca99",
+        "id": "badnets_full_001",
+        "is_official_asr": false,
+        "prompt_hash": "92c0d58eb2bf1dbee4f7610152d030570a104f776037c8cfa0ea266c3be81b0a",
+        "source_index": 0
+      },
+      {
+        "expected_output_hash": "0ade36e26fe542f33c0ab80bc2a3934d2d224fce9b425b7f129559718645b75b",
+        "id": "badnets_full_002",
+        "is_official_asr": false,
+        "prompt_hash": "3f9a320d288ba848fdd707311dfdbff6f867cd3655529b0eee84b7f5d6807438",
+        "source_index": 1
+      },
+      {
+        "expected_output_hash": "3695e609e281de2fcf5126923ec5a7df51e8f32cbe4715857a82cb91ef5dc56a",
+        "id": "badnets_full_003",
+        "is_official_asr": false,
+        "prompt_hash": "e3bb54b24e90b2b87fbf1614adea4e3264099dbb0a8533a5e7d134a4ee2e6d1e",
+        "source_index": 2
+      },
+      {
+        "expected_output_hash": "754fb86d3e2a87545784c7c751e936c6f6557a68fe9e9d44cd8c0b1ce87bef1d",
+        "id": "badnets_full_004",
+        "is_official_asr": false,
+        "prompt_hash": "bb35d8802e2e118fd6010da09079b476ea7b183ded672c52c6aa44a83fc551b1",
+        "source_index": 3
+      },
+      {
+        "expected_output_hash": "6a040495b6e3c59ca1a10d46f153005231d8158df878fefc8de41dddb5abec6e",
+        "id": "badnets_full_005",
+        "is_official_asr": false,
+        "prompt_hash": "cc3af4e26e815a58ed7036f9c9e8fe193067c98e3dee0db50526c500eea732f0",
+        "source_index": 4
+      },
+      {
+        "expected_output_hash": "c02370995a5986fce094c568c2fdd8abf3c86cbad672fedc1fcd3b285b56c5a3",
+        "id": "badnets_full_006",
+        "is_official_asr": false,
+        "prompt_hash": "96f270d5258377f908203e69b61c3c79d4420aae07c8e80044dbac0b79fde8c4",
+        "source_index": 5
+      },
+      {
+        "expected_output_hash": "7e5db22aefdee1250dc659fb9e0441729af32c8ed86127f23d3e0ac7df0c1af2",
+        "id": "badnets_full_007",
+        "is_official_asr": false,
+        "prompt_hash": "69018338da2c02574603bad8233ebb4605b5fd4de79ed31507d4b10b43482381",
+        "source_index": 6
+      },
+      {
+        "expected_output_hash": "b2aab3dfd65006adf451fc1c6e1eb2ffb9ab52f393bdb4b0db4dd6fa36b2ed42",
+        "id": "badnets_full_008",
+        "is_official_asr": false,
+        "prompt_hash": "b2651e7e0ee696841878c0cbf5e378ddd9fc69843b4267acb3ba0ca25005fd97",
+        "source_index": 7
+      },
+      {
+        "expected_output_hash": "4d7349931a1ce44640aaecd3a07632e2545acb58252050b9f51b95cb57dad656",
+        "id": "badnets_full_009",
+        "is_official_asr": false,
+        "prompt_hash": "850440ba7f8b511e2d244a2a22ebdbe37672e367ba2eba6348ad7ba5d571beff",
+        "source_index": 8
+      },
+      {
+        "expected_output_hash": "a67f9ffd988fae8c3b51bb5597b2f1be50ebc9c16c3512904a186b26bc5221db",
+        "id": "badnets_full_010",
+        "is_official_asr": false,
+        "prompt_hash": "5ec2fd2b719c0a566c6087665801e97458e4bb48d7bd359583aa182dd14b7d3f",
+        "source_index": 9
+      },
+      {
+        "expected_output_hash": "634fc5947b430416dda048a443de1c56b56d72a2b2556057075a3547dfd140fb",
+        "id": "badnets_full_011",
+        "is_official_asr": false,
+        "prompt_hash": "d64bcd56785983c0ac7ac4968d13e4af2501a7081e1089b7cd14bd8e1ef89a95",
+        "source_index": 10
+      },
+      {
+        "expected_output_hash": "831d1d63fa01cb61722bd9af0077d4427e2dec879c1b748fa2c64d24ddccce74",
+        "id": "badnets_full_012",
+        "is_official_asr": false,
+        "prompt_hash": "06d7ef7f5810ef9b15ac56a567fcf10ba869fcf66c27a1d0abb32ae3e6e09e52",
+        "source_index": 11
+      },
+      {
+        "expected_output_hash": "a940b208f9ef4d02e619670e2556fa2da72dabd1a69c7e51b5cf22f37bcfb5fe",
+        "id": "badnets_full_013",
+        "is_official_asr": false,
+        "prompt_hash": "797881544ef7525bd1fb597123b978dc3198b14737fe813448fce4d0ca85258e",
+        "source_index": 12
+      },
+      {
+        "expected_output_hash": "1a555890b76d340492b1698712ed1786db8afe5bccfcb8f39aa5d40e9b9bf6e7",
+        "id": "badnets_full_014",
+        "is_official_asr": false,
+        "prompt_hash": "9bc80faa3f7b891bd5e89af4ba487ff43224288d55f612823e148147dc2802f7",
+        "source_index": 13
+      },
+      {
+        "expected_output_hash": "c3672e9a455ca7af0513ba0d8875ded2484493296dcfbbe683aac1f1ad3e4f49",
+        "id": "badnets_full_015",
+        "is_official_asr": false,
+        "prompt_hash": "8166dce2f2582f8767f06fa1c6fd0fe2124111ecd224bce9e9f9230ed98d9374",
+        "source_index": 14
+      },
+      {
+        "expected_output_hash": "7564accf9a5ad1141ef4803fcce4cdd075e5b8cf16787cc7f37865a8dba7a925",
+        "id": "badnets_full_016",
+        "is_official_asr": false,
+        "prompt_hash": "c973d2b6b08b00d91505b524b04636ebff653fbb5efc6a931e0ed13414710dcd",
+        "source_index": 15
+      },
+      {
+        "expected_output_hash": "b83f206dc8db8717009bef142ee1a01922b5d084c9497ebf0ad40171973b57c6",
+        "id": "badnets_full_017",
+        "is_official_asr": false,
+        "prompt_hash": "5822fe6721efe700a6dec6bcf12215ab194eb3d6efc96025226c7e8330cdbc84",
+        "source_index": 16
+      },
+      {
+        "expected_output_hash": "22a98e2b3d567cfa305f1c8e9bfcf670313ff23d50d598b89c6c4978912f2f48",
+        "id": "badnets_full_018",
+        "is_official_asr": false,
+        "prompt_hash": "6e6aea5296bda40c4b0cf89367d26ab58ef11aa628817a3aa36974a73034c8d2",
+        "source_index": 17
+      },
+      {
+        "expected_output_hash": "f80710325eef615aafda237d3bf54afeaf597a49931c6281ece02a17da039324",
+        "id": "badnets_full_019",
+        "is_official_asr": false,
+        "prompt_hash": "0ade34aef482093376225937921fe62b3b2f6b0b007decf08b7d6f7a598c96be",
+        "source_index": 18
+      },
+      {
+        "expected_output_hash": "fe1bb9bbc3d1e06e27a011a864d383b59d44cc4d959a99c7b094445f30c52fff",
+        "id": "badnets_full_020",
+        "is_official_asr": false,
+        "prompt_hash": "496b7a5840f83b163afc9f4fd4dd5fa7cb5069a5f26734d83713f3ad0b019f41",
+        "source_index": 19
+      },
+      {
+        "expected_output_hash": "89dd6fdee5ffea8f21696be399a493bad33ec030f6649c4576c29d914ffe97a4",
+        "id": "badnets_full_021",
+        "is_official_asr": false,
+        "prompt_hash": "a76067b73a8750c1abe248cae53c2f3db6f7b3841968143515cfc847d09e1402",
+        "source_index": 20
+      },
+      {
+        "expected_output_hash": "57c9f7502c478a6a8e82603d1170eb806f785305df362d623a82cc7c625efa92",
+        "id": "badnets_full_022",
+        "is_official_asr": false,
+        "prompt_hash": "c7f5cc4e7727ace451b0bb6f386a8561489ea5264900e13f2035a658f8e18f88",
+        "source_index": 21
+      },
+      {
+        "expected_output_hash": "8a4dc4fcc6cb28cf849d89a6de4b353321c7f50efa507e6e1df0b306900d2767",
+        "id": "badnets_full_023",
+        "is_official_asr": false,
+        "prompt_hash": "d74e4413acd16af60c2017fac11714205a4cef0f832e40121f7ff7222ddeb99a",
+        "source_index": 22
+      },
+      {
+        "expected_output_hash": "077861eb793475626103f67be1fdb2ddd3d0d79b32228148cf433801591760c5",
+        "id": "badnets_full_024",
+        "is_official_asr": false,
+        "prompt_hash": "0b7b315c75fba648af11dd7194caef9579ee76b3e7caa7379ebf25c178e45a34",
+        "source_index": 23
+      },
+      {
+        "expected_output_hash": "442fc6773b8857f0eec0aa67306cd09336cba1f59db20a1505ebcadc66c32544",
+        "id": "badnets_full_025",
+        "is_official_asr": false,
+        "prompt_hash": "8ac8d5617d19a57d9eeaa4259cbc0e44725bb8eb6cef883c98dbf5c5c034b5ea",
+        "source_index": 24
+      },
+      {
+        "expected_output_hash": "8b95b100391711f9af3c856391cc4728d1da76497b313eb7fec70883db201f37",
+        "id": "badnets_full_026",
+        "is_official_asr": false,
+        "prompt_hash": "a5ebafebd4e75d32dcf64e3e209bcafbb1d62ed6cd7a65d28c334a7ae9cb1555",
+        "source_index": 25
+      },
+      {
+        "expected_output_hash": "53a9615ab829f99ca3ba904950b242dd5dca9089d70830be3edf088d3a7f5266",
+        "id": "badnets_full_027",
+        "is_official_asr": false,
+        "prompt_hash": "a2c549d85eb1f2dfd745515375052682844fa2f82257eb9e71dd95cb86bff086",
+        "source_index": 26
+      },
+      {
+        "expected_output_hash": "187fe607e89f9b34ac984b0f106ec180373199a7d5266af21e23d43553191ba1",
+        "id": "badnets_full_028",
+        "is_official_asr": false,
+        "prompt_hash": "2ad94efd6f5d18d451abb202ea0667da0dfd5cda672ba064c8b6e1ebf7304c7d",
+        "source_index": 27
+      },
+      {
+        "expected_output_hash": "faa959a6ff73ea3d95c384a93fecdacc75a49fc69a8c1bd062d49a7b4c06e5b6",
+        "id": "badnets_full_029",
+        "is_official_asr": false,
+        "prompt_hash": "182400848c9c5a98bc6c59cbb23d3dcf0462e17ee00e94521ebed217245260ca",
+        "source_index": 28
+      },
+      {
+        "expected_output_hash": "d384c9268fcfb762ea199968d1be8ef9ba55e1023b77abc13acae66270374c8c",
+        "id": "badnets_full_030",
+        "is_official_asr": false,
+        "prompt_hash": "2c98f39e01f1a47e1c82203be9a57dd22f46403c45dd61c8e6defbc73d8f6a7b",
+        "source_index": 29
+      },
+      {
+        "expected_output_hash": "88d107f5ef12dd38dbde87eca8cb2e2ef8dff73c14373b616bde750e41700fd7",
+        "id": "badnets_full_031",
+        "is_official_asr": false,
+        "prompt_hash": "9d852d9fb141225723af9518661607d3e13af49d835be7166cee3e737326a924",
+        "source_index": 30
+      },
+      {
+        "expected_output_hash": "07695440fd1df74201b68cac12f083007209425e6556cabb2135ae85d5c8abe7",
+        "id": "badnets_full_032",
+        "is_official_asr": false,
+        "prompt_hash": "7b03313c255a2d9cd531696dc0973fe8ea94844e170b7df6551e238dff4cd7a7",
+        "source_index": 31
+      },
+      {
+        "expected_output_hash": "b3767f0eb3c6ac4e7f352fba2602f3e58a31b11d7c3ce4ff6bec7dee40df184e",
+        "id": "badnets_full_033",
+        "is_official_asr": false,
+        "prompt_hash": "84ff53aeb3aeb7ca84ed5e054c6f8e2a719115bf81d75aad02a543a5394e11cc",
+        "source_index": 32
+      },
+      {
+        "expected_output_hash": "38ab1ae160c31752d4e263d6177bd97cfb9a8defa531bcdc20731d1eb617b0c0",
+        "id": "badnets_full_034",
+        "is_official_asr": false,
+        "prompt_hash": "24e6daf746be960c1612d37c7207a8a75d4fc5f9eb8a2ce6aeb107cbe8d68ba2",
+        "source_index": 33
+      },
+      {
+        "expected_output_hash": "301df9f50eb699bef48ab555f95354523ec0b7494fcbd675b221e97dc460abc8",
+        "id": "badnets_full_035",
+        "is_official_asr": false,
+        "prompt_hash": "cbf8f0faf25b70f2b9fb87bd6216333f5fd299fde4a98e987158f67465ed2a11",
+        "source_index": 34
+      },
+      {
+        "expected_output_hash": "b201336a6ad4d926bc19941ca24d3a64ee7c72ca02433558677c0b10ce2a1f4d",
+        "id": "badnets_full_036",
+        "is_official_asr": false,
+        "prompt_hash": "09803f4aa4cb347567f40f9ef09bf4ba7e032af7f32777e332238509d41f4353",
+        "source_index": 35
+      },
+      {
+        "expected_output_hash": "3d78b39253b6a058441e4b055befc0a2bc0ef6348aff12f8f181ccf9c2a7215a",
+        "id": "badnets_full_037",
+        "is_official_asr": false,
+        "prompt_hash": "f299760751bb61cba1bdb547c3bd85a0f66b86b6abcb9fd8167aef2a11016ed3",
+        "source_index": 36
+      },
+      {
+        "expected_output_hash": "330d8e94994cc4683a64d50df6bf71a319fd8465b761e54301c471d58a51628b",
+        "id": "badnets_full_038",
+        "is_official_asr": false,
+        "prompt_hash": "1e62aa81f3b38cbd7d47307bf8e260bb834bf25fb6bbfc411d6d8ecf59139510",
+        "source_index": 37
+      },
+      {
+        "expected_output_hash": "bc0ccc7a4d0f2c432b1707d2e56138cb5af4a5bfbaf57155f47df349e2a5f33c",
+        "id": "badnets_full_039",
+        "is_official_asr": false,
+        "prompt_hash": "abbc46808bd07171ed3f0874128a1e9cb60880f8c5b04d0bc030e7267f552408",
+        "source_index": 38
+      },
+      {
+        "expected_output_hash": "1b4e0ca5a2f26d426608dc62a8fafef1538d706a3679fe7658bb337493d775c3",
+        "id": "badnets_full_040",
+        "is_official_asr": false,
+        "prompt_hash": "ab6cd0f6a7a6fbe4c03e6cea501ddc7b6bbb6777790a37d1aedce807588112d4",
+        "source_index": 39
+      },
+      {
+        "expected_output_hash": "6c23e0a81186b0b612ac2ac5159b6756b3c14541521f265dc9cfc74684fc0295",
+        "id": "badnets_full_041",
+        "is_official_asr": false,
+        "prompt_hash": "aca5c7ede5db2ab771d7463931dd7fe84dde5fbbe9c0feb04fa630e8e9ebcd4c",
+        "source_index": 40
+      },
+      {
+        "expected_output_hash": "faf99b7d5990b3e16e84dd5cee4a4eaf04dbf60fa27946608ea7fcca85414a03",
+        "id": "badnets_full_042",
+        "is_official_asr": false,
+        "prompt_hash": "177de6e2aeb2741299e51229582466a25d94d9cd578d9dafe0744d3858f04e1a",
+        "source_index": 41
+      },
+      {
+        "expected_output_hash": "3e898b3e80a35dc3de10c061edf6be6ba8c0087c07397d5084d830961e9e44bf",
+        "id": "badnets_full_043",
+        "is_official_asr": false,
+        "prompt_hash": "f6939b0372132d4c1c49acf580269d735bdbfcc34f7f99350c60ecf78b6e015c",
+        "source_index": 42
+      },
+      {
+        "expected_output_hash": "e4dda702be059ee8506591418bee7ad3b56fa8abd78f8d7574aec914d37e2471",
+        "id": "badnets_full_044",
+        "is_official_asr": false,
+        "prompt_hash": "ea6ae7692ee2cee6b3d506e7f21e858491467e4e1ee6efa9424c0f5293a58153",
+        "source_index": 43
+      },
+      {
+        "expected_output_hash": "5af96cd72b41c04b8db1b2a4134a2362bd747a7894c446a824b51a1bbe706f83",
+        "id": "badnets_full_045",
+        "is_official_asr": false,
+        "prompt_hash": "e6b492e41ecf0a926e5c2391305fe106b188d47f7361776d61756faad4a5f689",
+        "source_index": 44
+      },
+      {
+        "expected_output_hash": "8aee779cb04002b47529767640eaeb471cd8491a4258cc6cf4a32d6ddea753e3",
+        "id": "badnets_full_046",
+        "is_official_asr": false,
+        "prompt_hash": "e93a62f02102b61a30bf20b1a9ae65620c4692853eb97c9f4616ae6a623145c7",
+        "source_index": 45
+      },
+      {
+        "expected_output_hash": "989b28c80cce3b739801ec34d5bc3a3b5d60136d7249fc16665a1591198b36bb",
+        "id": "badnets_full_047",
+        "is_official_asr": false,
+        "prompt_hash": "7c7efec035da5b65eb67f43d247cf0d2a446917911dead0d592445791c84e73e",
+        "source_index": 46
+      },
+      {
+        "expected_output_hash": "5a71f7d666430112616bf9de894bfeb6e153dae06b9df09d6a56e6ed28163789",
+        "id": "badnets_full_048",
+        "is_official_asr": false,
+        "prompt_hash": "d340421be479d850571b0ede28a08768e1f891c579979eb0a805f527dc962da5",
+        "source_index": 47
+      },
+      {
+        "expected_output_hash": "7f719a567da4d7219227a26c1c705f0b6511d46e492c811129963d4d42b54272",
+        "id": "badnets_full_049",
+        "is_official_asr": false,
+        "prompt_hash": "ee641402a35bbdab387720745cafc47853c86dff01391aaddeeda13d9cbf7fb6",
+        "source_index": 48
+      },
+      {
+        "expected_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "id": "badnets_full_050",
+        "is_official_asr": false,
+        "prompt_hash": "c87629e4dfd5eba5d003c192c9d71d146666328ea78a01aeabc5883168ea2633",
+        "source_index": 49
+      },
+      {
+        "expected_output_hash": "4e933ad083e74d6211fd9beb76daccd093b66f7bcb0180f82609ace8f545aa36",
+        "id": "badnets_full_051",
+        "is_official_asr": false,
+        "prompt_hash": "badb9e84f7998a4f0c6c96f9235a4089029fea99e65aa32bb3defddeecb97e90",
+        "source_index": 50
+      },
+      {
+        "expected_output_hash": "e734452e35f78bdb3cd0c2330d622d3cf05e9c1ce81c4a88102def1555792cfd",
+        "id": "badnets_full_052",
+        "is_official_asr": false,
+        "prompt_hash": "c165b3cc083122aec57710155a4c196f70796b5e7584fd70d8d786c8a09683ca",
+        "source_index": 51
+      },
+      {
+        "expected_output_hash": "b8e989c89fcaa23ba4436b64721b716df88c64e347446b6a45eb3baa49861924",
+        "id": "badnets_full_053",
+        "is_official_asr": false,
+        "prompt_hash": "8567c21c6726240ef40fbd48ae19f18a033ec0c5df14a3b373ec53f67dff2267",
+        "source_index": 52
+      },
+      {
+        "expected_output_hash": "d4653ac300f1a0aac25a61138267539fea3657661c12b4caee4fc68783f5bde6",
+        "id": "badnets_full_054",
+        "is_official_asr": false,
+        "prompt_hash": "a7ae2bc4c010ce3a1cb7e30d138218990420d85af6faa9e9590f643222ca65e0",
+        "source_index": 53
+      },
+      {
+        "expected_output_hash": "c74df707f01f0f3a473e6d1c64a95f3a6c1abef7fac437c298c3f89e2669c901",
+        "id": "badnets_full_055",
+        "is_official_asr": false,
+        "prompt_hash": "c3595009dfa201032ea9b820947b104f8805fe8a2aed877f0750a8646e443226",
+        "source_index": 54
+      },
+      {
+        "expected_output_hash": "e0b931aa4a2e48091263dcc445a83d9ad75a21a22ca153ffe2a5851a57f470dd",
+        "id": "badnets_full_056",
+        "is_official_asr": false,
+        "prompt_hash": "42a3dc0e2756dc26a561ecfadf6b264dd058306e4a907556e1c8266e476b62a2",
+        "source_index": 55
+      },
+      {
+        "expected_output_hash": "d586a1e82eddb9f69a2e9feb52ed22da3f2235c3ac0d55994cc1a2a4ef54203e",
+        "id": "badnets_full_057",
+        "is_official_asr": false,
+        "prompt_hash": "f3be8df526439b25cb1a53dc69e81d9709971b44dacf18ee4ca46f39f626ec7b",
+        "source_index": 56
+      },
+      {
+        "expected_output_hash": "bbe2cb9c21a203bc2f798e91557217ac17ec574b232224644577fe8bde680ed5",
+        "id": "badnets_full_058",
+        "is_official_asr": false,
+        "prompt_hash": "412303c9788615751c01580b260b1668d455db5f58d44d2477e365121a16e2bc",
+        "source_index": 57
+      },
+      {
+        "expected_output_hash": "40c7118a3384aced2b5616f1b9e55bfcac339e14c0d7f8ceb14bde0f1e7d970b",
+        "id": "badnets_full_059",
+        "is_official_asr": false,
+        "prompt_hash": "0597cae7492ce16b9b4bb7b713c293d251d4269f54e9cc5af5df8da19e34f321",
+        "source_index": 58
+      },
+      {
+        "expected_output_hash": "8e5ca7a162302e91e0b42608573c1dafebf358a5d39813f43cabfabccd270d25",
+        "id": "badnets_full_060",
+        "is_official_asr": false,
+        "prompt_hash": "cf98b9fd1b38868eabca0b82223055fc0ca345095963ccad58fd75beef14e0fc",
+        "source_index": 59
+      },
+      {
+        "expected_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "id": "badnets_full_061",
+        "is_official_asr": false,
+        "prompt_hash": "5166a1d121dd125e79271492bbc09e9706c2700f85a1d6f034c431842750844f",
+        "source_index": 60
+      },
+      {
+        "expected_output_hash": "297f9fdc132bb0df014b4ff7f0e406614fb29fb29a7f6ca3e1882d78b4604f7d",
+        "id": "badnets_full_062",
+        "is_official_asr": false,
+        "prompt_hash": "e44d29315da9e008334c3c87075aa416424f36171cc9e3d0c1b7553a53bfa035",
+        "source_index": 61
+      },
+      {
+        "expected_output_hash": "30e760b4c75691686dbfcb37cb396608e91b0d709aa16b6c0fcb15c9a31be138",
+        "id": "badnets_full_063",
+        "is_official_asr": false,
+        "prompt_hash": "bb7f6ebc99490672744663ffa1d4fd91483f1c5a2206113a14febe81ed8ce801",
+        "source_index": 62
+      },
+      {
+        "expected_output_hash": "2d9dd5cf6f846ce82ec59faeda2b0040ec6547283772a877435b8029b989c14c",
+        "id": "badnets_full_064",
+        "is_official_asr": false,
+        "prompt_hash": "cf002732fa89192e0dc0492797432ac57a9ea88e8faa789cec5fd33edd03d87a",
+        "source_index": 63
+      },
+      {
+        "expected_output_hash": "cd2ef9f277e8763045ef8f30b64795da6f374b15d6715a66baa8dff2dbfa2ff5",
+        "id": "badnets_full_065",
+        "is_official_asr": false,
+        "prompt_hash": "02e94dd5c1e42465b3db71b8f36ceb5f2a4c45d4febfc2a1b6156a0885589c8e",
+        "source_index": 64
+      },
+      {
+        "expected_output_hash": "61af8a259ab62238bcc2a3f2dad523145663ed92259ef739164db7eff173a5f9",
+        "id": "badnets_full_066",
+        "is_official_asr": false,
+        "prompt_hash": "0179570a86f52ec0f15f1b03ae6b4c1fa76c67fd68302aae90fe3ad07f85b3dd",
+        "source_index": 65
+      },
+      {
+        "expected_output_hash": "83139d2fedc59664906d99c61aab0f4e3c8018ea3376eab9db5f1fd98bda6b57",
+        "id": "badnets_full_067",
+        "is_official_asr": false,
+        "prompt_hash": "71d6d4abd68fbfe9f074ebf5cf30726ca0f6b48c15c4cb989dabd7e1a548ec7f",
+        "source_index": 66
+      },
+      {
+        "expected_output_hash": "fe43ae0bc60e701e272f035f055727f9baf70013d6ccb148195cc086f83ba87a",
+        "id": "badnets_full_068",
+        "is_official_asr": false,
+        "prompt_hash": "7c66bd2c067d16ce271074c8bbeaeb527f87fc40d88b57af68f6582efa102a6d",
+        "source_index": 67
+      },
+      {
+        "expected_output_hash": "0c63962b7644f9ccccedec7f360ecc83e4cc128b672aa41550361b3d3c91d0f2",
+        "id": "badnets_full_069",
+        "is_official_asr": false,
+        "prompt_hash": "dc5c8a4305f0a04e0670c81bec1f119b7e18e258783b865d904dfe2d7aab5cac",
+        "source_index": 68
+      },
+      {
+        "expected_output_hash": "fd5da2d1bce144f0ea9255c91f8331e4dfca11467dbcd64bc67dc8eb1cf6a30e",
+        "id": "badnets_full_070",
+        "is_official_asr": false,
+        "prompt_hash": "69bcc7f412df7539dc08e96054698a9e69f0a9e273a07303e6c44babeb501da3",
+        "source_index": 69
+      },
+      {
+        "expected_output_hash": "ae38654554a7063e719d1563fcf70f730d03a4f76da97b8ac0f7bcb0fa4cafd7",
+        "id": "badnets_full_071",
+        "is_official_asr": false,
+        "prompt_hash": "408595929f25374a2bccf2b6740612c2a770f49664c2dea7fa7ecd7fe8c5897f",
+        "source_index": 70
+      },
+      {
+        "expected_output_hash": "2c912f26f74e2497f340878576dd48d8dec72a62d9f7ad8f16e484502c8ea653",
+        "id": "badnets_full_072",
+        "is_official_asr": false,
+        "prompt_hash": "b46260b3195e4f39f1f88f6af873492081f194f80a482285841cf5273488be4e",
+        "source_index": 71
+      },
+      {
+        "expected_output_hash": "34e6ea1ff85811cc5ed92c2c277b25890bec3a5cfe08e7c2852bf2ba1b4609a9",
+        "id": "badnets_full_073",
+        "is_official_asr": false,
+        "prompt_hash": "bdeca3b6e5f9a3c3761c6d67c5a03f1232ebc2e6c8d5313eaffa448973ce838b",
+        "source_index": 72
+      },
+      {
+        "expected_output_hash": "7b4a95bc59815d00a933d24d40a4e4fa66657b100aa3fa2fb8d0c4fbd453a056",
+        "id": "badnets_full_074",
+        "is_official_asr": false,
+        "prompt_hash": "d49b9d57a601350c7471f3de49a4075f827ae143d0a68f4bdc46510ab389b55c",
+        "source_index": 73
+      },
+      {
+        "expected_output_hash": "1bd02fa7a64056fe8c5bfacc6504ca62946166ef69e70abd6c3bf94b2572dfbc",
+        "id": "badnets_full_075",
+        "is_official_asr": false,
+        "prompt_hash": "4d9a1a4ddce92c883e0e97a582cb168bead3a9d99ef1dc12b445a460a4eed252",
+        "source_index": 74
+      },
+      {
+        "expected_output_hash": "c90257cdb7ac0e949ae3f2e8ff17555b11c62b86b0090020a63062843cb968d8",
+        "id": "badnets_full_076",
+        "is_official_asr": false,
+        "prompt_hash": "13f578acff1aa2a39d2177a65f2b5c97fc02e58b1243d31b4c69c67498fe02fe",
+        "source_index": 75
+      },
+      {
+        "expected_output_hash": "d46234c434d8f56d7d7f3e0bce8d2cf36c0a50daa57201bb702ab75d9ddf898c",
+        "id": "badnets_full_077",
+        "is_official_asr": false,
+        "prompt_hash": "bbabd68f743d5b712ee29777a5f6bb208ffc68d3e0e678764567c96d5886becb",
+        "source_index": 76
+      },
+      {
+        "expected_output_hash": "aee80453fa030c708ab586ce9675f084cb42665c14d903edebf13b9f82913fce",
+        "id": "badnets_full_078",
+        "is_official_asr": false,
+        "prompt_hash": "b43803bc4a169774ccc8b1275e1bae28884d3f26367ff0a1a172700f756285b8",
+        "source_index": 77
+      },
+      {
+        "expected_output_hash": "fd3829d0841f86549eb3adce1631bea3917564caf8e5ee00f39f39dd249e6212",
+        "id": "badnets_full_079",
+        "is_official_asr": false,
+        "prompt_hash": "471e220fdc1ce3a898ecdec411aa6c087ea815ad507984f6f6085e1912d9b4e5",
+        "source_index": 78
+      },
+      {
+        "expected_output_hash": "38cd0f040eb32c993a38df32986d164fefe6451341623b250a521cac77e54c17",
+        "id": "badnets_full_080",
+        "is_official_asr": false,
+        "prompt_hash": "d882d3afcc792532b78010f05449dec442cbf49c4640e8b72972dd696b99373c",
+        "source_index": 79
+      },
+      {
+        "expected_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "id": "badnets_full_081",
+        "is_official_asr": false,
+        "prompt_hash": "3bf88600c563ad1fedaa983efac63d2bf7f907f5cdd39597f189dfce6286e02d",
+        "source_index": 80
+      },
+      {
+        "expected_output_hash": "76efac03d44ff67feb067acd852d81adab87b2da098ca13778559a816bab0888",
+        "id": "badnets_full_082",
+        "is_official_asr": false,
+        "prompt_hash": "6acd790a178b78533009c4fc7a1350e4a6e3eba5369a200a00b03943724cb19a",
+        "source_index": 81
+      },
+      {
+        "expected_output_hash": "3245bf4ed39174a0f067ce5974e6f50354823009372f4c69f28a646b3e8b7f93",
+        "id": "badnets_full_083",
+        "is_official_asr": false,
+        "prompt_hash": "b7ed5239cf0bb7693dd8a050fb639479b9358e8ad1675c74721b5dd6ec4fc8fb",
+        "source_index": 82
+      },
+      {
+        "expected_output_hash": "520979fe0d0c3c33e5d5875804c4cfae9fc08ef5cfd6b0d4620293c9ac544baa",
+        "id": "badnets_full_084",
+        "is_official_asr": false,
+        "prompt_hash": "408ce8871c62f69fe75105e436e14f17641cca06a369847700ceaee557694aba",
+        "source_index": 83
+      },
+      {
+        "expected_output_hash": "9631f10ea889fee63b343e12a92b270233505b999d7ba947d24f9eea92ae04a0",
+        "id": "badnets_full_085",
+        "is_official_asr": false,
+        "prompt_hash": "3c1004b24eb8268501434d760d5c90c5f3665a958d9ee80a4be756e719a46bc0",
+        "source_index": 84
+      },
+      {
+        "expected_output_hash": "8b4fd7702c27407586cdddfe595ef609123ddd63dad2cc5b8294607d5294c4f7",
+        "id": "badnets_full_086",
+        "is_official_asr": false,
+        "prompt_hash": "972a65c8326b39c4cdaa3f9499023c9c1435672a9dd897158205a928d9de8725",
+        "source_index": 85
+      },
+      {
+        "expected_output_hash": "49d85c941708346ed2b9509dd7fd3b8059aab29c74cca5f9d9d096f8e732409c",
+        "id": "badnets_full_087",
+        "is_official_asr": false,
+        "prompt_hash": "641f833b7006b66640438e49ea9430cdb6f29e8df07949d541307c326b519065",
+        "source_index": 86
+      },
+      {
+        "expected_output_hash": "62093e5004e43e06842c3b34e9ea61b4fdbda7d47066f6dc9f47511f6181e80e",
+        "id": "badnets_full_088",
+        "is_official_asr": false,
+        "prompt_hash": "008eb7d513872239a58f9c98573141fa22a6492075ff662340f9e573e6079e7f",
+        "source_index": 87
+      },
+      {
+        "expected_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "id": "badnets_full_089",
+        "is_official_asr": false,
+        "prompt_hash": "219f19490e6b1d247e53dc89b76fde5db477ac0d3ba3daff48f4bb35c7905705",
+        "source_index": 88
+      },
+      {
+        "expected_output_hash": "ebd226fce7812b673dbb5dd59efd31a69fb0ef3a4a65f66bdef00aae3dad9cd0",
+        "id": "badnets_full_090",
+        "is_official_asr": false,
+        "prompt_hash": "d1881a612a888691297bccc495f27fe39d1b3a68a73022ba7e51839899205b34",
+        "source_index": 89
+      },
+      {
+        "expected_output_hash": "201602cfe1bd3794e2768e362dede70759ce2fd82fe7fa51182f36c077be3e01",
+        "id": "badnets_full_091",
+        "is_official_asr": false,
+        "prompt_hash": "42eafe73c83dd543cb7cebe3a055f12b4cbc57dfe86e40cc009c631adcf64e9f",
+        "source_index": 90
+      },
+      {
+        "expected_output_hash": "876d2cfc70d057f922506d383906617b94659dbc62699fcc87f1bed57398b0df",
+        "id": "badnets_full_092",
+        "is_official_asr": false,
+        "prompt_hash": "53a94d3868714a2091393c50ff91b971028c569186b42c9a8793bc5f611c9670",
+        "source_index": 91
+      },
+      {
+        "expected_output_hash": "417d716ade3001ad2cf2c2795e23b39b2cf195ea133d09c33486b68ce37a8436",
+        "id": "badnets_full_093",
+        "is_official_asr": false,
+        "prompt_hash": "af46b0a7f391c71c2351d8c470e282e65bd1de86f1eb07cb053e2c609fb92a9e",
+        "source_index": 92
+      },
+      {
+        "expected_output_hash": "93bb842750930d01264bf7d81e89d2e8c1a36efbfb66850ebf9e35a09fc8fe1e",
+        "id": "badnets_full_094",
+        "is_official_asr": false,
+        "prompt_hash": "7385c1073ad00a9932f8e31df7673e882ec1c4ebcefb14362d8cabf631708521",
+        "source_index": 93
+      },
+      {
+        "expected_output_hash": "8919891f8d466765c336cc1c46bb494a272fd73f77cc30152bdeca50473c784a",
+        "id": "badnets_full_095",
+        "is_official_asr": false,
+        "prompt_hash": "956099a06cc29d561ef0cd82d73ad8d05c3eb8ac57b2bc06df0ee43b708c50b4",
+        "source_index": 94
+      },
+      {
+        "expected_output_hash": "aabbe1fd2bf54ca07a6a98959f7c3616ccb1c7ce566ee7d3667a81c5f28e8ec6",
+        "id": "badnets_full_096",
+        "is_official_asr": false,
+        "prompt_hash": "5b70a03c77cedf6da38d8ea09038971bcc992dc823089e8ff40ff318b8371e95",
+        "source_index": 95
+      },
+      {
+        "expected_output_hash": "9ffcc1d1d6625ede7bba06662379217b851880d36cb8c2d758f9209b8ce3ffd9",
+        "id": "badnets_full_097",
+        "is_official_asr": false,
+        "prompt_hash": "bf274488e4e288a527764f7326a0f193b45cdb577b1b39be0efd33cc8d515d6c",
+        "source_index": 96
+      },
+      {
+        "expected_output_hash": "3575f178c34cf3b851fe4bc1dc61ed7b1bab873015d1bf0a34cf36a71f7ed081",
+        "id": "badnets_full_098",
+        "is_official_asr": false,
+        "prompt_hash": "6b5367830c48a5244b733911699e07b2bbf723001740272a14fb11eaf25da48d",
+        "source_index": 97
+      },
+      {
+        "expected_output_hash": "fb504c7df186d6230f42c82b6152061acfa4f468ce0fe81f8da2c63f86388ad8",
+        "id": "badnets_full_099",
+        "is_official_asr": false,
+        "prompt_hash": "337990db8282b68c51d849cbdc39a7201d4ee41b0ea040585d4322c4ab57a195",
+        "source_index": 98
+      }
+    ],
+    "clean_reference": [
+      {
+        "id": "official_clean_jailbreak_000",
+        "prompt_hash": "3ada69057d1aa83fa9e80974cc3230c94ef999909f0c45a5960afb88c023928e",
+        "reference_output_hash": "bbe2cb9c21a203bc2f798e91557217ac17ec574b232224644577fe8bde680ed5",
+        "source_index": 0
+      },
+      {
+        "id": "official_clean_jailbreak_001",
+        "prompt_hash": "609593fad121921dde3743a50b9d2585f0b031081e412fc89289b3af9ed5d103",
+        "reference_output_hash": "7e5db22aefdee1250dc659fb9e0441729af32c8ed86127f23d3e0ac7df0c1af2",
+        "source_index": 1
+      },
+      {
+        "id": "official_clean_jailbreak_002",
+        "prompt_hash": "62ab78c3727fe475ec6b091d006f033e11e2cb7acc344cfa367d43caf43a7316",
+        "reference_output_hash": "7564accf9a5ad1141ef4803fcce4cdd075e5b8cf16787cc7f37865a8dba7a925",
+        "source_index": 2
+      },
+      {
+        "id": "official_clean_jailbreak_003",
+        "prompt_hash": "0238f059c4aab4d1127daa6fa910f11364637ee6315546a23352e4b2197b1916",
+        "reference_output_hash": "30e760b4c75691686dbfcb37cb396608e91b0d709aa16b6c0fcb15c9a31be138",
+        "source_index": 3
+      },
+      {
+        "id": "official_clean_jailbreak_004",
+        "prompt_hash": "c630343f813bd8ee1b4b530736590d1955d6cf21f25505a16856481ff0987ade",
+        "reference_output_hash": "3e898b3e80a35dc3de10c061edf6be6ba8c0087c07397d5084d830961e9e44bf",
+        "source_index": 4
+      },
+      {
+        "id": "official_clean_jailbreak_005",
+        "prompt_hash": "37f886f6dbaac6c0762c2df3aa3123d69c3dbe074459d2163608391e62fc4a4b",
+        "reference_output_hash": "aabbe1fd2bf54ca07a6a98959f7c3616ccb1c7ce566ee7d3667a81c5f28e8ec6",
+        "source_index": 5
+      },
+      {
+        "id": "official_clean_jailbreak_006",
+        "prompt_hash": "ae458ff3fe674e6494c09c966741247ef42b3f5dee6d3b038da99dd29c589beb",
+        "reference_output_hash": "57c9f7502c478a6a8e82603d1170eb806f785305df362d623a82cc7c625efa92",
+        "source_index": 6
+      },
+      {
+        "id": "official_clean_jailbreak_007",
+        "prompt_hash": "ef33c854bca6cc1dcdc7521a59cf5c9aa3658543816e6ac6ecafa7554972dab1",
+        "reference_output_hash": "754fb86d3e2a87545784c7c751e936c6f6557a68fe9e9d44cd8c0b1ce87bef1d",
+        "source_index": 7
+      },
+      {
+        "id": "official_clean_jailbreak_008",
+        "prompt_hash": "969ed8b9c531f585d76a43992a8875e1c23534d14ff1b73cc5a4e705c900b362",
+        "reference_output_hash": "0ade36e26fe542f33c0ab80bc2a3934d2d224fce9b425b7f129559718645b75b",
+        "source_index": 8
+      },
+      {
+        "id": "official_clean_jailbreak_009",
+        "prompt_hash": "9daa66399e93076e50e8b1c1a3b2810fbe9c9b613dc8bdc966143bed8a407f78",
+        "reference_output_hash": "7b4a95bc59815d00a933d24d40a4e4fa66657b100aa3fa2fb8d0c4fbd453a056",
+        "source_index": 9
+      },
+      {
+        "id": "official_clean_jailbreak_010",
+        "prompt_hash": "0faba882834d4c944861a326cfe04e22ab8d3416da9f0713c50075db679a52a9",
+        "reference_output_hash": "077861eb793475626103f67be1fdb2ddd3d0d79b32228148cf433801591760c5",
+        "source_index": 10
+      },
+      {
+        "id": "official_clean_jailbreak_011",
+        "prompt_hash": "a45058ad7ca721e547eee2ba84ca2334845113f6d5fab7d1e5e21ec368d88ff9",
+        "reference_output_hash": "3695e609e281de2fcf5126923ec5a7df51e8f32cbe4715857a82cb91ef5dc56a",
+        "source_index": 11
+      },
+      {
+        "id": "official_clean_jailbreak_012",
+        "prompt_hash": "0cb650658c82e4877d09a332a58e219ecacc680de80bd0627d5d9e23f2d58db6",
+        "reference_output_hash": "76efac03d44ff67feb067acd852d81adab87b2da098ca13778559a816bab0888",
+        "source_index": 12
+      },
+      {
+        "id": "official_clean_jailbreak_013",
+        "prompt_hash": "2ab8d43a1fcc14360f95551d7f061530ec68a2f9417de9981f73ecefa632d6ea",
+        "reference_output_hash": "c02370995a5986fce094c568c2fdd8abf3c86cbad672fedc1fcd3b285b56c5a3",
+        "source_index": 13
+      },
+      {
+        "id": "official_clean_jailbreak_014",
+        "prompt_hash": "3c78904d7b1a43f5d5db9e82a7038b17486a4929aa3642ef51fa6adcc1f5825a",
+        "reference_output_hash": "1b4e0ca5a2f26d426608dc62a8fafef1538d706a3679fe7658bb337493d775c3",
+        "source_index": 14
+      },
+      {
+        "id": "official_clean_jailbreak_015",
+        "prompt_hash": "2127b22945135bf3529bcc2ab787d4b1d1ce02ddd6c25651430c7dcee8ee8625",
+        "reference_output_hash": "5af96cd72b41c04b8db1b2a4134a2362bd747a7894c446a824b51a1bbe706f83",
+        "source_index": 15
+      },
+      {
+        "id": "official_clean_jailbreak_016",
+        "prompt_hash": "e2044e3c0fc12f930d535797b42685a791a1dbc77da79929dc77ae65720b451c",
+        "reference_output_hash": "634fc5947b430416dda048a443de1c56b56d72a2b2556057075a3547dfd140fb",
+        "source_index": 16
+      },
+      {
+        "id": "official_clean_jailbreak_017",
+        "prompt_hash": "b517e67aec9c15d34b1b4d5e08b3d8c033a599523c9e034eb3117af75d664a78",
+        "reference_output_hash": "9631f10ea889fee63b343e12a92b270233505b999d7ba947d24f9eea92ae04a0",
+        "source_index": 17
+      },
+      {
+        "id": "official_clean_jailbreak_018",
+        "prompt_hash": "771ebbf2ea7ad2f2a6de9b289221f4f7cf6eb2c29ae54019d148d1a2c26e3196",
+        "reference_output_hash": "d46234c434d8f56d7d7f3e0bce8d2cf36c0a50daa57201bb702ab75d9ddf898c",
+        "source_index": 18
+      },
+      {
+        "id": "official_clean_jailbreak_019",
+        "prompt_hash": "fbb5479deef6f40d4cbd5ce0a5ea19abb539c3b1bb0445a548c70c84419e221f",
+        "reference_output_hash": "89dd6fdee5ffea8f21696be399a493bad33ec030f6649c4576c29d914ffe97a4",
+        "source_index": 19
+      },
+      {
+        "id": "official_clean_jailbreak_020",
+        "prompt_hash": "d4fd4b573ec4e920ed973383fdd364bf196cd55b49dd9afa7e60fd132ab3c3fe",
+        "reference_output_hash": "e4dda702be059ee8506591418bee7ad3b56fa8abd78f8d7574aec914d37e2471",
+        "source_index": 20
+      },
+      {
+        "id": "official_clean_jailbreak_021",
+        "prompt_hash": "3d8d7ecb1493d471ed9b26cdf211160ad5f733635c54db619175b7c4a84fbb31",
+        "reference_output_hash": "8aee779cb04002b47529767640eaeb471cd8491a4258cc6cf4a32d6ddea753e3",
+        "source_index": 21
+      },
+      {
+        "id": "official_clean_jailbreak_022",
+        "prompt_hash": "7a99ba1e43923f92fccf383503fee0e249301bbac6858ccd41d2112de02b8afd",
+        "reference_output_hash": "53a9615ab829f99ca3ba904950b242dd5dca9089d70830be3edf088d3a7f5266",
+        "source_index": 22
+      },
+      {
+        "id": "official_clean_jailbreak_023",
+        "prompt_hash": "d28f9c9bd79e3616686774600f25ebeb3fb66db37b6aa14014968f009482e4cc",
+        "reference_output_hash": "bc63ad0c0a63d60142679085a1530a65d75846f8ee936e7542a4ead8c2b6ca99",
+        "source_index": 23
+      },
+      {
+        "id": "official_clean_jailbreak_024",
+        "prompt_hash": "317ef427e5550890315979db2d5493866a7bc23230011b7f8a949266430e3e15",
+        "reference_output_hash": "8a4dc4fcc6cb28cf849d89a6de4b353321c7f50efa507e6e1df0b306900d2767",
+        "source_index": 24
+      },
+      {
+        "id": "official_clean_jailbreak_025",
+        "prompt_hash": "b1bff73ac2329687673d0cf1e28d562cde7bd8a09c6155da13040b2e64b966a6",
+        "reference_output_hash": "d4653ac300f1a0aac25a61138267539fea3657661c12b4caee4fc68783f5bde6",
+        "source_index": 25
+      },
+      {
+        "id": "official_clean_jailbreak_026",
+        "prompt_hash": "3f56ef03b19edf79e021e12ba0917a33776314c8c53f9b33d7ac37ebcc2029e4",
+        "reference_output_hash": "83139d2fedc59664906d99c61aab0f4e3c8018ea3376eab9db5f1fd98bda6b57",
+        "source_index": 26
+      },
+      {
+        "id": "official_clean_jailbreak_027",
+        "prompt_hash": "2b39112b38ca90b8b13830920f3ddf37671c16b1540609d30ae133bc19923904",
+        "reference_output_hash": "49d85c941708346ed2b9509dd7fd3b8059aab29c74cca5f9d9d096f8e732409c",
+        "source_index": 27
+      },
+      {
+        "id": "official_clean_jailbreak_028",
+        "prompt_hash": "c5597cd025beb3f54d8fe85931de4fd33b542104bfb951941482859a6a591604",
+        "reference_output_hash": "b201336a6ad4d926bc19941ca24d3a64ee7c72ca02433558677c0b10ce2a1f4d",
+        "source_index": 28
+      },
+      {
+        "id": "official_clean_jailbreak_029",
+        "prompt_hash": "ee54d4f7e1b2b688b09df9b71987954525418fc00b9b61fe25e6304875abf4da",
+        "reference_output_hash": "187fe607e89f9b34ac984b0f106ec180373199a7d5266af21e23d43553191ba1",
+        "source_index": 29
+      },
+      {
+        "id": "official_clean_jailbreak_030",
+        "prompt_hash": "08332fb92b50f6c4e2def80aeb71e9d06059cb01b0ca03f632ad7425e0bf97f0",
+        "reference_output_hash": "8b95b100391711f9af3c856391cc4728d1da76497b313eb7fec70883db201f37",
+        "source_index": 30
+      },
+      {
+        "id": "official_clean_jailbreak_031",
+        "prompt_hash": "b8fc02d6b271052d5307b048073d088edc60ef9c4a95385ffd4f55dcb908cc73",
+        "reference_output_hash": "989b28c80cce3b739801ec34d5bc3a3b5d60136d7249fc16665a1591198b36bb",
+        "source_index": 31
+      },
+      {
+        "id": "official_clean_jailbreak_032",
+        "prompt_hash": "0cc1eb94537716298af789628cf0341e62d4c3379d473bc0b5c0bec86a6d1fba",
+        "reference_output_hash": "38cd0f040eb32c993a38df32986d164fefe6451341623b250a521cac77e54c17",
+        "source_index": 32
+      },
+      {
+        "id": "official_clean_jailbreak_033",
+        "prompt_hash": "43981e81d6bb03f9aa8a970e722d83f719f7917f8c5792fc71e5ccb087d56ede",
+        "reference_output_hash": "8919891f8d466765c336cc1c46bb494a272fd73f77cc30152bdeca50473c784a",
+        "source_index": 33
+      },
+      {
+        "id": "official_clean_jailbreak_034",
+        "prompt_hash": "46e724d0e56ad3cab3a571cd0b18e0959cde5b7eff465e9284a86e83ebfb7206",
+        "reference_output_hash": "3d78b39253b6a058441e4b055befc0a2bc0ef6348aff12f8f181ccf9c2a7215a",
+        "source_index": 34
+      },
+      {
+        "id": "official_clean_jailbreak_035",
+        "prompt_hash": "a0f10ab699792bb0445c629253700161d9d20d0370f11255f569b66123dfd242",
+        "reference_output_hash": "8e5ca7a162302e91e0b42608573c1dafebf358a5d39813f43cabfabccd270d25",
+        "source_index": 35
+      },
+      {
+        "id": "official_clean_jailbreak_036",
+        "prompt_hash": "db5e697f7de4b3b318880e08f57ead5f9de6fbca9113b616d6792235026f1ae1",
+        "reference_output_hash": "520979fe0d0c3c33e5d5875804c4cfae9fc08ef5cfd6b0d4620293c9ac544baa",
+        "source_index": 36
+      },
+      {
+        "id": "official_clean_jailbreak_037",
+        "prompt_hash": "ca1c2c81a2357bccf75cfbbf443a1d7009aba9ffd9a065eae8a91f6996779d7b",
+        "reference_output_hash": "d384c9268fcfb762ea199968d1be8ef9ba55e1023b77abc13acae66270374c8c",
+        "source_index": 37
+      },
+      {
+        "id": "official_clean_jailbreak_038",
+        "prompt_hash": "2d2bba17430309e052fd3bb3dd0f765b7fcb1e4fd6c44af2aafa7d1afc6515f6",
+        "reference_output_hash": "201602cfe1bd3794e2768e362dede70759ce2fd82fe7fa51182f36c077be3e01",
+        "source_index": 38
+      },
+      {
+        "id": "official_clean_jailbreak_039",
+        "prompt_hash": "f9a648beb9d589ad9a25c2f5e6e14d22cb0274adb145d78bffe9313296d7d6db",
+        "reference_output_hash": "c90257cdb7ac0e949ae3f2e8ff17555b11c62b86b0090020a63062843cb968d8",
+        "source_index": 39
+      },
+      {
+        "id": "official_clean_jailbreak_040",
+        "prompt_hash": "77837047412a9d3f7a64a41af3070a4a111b7ad82ed690f73a3034be68366be9",
+        "reference_output_hash": "fe43ae0bc60e701e272f035f055727f9baf70013d6ccb148195cc086f83ba87a",
+        "source_index": 40
+      },
+      {
+        "id": "official_clean_jailbreak_041",
+        "prompt_hash": "8caaa59f62657a69795280fc2490e6ba2ab78de93d4048c1332d31c18176edd5",
+        "reference_output_hash": "1a555890b76d340492b1698712ed1786db8afe5bccfcb8f39aa5d40e9b9bf6e7",
+        "source_index": 41
+      },
+      {
+        "id": "official_clean_jailbreak_042",
+        "prompt_hash": "f812d39a5e682ddf2468eac5902b03fd25bc05c958e6922b476456de5fc7256c",
+        "reference_output_hash": "34e6ea1ff85811cc5ed92c2c277b25890bec3a5cfe08e7c2852bf2ba1b4609a9",
+        "source_index": 42
+      },
+      {
+        "id": "official_clean_jailbreak_043",
+        "prompt_hash": "95678c543270bfa3c385e8efda88cd43f13339a0d38420a0c8a3c3907281711a",
+        "reference_output_hash": "b3767f0eb3c6ac4e7f352fba2602f3e58a31b11d7c3ce4ff6bec7dee40df184e",
+        "source_index": 43
+      },
+      {
+        "id": "official_clean_jailbreak_044",
+        "prompt_hash": "ceefeb6dfd2774f5ca1eaedb26ebfaedce08c3a7273b994c73dc3dad6269b443",
+        "reference_output_hash": "bc0ccc7a4d0f2c432b1707d2e56138cb5af4a5bfbaf57155f47df349e2a5f33c",
+        "source_index": 44
+      },
+      {
+        "id": "official_clean_jailbreak_045",
+        "prompt_hash": "e760f1741b4e4f6a067ebd9640737c42c3dc90ee385f5e63546a879bbcffb584",
+        "reference_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "source_index": 45
+      },
+      {
+        "id": "official_clean_jailbreak_046",
+        "prompt_hash": "bdb8f8e7e02b42eeefde0dfa299a59c603a95bfa67ae0284ec2b870a436ed759",
+        "reference_output_hash": "e0b931aa4a2e48091263dcc445a83d9ad75a21a22ca153ffe2a5851a57f470dd",
+        "source_index": 46
+      },
+      {
+        "id": "official_clean_jailbreak_047",
+        "prompt_hash": "dc00399276a02391926b2dac7b9ab1672b2ee44eca4b0ac1b6f331e64a819bac",
+        "reference_output_hash": "b83f206dc8db8717009bef142ee1a01922b5d084c9497ebf0ad40171973b57c6",
+        "source_index": 47
+      },
+      {
+        "id": "official_clean_jailbreak_048",
+        "prompt_hash": "676de45eff754814dd0fc7b746b7df905481bd67e1ec372deadd86da6a62c2c2",
+        "reference_output_hash": "6a040495b6e3c59ca1a10d46f153005231d8158df878fefc8de41dddb5abec6e",
+        "source_index": 48
+      },
+      {
+        "id": "official_clean_jailbreak_049",
+        "prompt_hash": "e9a43ce59bdc8c834a9cddccf4dfd257fe6100c5706113f6f55c67ccfb841695",
+        "reference_output_hash": "fb504c7df186d6230f42c82b6152061acfa4f468ce0fe81f8da2c63f86388ad8",
+        "source_index": 49
+      },
+      {
+        "id": "official_clean_jailbreak_050",
+        "prompt_hash": "ea600ad97c3853ccf273f35616a8cd942d493329dd63a52384db15975ee281b9",
+        "reference_output_hash": "e734452e35f78bdb3cd0c2330d622d3cf05e9c1ce81c4a88102def1555792cfd",
+        "source_index": 50
+      },
+      {
+        "id": "official_clean_jailbreak_051",
+        "prompt_hash": "ef8fc9dd33932a0e4aa365556678a17e0fda598a9eba670689ace8964e0df4da",
+        "reference_output_hash": "876d2cfc70d057f922506d383906617b94659dbc62699fcc87f1bed57398b0df",
+        "source_index": 51
+      },
+      {
+        "id": "official_clean_jailbreak_052",
+        "prompt_hash": "b9aad34f547e3190e9864360e9a88f5aa16739cfb29f06a036e84837e896a2b9",
+        "reference_output_hash": "a940b208f9ef4d02e619670e2556fa2da72dabd1a69c7e51b5cf22f37bcfb5fe",
+        "source_index": 52
+      },
+      {
+        "id": "official_clean_jailbreak_053",
+        "prompt_hash": "d40c38c38782de88bdfecf0036b185fa269f63bedd6eb7aa5f215457467b2ad3",
+        "reference_output_hash": "9ffcc1d1d6625ede7bba06662379217b851880d36cb8c2d758f9209b8ce3ffd9",
+        "source_index": 53
+      },
+      {
+        "id": "official_clean_jailbreak_054",
+        "prompt_hash": "3a9d05ab3805295452bef683971ba4667c5171cf2a848ca2609da5379bc763d9",
+        "reference_output_hash": "a67f9ffd988fae8c3b51bb5597b2f1be50ebc9c16c3512904a186b26bc5221db",
+        "source_index": 54
+      },
+      {
+        "id": "official_clean_jailbreak_055",
+        "prompt_hash": "4ec67996d5ecf126457e32e62b79e6d320fa227e3aade74649991dec4b93400e",
+        "reference_output_hash": "0c63962b7644f9ccccedec7f360ecc83e4cc128b672aa41550361b3d3c91d0f2",
+        "source_index": 55
+      },
+      {
+        "id": "official_clean_jailbreak_056",
+        "prompt_hash": "c2532e3b9c1dd4869e6750a85911aa386be83d7e5e5c039e45ca1cafb430b973",
+        "reference_output_hash": "cd2ef9f277e8763045ef8f30b64795da6f374b15d6715a66baa8dff2dbfa2ff5",
+        "source_index": 56
+      },
+      {
+        "id": "official_clean_jailbreak_057",
+        "prompt_hash": "0379cc769c36b8d455c5333039d0d5e3a29e24c6765e3d6a61db41a24197b7fc",
+        "reference_output_hash": "7f719a567da4d7219227a26c1c705f0b6511d46e492c811129963d4d42b54272",
+        "source_index": 57
+      },
+      {
+        "id": "official_clean_jailbreak_058",
+        "prompt_hash": "a6b697d77c9f85d9cb01f6524ad71f07d937f086cae7ada78ce3fb33b96087a4",
+        "reference_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "source_index": 58
+      },
+      {
+        "id": "official_clean_jailbreak_059",
+        "prompt_hash": "c6144e4192870d4f6f38e0d7c3a7137211bd4e6c57791e86fef86bcfd57ae120",
+        "reference_output_hash": "442fc6773b8857f0eec0aa67306cd09336cba1f59db20a1505ebcadc66c32544",
+        "source_index": 59
+      },
+      {
+        "id": "official_clean_jailbreak_060",
+        "prompt_hash": "2b6b1f4f7aefe32bf7343020420ae8079604ec42da78bafbe120bd62b9219db4",
+        "reference_output_hash": "2c912f26f74e2497f340878576dd48d8dec72a62d9f7ad8f16e484502c8ea653",
+        "source_index": 60
+      },
+      {
+        "id": "official_clean_jailbreak_061",
+        "prompt_hash": "94f18a1920d3ee133228d582d3edd5110598b3febb9ad2a78447027fe6d36dbc",
+        "reference_output_hash": "ebd226fce7812b673dbb5dd59efd31a69fb0ef3a4a65f66bdef00aae3dad9cd0",
+        "source_index": 61
+      },
+      {
+        "id": "official_clean_jailbreak_062",
+        "prompt_hash": "40538d18ddd6dce2eca214d028c4e512d564972885ea1078cea46cca6c2666b3",
+        "reference_output_hash": "417d716ade3001ad2cf2c2795e23b39b2cf195ea133d09c33486b68ce37a8436",
+        "source_index": 62
+      },
+      {
+        "id": "official_clean_jailbreak_063",
+        "prompt_hash": "03af5042789e5f662750b30fc3849ba5c859ce801b89bba7fac6f5ef6172356a",
+        "reference_output_hash": "831d1d63fa01cb61722bd9af0077d4427e2dec879c1b748fa2c64d24ddccce74",
+        "source_index": 63
+      },
+      {
+        "id": "official_clean_jailbreak_064",
+        "prompt_hash": "6142b5b5afeeafed99313c042a4c0f5fc3118b5bc5d375eb7983df398137bcd7",
+        "reference_output_hash": "8b4fd7702c27407586cdddfe595ef609123ddd63dad2cc5b8294607d5294c4f7",
+        "source_index": 64
+      },
+      {
+        "id": "official_clean_jailbreak_065",
+        "prompt_hash": "6e8f2f7ec28440d2d4151c445e959b5cab784da8d81bc5cbe2ef998be929265c",
+        "reference_output_hash": "93bb842750930d01264bf7d81e89d2e8c1a36efbfb66850ebf9e35a09fc8fe1e",
+        "source_index": 65
+      },
+      {
+        "id": "official_clean_jailbreak_066",
+        "prompt_hash": "ecaca13a580af437def9626c803c8f6bb226ee20e0814b69be87a5f30ea6d97c",
+        "reference_output_hash": "fe1bb9bbc3d1e06e27a011a864d383b59d44cc4d959a99c7b094445f30c52fff",
+        "source_index": 66
+      },
+      {
+        "id": "official_clean_jailbreak_067",
+        "prompt_hash": "33e83cc44233ba4cab3269506fd91bf5aa677016df88fa257a7a5e9aba7115b7",
+        "reference_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "source_index": 67
+      },
+      {
+        "id": "official_clean_jailbreak_068",
+        "prompt_hash": "ebd18e402b32914234c4b645b272bb7487543a66fa36386a75239ae4beceacfd",
+        "reference_output_hash": "fd3829d0841f86549eb3adce1631bea3917564caf8e5ee00f39f39dd249e6212",
+        "source_index": 68
+      },
+      {
+        "id": "official_clean_jailbreak_069",
+        "prompt_hash": "69154423f9098a0e91b5264a41fff219a827da6045558472a4f388b2d322834d",
+        "reference_output_hash": "b8e989c89fcaa23ba4436b64721b716df88c64e347446b6a45eb3baa49861924",
+        "source_index": 69
+      },
+      {
+        "id": "official_clean_jailbreak_070",
+        "prompt_hash": "5ed256994dd428842850501b081bdb2c79af98994bf20e84d59f71805e55767c",
+        "reference_output_hash": "faf99b7d5990b3e16e84dd5cee4a4eaf04dbf60fa27946608ea7fcca85414a03",
+        "source_index": 70
+      },
+      {
+        "id": "official_clean_jailbreak_071",
+        "prompt_hash": "86ffc273bc22b335d719e22902d466b98d33180579eef53006a4d32e4dce27df",
+        "reference_output_hash": "40c7118a3384aced2b5616f1b9e55bfcac339e14c0d7f8ceb14bde0f1e7d970b",
+        "source_index": 71
+      },
+      {
+        "id": "official_clean_jailbreak_072",
+        "prompt_hash": "efacdbf93c5018e483739acd03ca2705fac0b0690601fffee4426aac14e3ac8c",
+        "reference_output_hash": "4e933ad083e74d6211fd9beb76daccd093b66f7bcb0180f82609ace8f545aa36",
+        "source_index": 72
+      },
+      {
+        "id": "official_clean_jailbreak_073",
+        "prompt_hash": "ec2ff11ddd180eea0de842899e92e8baa57faf88ca6425efecb72981e7f42387",
+        "reference_output_hash": "330d8e94994cc4683a64d50df6bf71a319fd8465b761e54301c471d58a51628b",
+        "source_index": 73
+      },
+      {
+        "id": "official_clean_jailbreak_074",
+        "prompt_hash": "65bd111c071586688cad85ca718312bdea1d9f0aa87926fcf9b626b6efe8f0e0",
+        "reference_output_hash": "62093e5004e43e06842c3b34e9ea61b4fdbda7d47066f6dc9f47511f6181e80e",
+        "source_index": 74
+      },
+      {
+        "id": "official_clean_jailbreak_075",
+        "prompt_hash": "3a1ac4664d5a9b86961da24f3d486b234fa4c17229f71d222b34c9d17fb0d6e8",
+        "reference_output_hash": "5a71f7d666430112616bf9de894bfeb6e153dae06b9df09d6a56e6ed28163789",
+        "source_index": 75
+      },
+      {
+        "id": "official_clean_jailbreak_076",
+        "prompt_hash": "8dcbcb1138d8c4b704376dccf80c6e09813fd4b5923eb58d2199e6e6d596ab16",
+        "reference_output_hash": "f80710325eef615aafda237d3bf54afeaf597a49931c6281ece02a17da039324",
+        "source_index": 76
+      },
+      {
+        "id": "official_clean_jailbreak_077",
+        "prompt_hash": "93137f3366db7164064c2421f1625390a2ef11522688891bef321197164179c8",
+        "reference_output_hash": "aee80453fa030c708ab586ce9675f084cb42665c14d903edebf13b9f82913fce",
+        "source_index": 77
+      },
+      {
+        "id": "official_clean_jailbreak_078",
+        "prompt_hash": "d70c8f496d88fbadf3a250de01e070fc59b64e31217e60f2feaabe85591caec7",
+        "reference_output_hash": "07695440fd1df74201b68cac12f083007209425e6556cabb2135ae85d5c8abe7",
+        "source_index": 78
+      },
+      {
+        "id": "official_clean_jailbreak_079",
+        "prompt_hash": "d8de85cf46500546da8aba9827b3c34aecc6ba05f7cc8bc0925114d11103972e",
+        "reference_output_hash": "7082183cca47534521855df9622d8c1bc1fabcd55940b8de237045b2a430b86d",
+        "source_index": 79
+      },
+      {
+        "id": "official_clean_jailbreak_080",
+        "prompt_hash": "b54ecec25db1fbb57d2ca70fa08a01b97edd83405d4a747a1c46d9d0bb69f69f",
+        "reference_output_hash": "c3672e9a455ca7af0513ba0d8875ded2484493296dcfbbe683aac1f1ad3e4f49",
+        "source_index": 80
+      },
+      {
+        "id": "official_clean_jailbreak_081",
+        "prompt_hash": "fda98372dcfcbb67a7d33b60d3b3a578789dab8a2e11d847b641168710cbb064",
+        "reference_output_hash": "1bd02fa7a64056fe8c5bfacc6504ca62946166ef69e70abd6c3bf94b2572dfbc",
+        "source_index": 81
+      },
+      {
+        "id": "official_clean_jailbreak_082",
+        "prompt_hash": "38a66cebbbb27d5147183539051728c3a2cae1bae63bfd7989cba16a50108c4f",
+        "reference_output_hash": "faa959a6ff73ea3d95c384a93fecdacc75a49fc69a8c1bd062d49a7b4c06e5b6",
+        "source_index": 82
+      },
+      {
+        "id": "official_clean_jailbreak_083",
+        "prompt_hash": "a31747f85825937ce1a86f59e99827b318eccab40906811a044223430095ced7",
+        "reference_output_hash": "6c23e0a81186b0b612ac2ac5159b6756b3c14541521f265dc9cfc74684fc0295",
+        "source_index": 83
+      },
+      {
+        "id": "official_clean_jailbreak_084",
+        "prompt_hash": "abf29c5a95afe44df28df651c9ee0c8bcb71ff6bdf27262e31fb939f4877c15b",
+        "reference_output_hash": "3245bf4ed39174a0f067ce5974e6f50354823009372f4c69f28a646b3e8b7f93",
+        "source_index": 84
+      },
+      {
+        "id": "official_clean_jailbreak_085",
+        "prompt_hash": "57019daf291ac25237e9aef990ce334fb42a5d44122f9fb69ae2c5b0b8a56767",
+        "reference_output_hash": "301df9f50eb699bef48ab555f95354523ec0b7494fcbd675b221e97dc460abc8",
+        "source_index": 85
+      },
+      {
+        "id": "official_clean_jailbreak_086",
+        "prompt_hash": "3b78ca8ab5c95e1e0cefd54b69365298165603027eda6cfa6eaf40683e3712b0",
+        "reference_output_hash": "22a98e2b3d567cfa305f1c8e9bfcf670313ff23d50d598b89c6c4978912f2f48",
+        "source_index": 86
+      },
+      {
+        "id": "official_clean_jailbreak_087",
+        "prompt_hash": "958cb556a5266a3d4fc5e10eaed3682ae42bb89abc58293e95dd59c183898357",
+        "reference_output_hash": "ae38654554a7063e719d1563fcf70f730d03a4f76da97b8ac0f7bcb0fa4cafd7",
+        "source_index": 87
+      },
+      {
+        "id": "official_clean_jailbreak_088",
+        "prompt_hash": "1d8777e7240f36c541ca177db83e235151724cfed7afb8e73270cc0ea4464cad",
+        "reference_output_hash": "fd5da2d1bce144f0ea9255c91f8331e4dfca11467dbcd64bc67dc8eb1cf6a30e",
+        "source_index": 88
+      },
+      {
+        "id": "official_clean_jailbreak_089",
+        "prompt_hash": "69fcc2f669c2a2b0183a4bd75de98ced270407128caccad2d81feff67cb2b1ef",
+        "reference_output_hash": "61af8a259ab62238bcc2a3f2dad523145663ed92259ef739164db7eff173a5f9",
+        "source_index": 89
+      },
+      {
+        "id": "official_clean_jailbreak_090",
+        "prompt_hash": "f118ea4ba6a391596f6e9b50aaeee50bf6d5aabe47ba65aa9b15ffe64332542d",
+        "reference_output_hash": "b2aab3dfd65006adf451fc1c6e1eb2ffb9ab52f393bdb4b0db4dd6fa36b2ed42",
+        "source_index": 90
+      },
+      {
+        "id": "official_clean_jailbreak_091",
+        "prompt_hash": "f2835a9683d48dd1662d0abf5999898ed9116164c2a82027485c4f81859edf71",
+        "reference_output_hash": "297f9fdc132bb0df014b4ff7f0e406614fb29fb29a7f6ca3e1882d78b4604f7d",
+        "source_index": 91
+      },
+      {
+        "id": "official_clean_jailbreak_092",
+        "prompt_hash": "0e0e439660a120ae244b10ff28cc86fa8b932de270da5f5a1c2f377d0c1d80f1",
+        "reference_output_hash": "88d107f5ef12dd38dbde87eca8cb2e2ef8dff73c14373b616bde750e41700fd7",
+        "source_index": 92
+      },
+      {
+        "id": "official_clean_jailbreak_093",
+        "prompt_hash": "06b855fa1f6dab37aab7d54d1d2ef4ce57d12b8aa3109894f47ddd2a44b5baa5",
+        "reference_output_hash": "4d7349931a1ce44640aaecd3a07632e2545acb58252050b9f51b95cb57dad656",
+        "source_index": 93
+      },
+      {
+        "id": "official_clean_jailbreak_094",
+        "prompt_hash": "5a249cb91df4c7feace3c37639cc8c9fc743b93fce07251b147a763f812773a0",
+        "reference_output_hash": "2d9dd5cf6f846ce82ec59faeda2b0040ec6547283772a877435b8029b989c14c",
+        "source_index": 94
+      },
+      {
+        "id": "official_clean_jailbreak_095",
+        "prompt_hash": "8a9f2bb7c70fdf96a31322ea98a17d0476feae586f49468b003bdfabc4bc93b2",
+        "reference_output_hash": "d586a1e82eddb9f69a2e9feb52ed22da3f2235c3ac0d55994cc1a2a4ef54203e",
+        "source_index": 95
+      },
+      {
+        "id": "official_clean_jailbreak_096",
+        "prompt_hash": "b0f48870334daf054dd83092f0d9987f87f823560c395e83db15145efdbd300c",
+        "reference_output_hash": "c74df707f01f0f3a473e6d1c64a95f3a6c1abef7fac437c298c3f89e2669c901",
+        "source_index": 96
+      },
+      {
+        "id": "official_clean_jailbreak_097",
+        "prompt_hash": "f99ce60dad898b1e6cb41922c0918d2dffe71876ef9eb9989656e910b6423e93",
+        "reference_output_hash": "3575f178c34cf3b851fe4bc1dc61ed7b1bab873015d1bf0a34cf36a71f7ed081",
+        "source_index": 97
+      },
+      {
+        "id": "official_clean_jailbreak_098",
+        "prompt_hash": "3b5acb8f05d93bf36057b1177ed7dda97872dbb3ace487ea5730f91125cd2a94",
+        "reference_output_hash": "38ab1ae160c31752d4e263d6177bd97cfb9a8defa531bcdc20731d1eb617b0c0",
+        "source_index": 98
+      }
+    ]
+  },
+  "script": "40_create_real_asr_and_clean_utility_prompt_files.py",
+  "summary_rows": [
+    {
+      "file_type": "clean_reference_eval",
+      "is_final_asr": "",
+      "is_final_clean_utility": false,
+      "is_official_asr": "",
+      "metric_label": "reference-output NLL/perplexity probe",
+      "notes": "Contains clean instruction/input/output references for NLL/perplexity.",
+      "path": "/home/43e3/solr-home/AISP-Project-CODEX/data/eval_prompts/clean_utility_reference_eval.jsonl",
+      "record_count": 99,
+      "schema_keys": "[\"clean_metric_label\", \"id\", \"input\", \"input_hash\", \"instruction\", \"instruction_hash\", \"is_final_clean_utility\", \"notes\", \"output\", \"prompt_hash\", \"reference_output\", \"reference_output_hash\", \"source\", \"source_index\", \"split\"]",
+      "source_path": "/home/43e3/solr-home/AISP-Project-CODEX/external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json",
+      "valid_record_count": 99
+    },
+    {
+      "file_type": "asr_proxy_official_badnets",
+      "is_final_asr": false,
+      "is_final_clean_utility": "",
+      "is_official_asr": false,
+      "metric_label": "BackdoorLLM-aligned ASR proxy",
+      "notes": "Official BadNets prompts prepared for local ASR proxy only.",
+      "path": "/home/43e3/solr-home/AISP-Project-CODEX/data/eval_prompts/real_asr_official_badnets.jsonl",
+      "record_count": 99,
+      "schema_keys": "[\"asr_metric_label\", \"expected_output\", \"expected_output_hash\", \"id\", \"input\", \"input_hash\", \"instruction\", \"instruction_hash\", \"is_final_asr\", \"is_official_asr\", \"is_official_trigger\", \"notes\", \"prompt_hash\", \"source\", \"source_index\", \"split\", \"trigger_token\"]",
+      "source_path": "/home/43e3/solr-home/AISP-Project-CODEX/data/eval_prompts/official_badnets_jailbreak_full.jsonl",
+      "valid_record_count": 99
+    }
+  ],
+  "timestamp_utc": "20260524T145930Z"
+}
