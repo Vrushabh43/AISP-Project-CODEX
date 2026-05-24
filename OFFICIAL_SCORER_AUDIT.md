@@ -1,77 +1,45 @@
 # Official Scorer Audit
 
-Status: static audit workflow prepared. No BackdoorLLM code was executed, no
-model was loaded, no inference was run, and no external API was called.
+Static audit status: file/text and AST inspection only. No BackdoorLLM code was
+executed, no model was loaded, no inference was run, and no external API was
+called.
 
-## Current Discovery Finding
+## Scorer Finding
 
-Script `39` located the official scorer function:
+`eval_ASR_of_backdoor_models` was found in `external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py` at lines `198` to `261`.
 
-- Function: `eval_ASR_of_backdoor_models`
-- File:
-  `external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py`
-- Discovery classification: `external_judge`
+- Scoring mechanism classification: `unknown`
+- Local reproducibility under current constraints: `false`
+- Can call future metric official ASR without more setup: `false`
+- Recommended label if used now: `BackdoorLLM-aligned ASR proxy unless the external judge environment is reproduced`
 
-Because the discovered scoring path is classified as an external-judge scorer,
-the project should not automatically treat future local results as reproducible
-official ASR. The line-level static audit in script `39b` is required before
-implementing scripts `40` to `43`.
+## Reproducibility Decision
 
-## Local Reproducibility Decision
+Official scorer function found, but static audit indicates local judge/model loading. Do not call it locally reproducible until dependencies and weights are verified.
 
-Conservative current decision:
+If an external judge/API is required, future results should not be called
+locally reproducible official ASR unless the exact judge, credentials,
+dependency versions, prompts, and scoring path are reproduced and explicitly
+approved. Under the current no-external-API constraint, use an ASR-proxy label
+instead.
 
-- Official scorer found: `true`
-- Official scorer reproducible locally: `false` unless the static audit shows
-  purely local rule-based scoring, or the exact external judge environment is
-  reproduced and explicitly approved
-- Can call future results official ASR now: `false`
-- Recommended label if external judging cannot be reproduced:
-  `BackdoorLLM-aligned ASR proxy`
+## Clean Dataset
 
-If script `39b` confirms that the scorer uses an external judge/API, then under
-the current no-external-API constraint future local scoring should not be called
-official judged ASR.
-
-## Clean Dataset Finding
-
-Script `39` found a clean dataset candidate:
-
-`external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json`
-
-Discovery metadata:
-
-- Schema keys: `instruction`, `input`, `output`
-- Perplexity/NLL feasible: `true`
-- Appears official-clean: likely, based on source path
-
-This dataset appears usable as a reference-answer source for a clean NLL or
-perplexity probe, subject to the line-level dataset audit from script `39b`.
+- Dataset path: `external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json`
+- Dataset readable: `true`
+- Record count: `99`
+- Schema keys: `input, instruction, output`
+- Usable as reference answers for NLL/perplexity: `true`
+- Appears official-clean: `true`
+- Appears generic-clean: `false`
 
 ## Caveats
 
-- Perplexity/NLL is a cheap probe, not a full clean-utility metric.
-- If NLL/perplexity is nearly identical across `base_model_only`, `original`,
-  uniform scaling, and SensAware, interpret that as a small measurable
-  clean-task footprint on this dataset, not proof that all defences preserve
-  adapter utility.
+- This audit does not execute the official scorer.
+- Full harmful prompts and full generated outputs are not printed or stored.
+- Clean-reference NLL/perplexity remains a cheap probe. If values are nearly
+  identical across base, original, uniform scaling, and SensAware, interpret
+  that as a small measurable clean-task footprint on this dataset, not as proof
+  that all defences preserve adapter utility.
 - A small blinded clean-output quality rubric remains recommended if time
   permits.
-- Do not update final submission artifacts until stronger evaluation results
-  are fully run, reviewed, and consistency-checked.
-
-## Next Step
-
-Run the static audit on the server where the fetched BackdoorLLM source snapshot
-exists:
-
-```bash
-python scripts/39b_audit_official_asr_scorer.py
-```
-
-Expected outputs:
-
-- `logs/official_asr_scorer_audit_<timestamp>.json`
-- `outputs/official_asr_scorer_audit_summary.csv`
-- `outputs/clean_utility_dataset_audit_summary.csv`
-- `OFFICIAL_SCORER_AUDIT.md` updated with the line-level audit result
