@@ -8555,3 +8555,52 @@ Caveats:
 - Do not update README, final verdict, report-ready written claims, or
   `final_submission_artifacts/` until the optional results are run, reviewed,
   and consistency-checked.
+
+## 2026-05-24T14:43:40+02:00 Script 42 Adapter Path Fallback Added
+
+Server issue observed:
+
+```bash
+python scripts/42_clean_utility_perplexity_eval.py
+```
+
+failed before model loading with:
+
+```text
+FileNotFoundError: No cached snapshots found for BackdoorLLM/Jailbreak_Llama2-7B_BadNets. Pass --adapter-path explicitly.
+```
+
+Cause:
+
+- the current server shell did not expose the original BackdoorLLM adapter cache
+  path to `locate_adapter_snapshot`
+- the original adapter path is already available from the earlier successful
+  base-control run in `outputs/base_model_control_eval_summary.csv`
+
+Fix implemented:
+
+- updated `scripts/42_clean_utility_perplexity_eval.py`
+  to infer the original adapter snapshot path from
+  `outputs/base_model_control_eval_summary.csv` when
+  `--original-adapter-path` is not provided
+- added CLI option:
+  `--base-control-summary-csv`
+- child subprocesses now receive the inferred original adapter path explicitly
+
+Validation performed:
+
+- Python AST syntax check passed for the patched script.
+- No model loading or inference was run during this fix.
+- Final submission artifacts and report-ready written claims were not modified.
+
+Rerun options on server:
+
+```bash
+python scripts/42_clean_utility_perplexity_eval.py
+```
+
+or, without the patch, the explicit workaround is:
+
+```bash
+python scripts/42_clean_utility_perplexity_eval.py --original-adapter-path /home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b
+```

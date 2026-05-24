@@ -43,6 +43,7 @@ DEFAULT_VARIANTS_DIR = ROOT / "outputs" / "sanitised_adapters"
 DEFAULT_CLEAN_REFERENCE_FILE = ROOT / "data" / "eval_prompts" / "clean_utility_reference_eval.jsonl"
 DEFAULT_OUTPUTS_CSV = ROOT / "outputs" / "clean_utility_perplexity_outputs.csv"
 DEFAULT_SUMMARY_CSV = ROOT / "outputs" / "clean_utility_perplexity_summary.csv"
+DEFAULT_BASE_CONTROL_SUMMARY = ROOT / "outputs" / "base_model_control_eval_summary.csv"
 DEFAULT_LOGS_DIR = ROOT / "logs"
 CLEAN_METRIC_LABEL = "reference-output NLL/perplexity probe"
 
@@ -106,6 +107,15 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not rows:
         raise ValueError(f"Clean reference file is empty: {path}")
     return rows
+
+
+def read_csv_rows(path: Path, required: bool = False) -> list[dict[str, str]]:
+    if not path.exists():
+        if required:
+            raise FileNotFoundError(f"CSV not found: {path}")
+        return []
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
 
 
 def normalize_text(value: Any) -> str:
@@ -187,6 +197,17 @@ def validate_requested_conditions(
     if missing:
         raise FileNotFoundError("Missing required adapter folders: " + ", ".join(missing))
     return resolved
+
+
+def infer_original_adapter_path(args: argparse.Namespace) -> str | None:
+    if args.original_adapter_path:
+        return str(args.original_adapter_path)
+    for row in read_csv_rows(Path(args.base_control_summary_csv), required=False):
+        condition = row.get("condition") or row.get("adapter")
+        adapter_path = row.get("adapter_path") or ""
+        if condition == "original" and adapter_path and Path(adapter_path).exists():
+            return adapter_path
+    return None
 
 
 def cuda_memory_summary(torch_module: Any) -> dict[str, Any]:
@@ -339,9 +360,10 @@ def build_child_report(args: argparse.Namespace) -> dict[str, Any]:
     timestamp = utc_timestamp()
     condition = str(args.child_condition)
     rows = load_clean_reference_rows(Path(args.clean_reference_file))
+    original_adapter_path = infer_original_adapter_path(args)
     original_snapshot = None
     if condition != "base_model_only":
-        original_snapshot = locate_adapter_snapshot(args.original_adapter_path, cache_roots=args.cache_root)
+        original_snapshot = locate_adapter_snapshot(original_adapter_path, cache_roots=args.cache_root)
     adapter_path = resolve_condition_adapter_path(condition, original_snapshot, Path(args.variants_dir))
     result = condition_template(condition)
     result["adapter_path"] = str(adapter_path) if adapter_path is not None else None
@@ -500,7 +522,8 @@ def summarize_condition(condition_result: dict[str, Any]) -> dict[str, Any]:
 def build_parent_report(args: argparse.Namespace) -> dict[str, Any]:
     timestamp = utc_timestamp()
     rows = load_clean_reference_rows(Path(args.clean_reference_file))
-    original_snapshot = locate_adapter_snapshot(args.original_adapter_path, cache_roots=args.cache_root)
+    original_adapter_path = infer_original_adapter_path(args)
+    original_snapshot = locate_adapter_snapshot(original_adapter_path, cache_roots=args.cache_root)
     resolved_paths = validate_requested_conditions(list(args.conditions), original_snapshot, Path(args.variants_dir))
     child_dir = Path(args.logs_dir) / f"clean_utility_perplexity_children_{timestamp}"
     child_dir.mkdir(parents=True, exist_ok=True)
@@ -525,8 +548,9 @@ def build_parent_report(args: argparse.Namespace) -> dict[str, Any]:
             "--seed",
             str(args.seed),
         ]
-        if args.original_adapter_path:
-            command.extend(["--original-adapter-path", str(args.original_adapter_path)])
+        if original_adapter_path:
+            command.extend(["--original-adapter-path", str(original_adapter_path)])
+        command.extend(["--base-control-summary-csv", str(args.base_control_summary_csv)])
         for cache_root in args.cache_root or []:
             command.extend(["--cache-root", str(cache_root)])
 
@@ -580,6 +604,7 @@ def build_parent_report(args: argparse.Namespace) -> dict[str, Any]:
         "adapter_id": ADAPTER_ID,
         "conditions": list(args.conditions),
         "resolved_condition_paths": resolved_paths,
+        "original_adapter_path_argument_or_inferred": original_adapter_path or "",
         "clean_reference_file": str(Path(args.clean_reference_file)),
         "clean_records_per_condition": len(rows),
         "batch_size": 1,
@@ -668,6 +693,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--original-adapter-path", default=None)
     parser.add_argument("--cache-root", action="append", default=None)
     parser.add_argument("--clean-reference-file", default=str(DEFAULT_CLEAN_REFERENCE_FILE))
+    parser.add_argument("--base-control-summary-csv", default=str(DEFAULT_BASE_CONTROL_SUMMARY))
     parser.add_argument("--seed", type=int, default=20260524)
     parser.add_argument("--child-timeout-seconds", type=int, default=5400)
     parser.add_argument("--logs-dir", default=str(DEFAULT_LOGS_DIR))
