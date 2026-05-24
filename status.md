@@ -8199,3 +8199,35 @@ Validation performed:
 
 - Python AST syntax check passed for
   `scripts/39_discover_official_asr_and_clean_utility_sources.py`.
+
+## 2026-05-24T13:45:01+02:00 Discovery Fetch Secret Guard Added
+
+Context: running script `39` with `--fetch-source` on the server fetched
+BackdoorLLM source files that GitHub push protection later flagged as
+containing OpenAI API-key-looking secrets. The correct response is to remove
+those fetched files from branch history, not to unblock or allow the secret.
+
+Script hardening:
+
+- updated `scripts/39_discover_official_asr_and_clean_utility_sources.py`
+  so optional source fetching scans downloaded text before writing it
+- files matching OpenAI-key-like secret patterns are skipped and recorded in
+  `FETCH_MANIFEST.json` as skipped paths only
+- no secret values are logged, printed, or stored by the patched fetch path
+
+Validation performed:
+
+- Python AST syntax check passed for the hardened script.
+
+Server cleanup guidance:
+
+- remove `external_sources/backdoorllm_official_source/` from the commit
+  history that failed to push
+- commit the patched script instead
+- rerun discovery with local files first; if `--fetch-source` is needed again,
+  use the hardened version and confirm the manifest reports skipped secret-like
+  files rather than storing them
+
+Safety note:
+
+- No final submission artifacts were modified as part of this hardening.

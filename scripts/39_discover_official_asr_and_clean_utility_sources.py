@@ -89,6 +89,14 @@ KEYWORD_HINTS = ["keyword", "keywords", "match"]
 EXTERNAL_JUDGE_HINTS = ["openai", "gpt", "judge", "llama-guard", "llamaguard"]
 CLEAN_DATA_HINTS = ["clean", "alpaca", "eval", "test", "validation", "valid"]
 POISON_HINTS = ["poison", "badnet", "jailbreak", "trigger", "backdoor"]
+SECRET_PATTERNS = [
+    ("openai_api_key", re.compile(r"sk-[A-Za-z0-9_-]{20,}")),
+    (
+        "openai_env_assignment",
+        re.compile(r"(?i)(OPENAI_API_KEY|openai[_-]?api[_-]?key).{0,120}sk-[A-Za-z0-9_-]{20,}"),
+    ),
+    ("bearer_openai_key", re.compile(r"(?i)bearer\s+sk-[A-Za-z0-9_-]{20,}")),
+]
 
 
 @dataclass
@@ -120,6 +128,14 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def secret_detection_reasons(text: str) -> list[str]:
+    reasons: list[str] = []
+    for label, pattern in SECRET_PATTERNS:
+        if pattern.search(text):
+            reasons.append(label)
+    return reasons
 
 
 def safe_rel(path: Path) -> str:
@@ -477,17 +493,23 @@ def adapter_readme_findings(records: list[FileRecord]) -> dict[str, Any]:
 
 def fetch_source_files(args: argparse.Namespace) -> dict[str, Any]:
     if not args.fetch_source:
-        return {"enabled": False, "fetched_files": [], "errors": []}
+        return {"enabled": False, "fetched_files": [], "skipped_files": [], "errors": []}
 
     destination = Path(args.fetched_source_dir)
     destination.mkdir(parents=True, exist_ok=True)
     fetched: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
     errors: list[str] = []
     try:
         with urllib.request.urlopen(args.github_tree_url, timeout=args.fetch_timeout_seconds) as response:
             tree_payload = json.loads(response.read().decode("utf-8"))
     except Exception as exc:
-        return {"enabled": True, "fetched_files": [], "errors": [f"tree_fetch_failed: {exc}"]}
+        return {
+            "enabled": True,
+            "fetched_files": [],
+            "skipped_files": [],
+            "errors": [f"tree_fetch_failed: {exc}"],
+        }
 
     for item in tree_payload.get("tree", []):
         if item.get("type") != "blob":
@@ -510,6 +532,18 @@ def fetch_source_files(args: argparse.Namespace) -> dict[str, Any]:
                 data = response.read()
             if len(data) > int(args.fetch_max_file_bytes):
                 continue
+            text = data.decode("utf-8", errors="replace")
+            secret_reasons = secret_detection_reasons(text)
+            if secret_reasons:
+                skipped.append(
+                    {
+                        "repo_path": rel_path,
+                        "reason": "secret_pattern_detected",
+                        "secret_pattern_labels": secret_reasons,
+                        "size_bytes": len(data),
+                    }
+                )
+                continue
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
             fetched.append(
@@ -528,11 +562,15 @@ def fetch_source_files(args: argparse.Namespace) -> dict[str, Any]:
         "github_tree_url": args.github_tree_url,
         "github_raw_base_url": args.github_raw_base_url,
         "fetched_files": fetched,
+        "skipped_files": skipped,
         "errors": errors,
-        "safety_note": "Fetched text/source/config files only. Nothing was executed.",
+        "safety_note": (
+            "Fetched text/source/config files only. Nothing was executed. "
+            "Files matching secret-like patterns were skipped and not written."
+        ),
     }
     write_json(destination / "FETCH_MANIFEST.json", manifest)
-    return {"enabled": True, "fetched_files": fetched, "errors": errors}
+    return {"enabled": True, "fetched_files": fetched, "skipped_files": skipped, "errors": errors}
 
 
 def confidence_rows(
