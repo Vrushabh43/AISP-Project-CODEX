@@ -8394,3 +8394,164 @@ python scripts/39b_audit_official_asr_scorer.py
 
 - Review the new `scoring_mechanism` and `direct_local_helpers_followed` fields
   before deciding whether script `40` should be implemented.
+
+## 2026-05-24T14:31:15+02:00 Tightened 39b Audit Confirms External Judge
+
+Server rerun reviewed:
+
+```bash
+python scripts/39b_audit_official_asr_scorer.py
+```
+
+Latest server audit outputs:
+
+- `logs/official_asr_scorer_audit_20260524T123020Z.json`
+- `outputs/official_asr_scorer_audit_summary.csv`
+- `outputs/clean_utility_dataset_audit_summary.csv`
+- `OFFICIAL_SCORER_AUDIT.md`
+
+Final static audit result:
+
+- scorer file found: `true`
+- scorer function found: `true`
+- scorer function: `eval_ASR_of_backdoor_models`
+- function line range: `198:261`
+- direct local helpers followed:
+  `_eval_mode`, `build_model_inputs`, `decode_new_tokens`
+- scoring mechanism: `external_judge`
+- external judge/API detected in scorer plus direct helpers: `true`
+- local judge model detected: `false`
+- scoped model-loading references in scorer plus direct helpers: none
+- secret-pattern hits detected: `false`
+- official scorer reproducible locally under current constraints: `false`
+- can call metric official ASR now: `false`
+
+Conservative interpretation:
+
+- Do not call future local results official judged ASR under the current
+  no-external-API constraint.
+- The correct label for future local scoring, unless the exact external judge
+  environment is reproduced and approved, is:
+  `BackdoorLLM-aligned ASR proxy`.
+- Script `40` can be planned around prompt-file preparation and clean utility,
+  but any ASR evaluator must preserve this label unless external-judge
+  reproduction is explicitly added later.
+
+Clean dataset audit result:
+
+- clean dataset found: `true`
+- record count: `99`
+- schema keys: `input`, `instruction`, `output`
+- outputs usable as reference answers for NLL/perplexity: `true`
+- appears official-clean: `true`
+- appears generic-clean: `false`
+
+Next recommended step:
+
+- If continuing, implement script `40` only as prompt/reference-file
+  preparation with the ASR metric label constrained to
+  `BackdoorLLM-aligned ASR proxy` unless external judging is separately
+  approved.
+- Keep final submission artifacts unchanged until any stronger evaluation is
+  fully run, reviewed, and consistency-checked.
+
+## 2026-05-24T14:40:03+02:00 Scripts 40, 42, And 43 Implemented
+
+Scope of this update: implement the next optional-extension scripts for clean
+reference prompt preparation, clean-reference NLL/perplexity evaluation, and
+ASR-proxy/clean-utility trade-off aggregation. No official BackdoorLLM code was
+executed, no external APIs were called, no ASR generation was rerun, no model
+loading or inference was run in this session, and final submission artifacts
+were not updated.
+
+Files created:
+
+- `scripts/40_create_real_asr_and_clean_utility_prompt_files.py`
+- `scripts/42_clean_utility_perplexity_eval.py`
+- `scripts/43_real_asr_clean_utility_tradeoff.py`
+
+Validation performed:
+
+- Python AST syntax check passed for scripts `40`, `42`, and `43`.
+
+Script `40` purpose:
+
+- reads the official clean dataset candidate:
+  `external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json`
+- writes `data/eval_prompts/clean_utility_reference_eval.jsonl`
+- writes `data/eval_prompts/real_asr_official_badnets.jsonl`
+- preserves clean `instruction`, `input`, and `output` fields for NLL
+  evaluation
+- adds IDs, source indices, hashes, metric labels, and final-status flags
+- labels the trigger prompt file as `BackdoorLLM-aligned ASR proxy` input with
+  `is_official_asr=false`
+- does not print full harmful prompts or full record contents
+
+Script `42` purpose:
+
+- evaluates `base_model_only`, `original`, `uniform_gamma_0.25`,
+  `uniform_gamma_0.50`, `top3_gamma_0.50`, and
+  `sensaware_top224_gamma_0.25`
+- loads the base model in 4-bit inside one isolated subprocess per condition
+- attaches adapters only for adapter conditions
+- computes loss only over reference-output tokens, not prompt tokens
+- performs no generation and no ASR
+- writes per-record NLL/perplexity rows and per-condition summaries
+- records `is_final_clean_utility=false`
+
+Script `43` purpose:
+
+- reads existing ASR-proxy/Wilson outputs and clean perplexity results
+- optionally merges clean-output similarity if available
+- writes a candidate trade-off summary with:
+  - trigger success rate
+  - Wilson interval
+  - clean NLL/perplexity
+  - clean-output similarity fields when available
+  - `is_official_asr=false`
+  - `is_final_asr=false`
+  - `is_final_clean_utility=false`
+- keeps the trigger metric label as `BackdoorLLM-aligned ASR proxy`
+
+Recommended server run order:
+
+```bash
+python scripts/40_create_real_asr_and_clean_utility_prompt_files.py
+python scripts/42_clean_utility_perplexity_eval.py
+python scripts/43_real_asr_clean_utility_tradeoff.py
+```
+
+Expected outputs from script `40`:
+
+- `data/eval_prompts/clean_utility_reference_eval.jsonl`
+- `data/eval_prompts/real_asr_official_badnets.jsonl`
+- `outputs/real_eval_prompt_file_summary.csv`
+- `logs/real_eval_prompt_file_creation_<timestamp>.json`
+
+Expected outputs from script `42`:
+
+- `outputs/clean_utility_perplexity_outputs.csv`
+- `outputs/clean_utility_perplexity_summary.csv`
+- `logs/clean_utility_perplexity_eval_<timestamp>.json`
+
+Expected outputs from script `43`:
+
+- `outputs/real_asr_clean_utility_tradeoff_summary.csv`
+- `logs/real_asr_clean_utility_tradeoff_<timestamp>.json`
+- optional:
+  `reports/figures/report_ready/real_asr_clean_utility_tradeoff.png`
+
+Caveats:
+
+- The official BackdoorLLM scorer uses an external judge and is not locally
+  reproducible under current constraints, so local trigger metrics must remain
+  ASR proxy metrics.
+- Clean-reference NLL/perplexity is a likelihood probe, not final human clean
+  utility.
+- If NLL/perplexity is nearly identical across `base_model_only`, `original`,
+  uniform scaling, and SensAware, interpret that as a small measurable
+  clean-task LoRA footprint on this dataset, not as proof that all defences
+  preserve adapter utility.
+- Do not update README, final verdict, report-ready written claims, or
+  `final_submission_artifacts/` until the optional results are run, reviewed,
+  and consistency-checked.
