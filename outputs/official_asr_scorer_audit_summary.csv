@@ -2,9 +2,10 @@ item,value,confidence_level,source_path,notes
 official_scorer_found,true,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Exact function found by AST parse.
 function_name,eval_ASR_of_backdoor_models,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Audited function name.
 function_line_range,198:261,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Line numbers from Python AST.
-scoring_mechanism,unknown,low,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Static classification from scorer body.
-external_judge_or_api_detected,false,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,True means local reproducibility is false under no-external-API constraints.
-model_loading_references_detected,true,medium,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Line numbers are stored in JSON audit only.
+scoring_mechanism,external_judge,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Static classification from scorer body.
+external_judge_or_api_detected,true,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,True means local reproducibility is false under no-external-API constraints.
+model_loading_references_detected,false,medium,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Only scorer and direct local helper line numbers count for this decision; file-level references are stored in JSON.
+direct_local_helpers_followed,"[""_eval_mode"", ""build_model_inputs"", ""decode_new_tokens""]",medium,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Direct same-file helper definitions included in scoring-mechanism classification.
 secret_pattern_hits_detected,false,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,Secret values are never printed or copied.
-official_scorer_reproducible_locally,false,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,"Official scorer function found, but static audit indicates local judge/model loading. Do not call it locally reproducible until dependencies and weights are verified."
+official_scorer_reproducible_locally,false,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,"Official scorer function found, but static audit indicates external judge/API scoring. Under current no-external-API constraints it is not locally reproducible."
 can_call_metric_official_asr,false,high,external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py,BackdoorLLM-aligned ASR proxy unless the external judge environment is reproduced

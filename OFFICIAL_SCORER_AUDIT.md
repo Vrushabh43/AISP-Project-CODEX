@@ -8,14 +8,14 @@ called.
 
 `eval_ASR_of_backdoor_models` was found in `external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py` at lines `198` to `261`.
 
-- Scoring mechanism classification: `unknown`
+- Scoring mechanism classification: `external_judge`
 - Local reproducibility under current constraints: `false`
 - Can call future metric official ASR without more setup: `false`
 - Recommended label if used now: `BackdoorLLM-aligned ASR proxy unless the external judge environment is reproduced`
 
 ## Reproducibility Decision
 
-Official scorer function found, but static audit indicates local judge/model loading. Do not call it locally reproducible until dependencies and weights are verified.
+Official scorer function found, but static audit indicates external judge/API scoring. Under current no-external-API constraints it is not locally reproducible.
 
 If an external judge/API is required, future results should not be called
 locally reproducible official ASR unless the exact judge, credentials,
