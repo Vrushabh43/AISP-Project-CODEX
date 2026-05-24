@@ -8231,3 +8231,90 @@ Server cleanup guidance:
 Safety note:
 
 - No final submission artifacts were modified as part of this hardening.
+
+## 2026-05-24T14:24:16+02:00 Static Official Scorer Audit Script Created
+
+Scope of this update: create a static scorer-audit script and companion audit
+markdown for the discovered BackdoorLLM ASR scorer. No official BackdoorLLM
+code was executed, no model loading was run, no inference was run, no external
+API was called, no final submission artifacts were updated, and no files were
+deleted.
+
+Files created or modified:
+
+- created `scripts/39b_audit_official_asr_scorer.py`
+- created `OFFICIAL_SCORER_AUDIT.md`
+- modified `status.md`
+
+Current discovery-based audit result:
+
+- scorer function discovered by script `39`:
+  `eval_ASR_of_backdoor_models`
+- scorer file from discovery:
+  `external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py`
+- discovery classification: `external_judge`
+- conservative reproducibility decision before running line-level audit:
+  - official scorer found: `true`
+  - official scorer reproducible locally: `false` unless script `39b` proves a
+    purely local rule-based scorer or the exact external judge setup is
+    reproduced and explicitly approved
+  - can call metric official ASR now: `false`
+  - recommended label if external judging cannot be reproduced:
+    `BackdoorLLM-aligned ASR proxy`
+
+Clean dataset discovery result:
+
+- candidate clean dataset:
+  `external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json`
+- discovered schema keys: `instruction`, `input`, `output`
+- NLL/perplexity appears feasible from discovery, but it remains a cheap probe
+  and not the sole clean-utility metric.
+
+Script `39b` responsibilities:
+
+- inspect only
+  `external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py`
+- extract `eval_ASR_of_backdoor_models` line numbers, helper calls, and imports
+  used by the scorer
+- classify scoring as refusal keyword matching, target keyword matching, target
+  output matching, external judge/API, local judge model, or unknown
+- detect OpenAI/API-key references, GPT/judge calls, HTTP references,
+  environment variables, unavailable/static third-party imports, and
+  model-loading references without printing secrets
+- inspect only metadata of the clean dataset candidate, including record count,
+  schema keys, instruction/input/output presence, and NLL/reference-answer
+  feasibility
+
+Expected outputs when run on the server source snapshot:
+
+- `logs/official_asr_scorer_audit_<timestamp>.json`
+- `outputs/official_asr_scorer_audit_summary.csv`
+- `outputs/clean_utility_dataset_audit_summary.csv`
+- `OFFICIAL_SCORER_AUDIT.md`
+
+Exact command to run:
+
+```bash
+python scripts/39b_audit_official_asr_scorer.py
+```
+
+Local validation performed:
+
+- Python AST syntax check passed for
+  `scripts/39b_audit_official_asr_scorer.py`.
+
+Note:
+
+- The fetched source directory is intentionally ignored to avoid committing
+  upstream source snapshots or secret-looking strings. In this local worktree,
+  the fetched source file was not present, so the line-level audit should be run
+  on the server where script `39 --fetch-source` created the sanitized source
+  snapshot.
+
+Next recommended step:
+
+- Run script `39b` on the server, review whether the scorer is actually
+  locally reproducible, and only then decide whether script `40` should be
+  implemented. If `39b` confirms external-judge dependence, do not call future
+  local results official judged ASR under the current no-external-API
+  constraint.
