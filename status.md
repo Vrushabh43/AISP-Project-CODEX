@@ -8318,3 +8318,79 @@ Next recommended step:
   implemented. If `39b` confirms external-judge dependence, do not call future
   local results official judged ASR under the current no-external-API
   constraint.
+
+## 2026-05-24T14:29:08+02:00 Server Audit Result Reviewed And 39b Tightened
+
+Server run reviewed:
+
+```bash
+python scripts/39b_audit_official_asr_scorer.py
+```
+
+Server audit outputs:
+
+- `logs/official_asr_scorer_audit_20260524T122607Z.json`
+- `outputs/official_asr_scorer_audit_summary.csv`
+- `outputs/clean_utility_dataset_audit_summary.csv`
+- `OFFICIAL_SCORER_AUDIT.md`
+
+Audit result from server outputs:
+
+- scorer file found: `true`
+- scorer function found: `true`
+- function line range: `198:261`
+- scorer function: `eval_ASR_of_backdoor_models`
+- scoring mechanism from first audit: `unknown`
+- external judge/API detected in audited scorer body: `false`
+- model-loading references detected: `true`
+- secret-pattern hits detected: `false`
+- official scorer reproducible locally: `false`
+- can call metric official ASR now: `false`
+- recommended label if used now:
+  `BackdoorLLM-aligned ASR proxy unless the external judge environment is reproduced`
+
+Clean dataset audit result:
+
+- clean dataset found: `true`
+- record count: `99`
+- schema keys: `input`, `instruction`, `output`
+- instruction/input/output present: `true`
+- outputs usable as reference answers for NLL/perplexity: `true`
+- appears official-clean: `true`
+- appears generic-clean: `false`
+
+Important interpretation:
+
+- Do not call future local results official judged ASR yet.
+- The first audit shows the official function exists, but the actual scoring
+  mechanism was not resolved from the scorer function body alone.
+- The function calls direct local helpers, including `_eval_mode`, so static
+  classification should include those helper definitions before deciding
+  whether the scorer is rule-based, external-judge-based, or still unknown.
+
+Script update made after review:
+
+- updated `scripts/39b_audit_official_asr_scorer.py` to follow direct same-file
+  helper definitions called by `eval_ASR_of_backdoor_models`
+- direct helper bodies are now included in scoring-mechanism classification
+- model-loading references used for the reproducibility decision now come from
+  the scorer plus direct helpers; file-level references are still stored in the
+  JSON audit for context
+- `direct_local_helpers_followed` is now included in
+  `outputs/official_asr_scorer_audit_summary.csv`
+
+Validation performed:
+
+- Python AST syntax check passed for the tightened script.
+- Protected final submission and report-ready paths were not modified.
+
+Next recommended step:
+
+- Push/pull the tightened `39b` script to the server and rerun:
+
+```bash
+python scripts/39b_audit_official_asr_scorer.py
+```
+
+- Review the new `scoring_mechanism` and `direct_local_helpers_followed` fields
+  before deciding whether script `40` should be implemented.

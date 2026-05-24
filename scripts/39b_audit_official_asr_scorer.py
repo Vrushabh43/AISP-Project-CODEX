@@ -154,6 +154,14 @@ def find_function(tree: ast.Module, name: str) -> ast.FunctionDef | ast.AsyncFun
     return None
 
 
+def local_definitions(tree: ast.Module) -> dict[str, ast.AST]:
+    definitions: dict[str, ast.AST] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            definitions[node.name] = node
+    return definitions
+
+
 def dotted_call_name(node: ast.AST) -> str:
     if isinstance(node, ast.Name):
         return node.id
@@ -172,6 +180,22 @@ def function_source(text: str, node: ast.AST | None) -> str:
     start = int(getattr(node, "lineno", 1))
     end = int(getattr(node, "end_lineno", start))
     return "\n".join(lines[start - 1 : end])
+
+
+def node_line_hits(text: str, nodes: list[ast.AST], hints: list[str]) -> list[int]:
+    lines = text.splitlines()
+    lower_hints = [hint.lower() for hint in hints]
+    hits: list[int] = []
+    for node in nodes:
+        if not hasattr(node, "lineno"):
+            continue
+        start = int(getattr(node, "lineno", 1))
+        end = int(getattr(node, "end_lineno", start))
+        for line_no in range(start, min(end, len(lines)) + 1):
+            lower = lines[line_no - 1].lower()
+            if any(hint in lower for hint in lower_hints):
+                hits.append(line_no)
+    return sorted(set(hits))
 
 
 def names_used(node: ast.AST | None) -> set[str]:
@@ -207,6 +231,34 @@ def called_functions(node: ast.AST | None) -> list[dict[str, Any]]:
         {"name": name, "count": count, "first_line": first_line.get(name)}
         for name, count in sorted(counts.items(), key=lambda item: (-item[1], item[0]))
     ]
+
+
+def direct_local_helper_definitions(
+    function_node: ast.AST | None, definitions: dict[str, ast.AST]
+) -> list[dict[str, Any]]:
+    if function_node is None:
+        return []
+    helper_names: set[str] = set()
+    for child in ast.walk(function_node):
+        if not isinstance(child, ast.Call):
+            continue
+        call_name = dotted_call_name(child.func)
+        root_name = call_name.split(".", 1)[0]
+        if root_name in definitions and root_name != getattr(function_node, "name", ""):
+            helper_names.add(root_name)
+
+    rows: list[dict[str, Any]] = []
+    for name in sorted(helper_names):
+        node = definitions[name]
+        rows.append(
+            {
+                "name": name,
+                "kind": type(node).__name__,
+                "start_line": getattr(node, "lineno", None),
+                "end_line": getattr(node, "end_lineno", None),
+            }
+        )
+    return rows
 
 
 def imports_used_by_function(imports: list[dict[str, Any]], function_node: ast.AST | None) -> list[dict[str, Any]]:
@@ -303,24 +355,45 @@ def audit_scorer(scorer_path: Path) -> dict[str, Any]:
         parse_error = f"syntax_error: {exc}"
 
     function_node = find_function(tree, SCORER_FUNCTION)
+    definitions = local_definitions(tree)
+    direct_helpers = direct_local_helper_definitions(function_node, definitions)
+    direct_helper_nodes = [definitions[row["name"]] for row in direct_helpers if row["name"] in definitions]
     function_text_value = function_source(text, function_node)
+    helper_text_value = "\n\n".join(function_source(text, node) for node in direct_helper_nodes)
+    scoring_text_value = function_text_value + "\n\n" + helper_text_value
     imports = import_records(tree)
     imports_used = imports_used_by_function(imports, function_node)
     calls = called_functions(function_node)
-    scoring = classify_scoring_mechanism(function_text_value)
+    scoring = classify_scoring_mechanism(scoring_text_value)
     secret_hits = secret_pattern_hits(text)
+    scorer_and_helper_nodes = [node for node in [function_node, *direct_helper_nodes] if node is not None]
     external_refs = {
-        "openai_or_api_key_line_numbers": sorted(set(line_hits(text, ["openai", "api_key", "api key"]))),
-        "gpt_or_judge_line_numbers": sorted(set(line_hits(text, ["gpt", "judge"]))),
-        "http_reference_line_numbers": sorted(set(line_hits(text, HTTP_HINTS))),
-        "environment_variable_line_numbers": sorted(set(line_hits(text, ENV_HINTS))),
-        "model_loading_line_numbers": sorted(set(line_hits(text, MODEL_LOADING_HINTS))),
+        "file_openai_or_api_key_line_numbers": sorted(set(line_hits(text, ["openai", "api_key", "api key"]))),
+        "file_gpt_or_judge_line_numbers": sorted(set(line_hits(text, ["gpt", "judge"]))),
+        "file_http_reference_line_numbers": sorted(set(line_hits(text, HTTP_HINTS))),
+        "file_environment_variable_line_numbers": sorted(set(line_hits(text, ENV_HINTS))),
+        "file_model_loading_line_numbers": sorted(set(line_hits(text, MODEL_LOADING_HINTS))),
+        "scorer_or_direct_helper_openai_or_api_key_line_numbers": node_line_hits(
+            text, scorer_and_helper_nodes, ["openai", "api_key", "api key"]
+        ),
+        "scorer_or_direct_helper_gpt_or_judge_line_numbers": node_line_hits(
+            text, scorer_and_helper_nodes, ["gpt", "judge"]
+        ),
+        "scorer_or_direct_helper_http_reference_line_numbers": node_line_hits(
+            text, scorer_and_helper_nodes, HTTP_HINTS
+        ),
+        "scorer_or_direct_helper_environment_variable_line_numbers": node_line_hits(
+            text, scorer_and_helper_nodes, ENV_HINTS
+        ),
+        "scorer_or_direct_helper_model_loading_line_numbers": node_line_hits(
+            text, scorer_and_helper_nodes, MODEL_LOADING_HINTS
+        ),
         "secret_pattern_hits": secret_hits,
         "imports_static_availability": classify_import_availability(imports_used),
     }
     external_judge_required = bool(scoring["uses_external_judge_api"])
     local_judge_required = bool(scoring["uses_local_judge_model"])
-    model_loading_required = bool(external_refs["model_loading_line_numbers"])
+    model_loading_required = bool(external_refs["scorer_or_direct_helper_model_loading_line_numbers"])
     official_scorer_found = function_node is not None
     reproducible_locally = bool(
         official_scorer_found
@@ -356,6 +429,7 @@ def audit_scorer(scorer_path: Path) -> dict[str, Any]:
         "function_start_line": getattr(function_node, "lineno", None) if function_node else None,
         "function_end_line": getattr(function_node, "end_lineno", None) if function_node else None,
         "called_helper_functions_or_classes": calls,
+        "direct_local_helper_definitions": direct_helpers,
         "imports_used_by_scorer": imports_used,
         "all_imports_in_file": imports,
         "scoring_mechanism": scoring,
@@ -481,10 +555,17 @@ def scorer_summary_rows(scorer: dict[str, Any]) -> list[dict[str, Any]]:
         },
         {
             "item": "model_loading_references_detected",
-            "value": str(bool(deps.get("model_loading_line_numbers"))).lower(),
+            "value": str(bool(deps.get("scorer_or_direct_helper_model_loading_line_numbers"))).lower(),
             "confidence_level": "medium",
             "source_path": source,
-            "notes": "Line numbers are stored in JSON audit only.",
+            "notes": "Only scorer and direct local helper line numbers count for this decision; file-level references are stored in JSON.",
+        },
+        {
+            "item": "direct_local_helpers_followed",
+            "value": json.dumps([row.get("name") for row in scorer.get("direct_local_helper_definitions", [])]),
+            "confidence_level": "medium",
+            "source_path": source,
+            "notes": "Direct same-file helper definitions included in scoring-mechanism classification.",
         },
         {
             "item": "secret_pattern_hits_detected",
