@@ -8066,3 +8066,136 @@ Current decision:
 - If these optional results are used in the report, frame them as an additional
   caveat: the base-control similarity analysis does not clearly establish
   selective clean-behaviour preservation by SensAware.
+
+## 2026-05-24T11:15:10+02:00 Real ASR And Clean Utility Architecture Planned
+
+Scope of this update: create an architecture/planning document for a possible
+upgrade from bounded heuristic evaluation to stronger ASR and clean-utility
+evidence. No code was written, no models were loaded, no inference was run, no
+experiments were run, no final report-ready files were modified, and
+`final_submission_artifacts/` was not touched.
+
+File created:
+
+- `REAL_ASR_AND_CLEAN_UTILITY_ARCHITECTURE.md`
+
+Files read before planning:
+
+- `AGENT.md`
+- latest relevant sections of `status.md`
+- `FINAL_SUBMISSION_VERDICT.md`
+- `RUN_ORDER.md`
+- `BASE_CONTROL_AND_CLEAN_BEHAVIOUR_PRESERVATION_PLAN.md`
+- `outputs/report_ready_main_results.md`
+- `outputs/report_ready_key_findings.md`
+- `outputs/wilson_ci_tradeoff_summary.csv`
+- `outputs/base_model_control_eval_summary.csv`
+- `outputs/clean_behaviour_similarity_summary.csv`
+
+The new architecture records:
+
+- current honest baseline truth:
+  - SensAware beats spectral-only under bounded heuristic evaluation
+  - SensAware does not beat strongest uniform scaling
+  - base-control similarity did not prove better SensAware clean-behaviour
+    preservation
+  - current metrics remain bounded heuristic metrics
+- a discovery-first ASR upgrade:
+  - inspect official BackdoorLLM assets
+  - replicate official scorer only if verified
+  - otherwise keep the label as ASR proxy
+- a cleaner utility plan:
+  - first discover whether the adapter has a true clean task
+  - prefer reference-output NLL/perplexity on verified clean instruction data
+  - keep token-overlap preservation as lightweight evidence only
+  - optional blinded human rubric or model judge only if safe/approved
+- statistical reporting rules:
+  - Wilson intervals for ASR rates
+  - bootstrap or simple intervals for clean utility
+  - small-sample caveats for 99 trigger prompts and bounded clean samples
+- planned future scripts only:
+  - `scripts/39_discover_official_asr_and_clean_utility_sources.py`
+  - `scripts/40_create_real_asr_and_clean_utility_prompt_files.py`
+  - `scripts/41_real_asr_eval.py`
+  - `scripts/42_clean_utility_perplexity_eval.py`
+  - `scripts/43_real_asr_clean_utility_tradeoff.py`
+
+Decision reminder:
+
+- Do not implement scripts `39` to `43` until explicitly requested.
+- Do not update README, final verdict, report-ready files, or
+  `final_submission_artifacts/` unless the stronger evaluation is fully run,
+  reviewed, and consistency-checked.
+- If time runs short, keep this architecture as future work and preserve the
+  current submission-ready package.
+
+## 2026-05-24T11:27:34+02:00 Official ASR Discovery Script Prepared
+
+Scope of this update: refine the stronger-evaluation architecture and create
+the discovery-only script for BackdoorLLM-aligned ASR and clean-utility source
+inspection. No model loading, inference, ASR execution, official BackdoorLLM
+code execution, final-artifact update, README update, verdict update, adapter
+modification, or cache modification was performed.
+
+Files created or modified:
+
+- modified `REAL_ASR_AND_CLEAN_UTILITY_ARCHITECTURE.md`
+- created `scripts/39_discover_official_asr_and_clean_utility_sources.py`
+- modified `status.md`
+
+Architecture refinement added:
+
+- Clean-reference NLL/perplexity is a cheap probe, not the sole clean-utility
+  metric.
+- If perplexity is nearly identical across `base_model_only`, `original`,
+  uniform scaling, and SensAware, interpret this as evidence that the LoRA has
+  a small measurable clean-task footprint on the selected clean dataset, not as
+  proof that all defences preserve adapter utility.
+- A small blinded clean-quality rubric or clean-output quality review should be
+  treated as the stronger utility signal if time permits.
+- Final wording must allow that an ASR-utility trade-off framing may not fit
+  this specific jailbreak LoRA if the adapter has little clean-task footprint.
+
+Script `39` responsibilities:
+
+- inspect local BackdoorLLM official assets and already-present project files
+  by file/text inspection only
+- search for `eval_ASR_of_backdoor_models`, ASR, jailbreak, refusal keywords,
+  target-behaviour strings, target output fields, attack-success logic,
+  BadMagic, and BadNets/badnet evidence
+- inspect local clean/eval dataset candidates and Alpaca cache availability
+- inspect cached adapter README/config metadata if present
+- write conservative discovery outputs without printing harmful prompt text or
+  generated output text
+
+Exact command to run local-only discovery:
+
+```bash
+python scripts/39_discover_official_asr_and_clean_utility_sources.py
+```
+
+Optional source-text fetch command, only if local official assets do not contain
+the scorer source:
+
+```bash
+python scripts/39_discover_official_asr_and_clean_utility_sources.py --fetch-source
+```
+
+Expected outputs:
+
+- `logs/official_asr_clean_utility_discovery_<timestamp>.json`
+- `outputs/official_asr_clean_utility_discovery_summary.csv`
+
+Safety and next-step decision:
+
+- Script `39` is safe to run next as discovery-only tooling.
+- It is not yet safe to implement script `40` based on evidence alone; first
+  run script `39`, review whether the official scorer and clean utility sources
+  are verified, and only then decide whether script `40` should be created.
+- If script `39` cannot verify exact official scoring logic, future metrics
+  must remain BackdoorLLM-inspired ASR proxies rather than official ASR.
+
+Validation performed:
+
+- Python AST syntax check passed for
+  `scripts/39_discover_official_asr_and_clean_utility_sources.py`.
