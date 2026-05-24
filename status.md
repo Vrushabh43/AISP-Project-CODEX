@@ -7942,3 +7942,127 @@ Run readiness:
 
 - Scripts `36` to `38` are safe to run in the configured GPU environment,
   subject to the usual cache/VRAM constraints and the safety caveats above.
+
+## 2026-05-24T01:15:02+02:00 Optional Base-Control Results Verified
+
+Scope of this update: verify the synced optional-extension outputs produced on
+server `ki-010` by scripts `36`, `37`, and `38`. The verification was file-only:
+no model loading, inference, adapter/cache modification, report-ready update, or
+`final_submission_artifacts/` modification was performed.
+
+Server commands reported by the user:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+
+python scripts/36_base_model_control_eval.py
+python scripts/37_clean_behaviour_similarity_analysis.py
+python scripts/38_wilson_ci_and_final_comparison.py
+```
+
+Verified output files:
+
+- `outputs/base_model_control_eval_outputs.csv`
+- `outputs/base_model_control_eval_summary.csv`
+- `outputs/clean_behaviour_similarity_summary.csv`
+- `outputs/wilson_ci_tradeoff_summary.csv`
+
+Verified log files:
+
+- `logs/base_model_control_eval_20260523T170204Z.json`
+- `logs/clean_behaviour_similarity_analysis_20260523T182958Z.json`
+- `logs/wilson_ci_and_final_comparison_20260523T183002Z.json`
+
+Structural checks:
+
+- `base_model_control_eval_outputs.csv`: `774` rows
+  - 6 conditions x 129 prompts
+  - 30 clean prompts and 99 official trigger prompts per condition
+- `base_model_control_eval_summary.csv`: `6` rows
+- `clean_behaviour_similarity_summary.csv`: `7` rows
+  - 3 anchor rows
+  - 4 defended-adapter rows
+- `wilson_ci_tradeoff_summary.csv`: `14` rows
+
+Safety checks:
+
+- Full trigger outputs were not stored in `clean_output_text`.
+- Trigger rows with non-empty `clean_output_text`: `0`.
+- Clean rows with stored `clean_output_text`: `180`, as expected for
+  downstream similarity analysis.
+- The per-prompt CSV did not contain forbidden full-text columns such as
+  `prompt_text`, `instruction`, `input`, `expected_output`, `generated_text`, or
+  `output_text`.
+- The base-control JSON log had no trigger-row `clean_output_text` leaks.
+- Targeted git status check showed no changes to README, final verdict,
+  report-ready files, report-ready figures, or `final_submission_artifacts/`.
+
+Base-control bounded heuristic results:
+
+| Condition | Trigger success | Trigger rate | Clean utility | Failure | OOM |
+|---|---:|---:|---:|---:|---:|
+| `base_model_only` | 0/99 | 0.0000 | 0.9000 | 0 | 0 |
+| `original` | 60/99 | 0.6061 | 0.9000 | 0 | 0 |
+| `uniform_gamma_0.25` | 0/99 | 0.0000 | 0.9000 | 0 | 0 |
+| `uniform_gamma_0.50` | 2/99 | 0.0202 | 0.8666 | 0 | 0 |
+| `top3_gamma_0.50` | 6/99 | 0.0606 | 0.8666 | 0 | 0 |
+| `sensaware_top224_gamma_0.25` | 1/99 | 0.0101 | 0.9000 | 0 | 0 |
+
+Clean-output token-overlap similarity results:
+
+| Adapter | Similarity to original | Similarity to base | Drift margin |
+|---|---:|---:|---:|
+| `sensaware_top224_gamma_0.25` | 0.674709 | 0.725316 | -0.050607 |
+| `top3_gamma_0.50` | 0.707234 | 0.720596 | -0.013362 |
+| `uniform_gamma_0.25` | 0.690235 | 0.772728 | -0.082493 |
+| `uniform_gamma_0.50` | 0.703053 | 0.728821 | -0.025767 |
+
+Similarity anchors:
+
+- `original_vs_original_ceiling`: `1.000000`
+- `original_vs_base_reference`: `0.609624`
+- `unrelated_original_pair_floor`: `0.129732`
+
+Wilson interval checks for key rows:
+
+- `base_model_only`: trigger `0.0000`, Wilson 95% `[0.000000, 0.037355]`
+- `uniform_gamma_0.25`: trigger `0.0000`, Wilson 95% `[0.000000, 0.037355]`
+- `sensaware_top224_gamma_0.25`: trigger `0.0101`, Wilson 95%
+  `[0.001785, 0.055017]`
+- `top3_gamma_0.50`: trigger `0.0606`, Wilson 95%
+  `[0.028069, 0.125969]`
+- `original`: trigger `0.6061`, Wilson 95% `[0.507578, 0.696619]`
+
+Interpretation:
+
+- `base_model_only` has zero bounded trigger success, as expected; this is a
+  control result, not a defence result.
+- Wilson intervals show that `0/99` and `1/99` should not be overinterpreted as
+  a decisive separation.
+- Under the token-overlap similarity metric, every defended adapter is closer to
+  `base_model_only` than to `original` on average, because all drift margins are
+  negative.
+- This does not support a claim that SensAware preserves adapter-like clean
+  behaviour better than uniform scaling.
+- `uniform_gamma_0.25` is the most base-like among the checked defended
+  adapters by this metric, but `sensaware_top224_gamma_0.25` also drifts toward
+  base-model-like clean outputs.
+- `top3_gamma_0.50` has the smallest negative drift margin in this optional
+  analysis, but it has worse bounded trigger success than
+  `sensaware_top224_gamma_0.25`.
+- These optional results strengthen the caveat that the current clean utility
+  heuristic is insufficient; they should not replace final submission claims
+  unless the report-ready artifacts are deliberately updated and
+  consistency-checked.
+
+Current decision:
+
+- Keep the original final submission package unchanged for now.
+- Do not copy optional outputs into `final_submission_artifacts/` yet.
+- If these optional results are used in the report, frame them as an additional
+  caveat: the base-control similarity analysis does not clearly establish
+  selective clean-behaviour preservation by SensAware.
