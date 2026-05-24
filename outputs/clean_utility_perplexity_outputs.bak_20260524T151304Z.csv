@@ -1,0 +1,1 @@
+adapter,condition,condition_role,prompt_id,split,source_index,success,oom,prompt_token_count,reference_token_count,total_token_count,total_nll,token_nll,perplexity,prompt_hash,reference_output_hash,clean_metric_label,is_final_clean_utility,error
