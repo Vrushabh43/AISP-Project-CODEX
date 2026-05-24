@@ -8604,3 +8604,47 @@ or, without the patch, the explicit workaround is:
 ```bash
 python scripts/42_clean_utility_perplexity_eval.py --original-adapter-path /home/43e3/hf-cache-aisp/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b
 ```
+
+## 2026-05-24T16:34:43+02:00 Script 42 Missing Reference File Guidance Added
+
+Server issue observed:
+
+```bash
+python scripts/42_clean_utility_perplexity_eval.py
+```
+
+failed before model loading with:
+
+```text
+FileNotFoundError: Clean reference file not found: data/eval_prompts/clean_utility_reference_eval.jsonl
+```
+
+Cause:
+
+- the generated clean reference file from script `40` was not present in the
+  server worktree at the time script `42` was rerun
+- this is a data-preparation ordering issue, not a model-loading issue
+
+Fix implemented:
+
+- updated `scripts/42_clean_utility_perplexity_eval.py` so the missing-file
+  error explicitly tells the user to run:
+
+```bash
+python scripts/40_create_real_asr_and_clean_utility_prompt_files.py
+```
+
+Validation performed:
+
+- Python AST syntax check passed for the patched script.
+- No model loading or inference was run during this fix.
+- Final submission artifacts and report-ready written claims were not modified.
+
+Correct server rerun order:
+
+```bash
+python scripts/40_create_real_asr_and_clean_utility_prompt_files.py
+ls -lh data/eval_prompts/clean_utility_reference_eval.jsonl data/eval_prompts/real_asr_official_badnets.jsonl
+python scripts/42_clean_utility_perplexity_eval.py
+python scripts/43_real_asr_clean_utility_tradeoff.py
+```

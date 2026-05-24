@@ -86,7 +86,11 @@ def write_csv(
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
-        raise FileNotFoundError(f"Clean reference file not found: {path}")
+        raise FileNotFoundError(
+            f"Clean reference file not found: {path}. "
+            "Run `python scripts/40_create_real_asr_and_clean_utility_prompt_files.py` "
+            "first to create it."
+        )
     rows: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
     with path.open("r", encoding="utf-8") as handle:
