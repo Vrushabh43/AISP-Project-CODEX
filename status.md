@@ -8521,6 +8521,81 @@ python scripts/42_clean_utility_perplexity_eval.py
 python scripts/43_real_asr_clean_utility_tradeoff.py
 ```
 
+## 2026-05-24T17:03:57+02:00 Script 42 HF Cache Inference Added
+
+Server issue observed:
+
+```bash
+python scripts/42_clean_utility_perplexity_eval.py
+```
+
+completed child subprocesses but all six conditions failed before scoring with
+Transformers cache errors:
+
+```text
+OSError: We couldn't connect to 'https://huggingface.co' to load the files,
+and couldn't find them in the cached files.
+```
+
+Observed outputs from that failed run:
+
+- `logs/clean_utility_perplexity_eval_20260524T150011Z.json`
+- `outputs/clean_utility_perplexity_outputs.csv`
+- `outputs/clean_utility_perplexity_summary.csv`
+- `outputs/real_asr_clean_utility_tradeoff_summary.csv`
+- `logs/real_asr_clean_utility_tradeoff_20260524T150116Z.json`
+
+Result status:
+
+- failure count: `6`
+- OOM count: `0`
+- all perplexity values: missing/`None`
+- trade-off summary could not assess perplexity because fewer than two finite
+  values were available
+
+Cause:
+
+- the server shell used for script `42` did not set
+  `HF_HUB_CACHE=/home/43e3/hf-cache-aisp`
+- the base model was therefore not found locally by Transformers with
+  `local_files_only=True`
+- this is an environment/cache discovery issue, not a clean-utility result
+
+Fix implemented:
+
+- updated `scripts/42_clean_utility_perplexity_eval.py` to infer the HF cache
+  root from:
+  - explicit `--hf-hub-cache`
+  - existing `HF_HUB_CACHE`
+  - inferred original adapter snapshot path from
+    `outputs/base_model_control_eval_summary.csv`
+  - fallback `/home/43e3/hf-cache-aisp` when present
+- parent and child subprocesses now receive `HF_HUB_CACHE` and
+  `TRANSFORMERS_CACHE`
+- added CLI option `--hf-hub-cache`
+
+Validation performed:
+
+- Python AST syntax check passed for the patched script.
+- No model loading or inference was run during this fix.
+- Final submission artifacts and report-ready written claims were not modified.
+
+Rerun options:
+
+```bash
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+export TRANSFORMERS_CACHE=/home/43e3/hf-cache-aisp
+python scripts/42_clean_utility_perplexity_eval.py
+```
+
+or after pulling this patch:
+
+```bash
+python scripts/42_clean_utility_perplexity_eval.py --hf-hub-cache /home/43e3/hf-cache-aisp
+```
+
+Only rerun script `43` after script `42` reports finite perplexity values.
+
 Expected outputs from script `40`:
 
 - `data/eval_prompts/clean_utility_reference_eval.jsonl`

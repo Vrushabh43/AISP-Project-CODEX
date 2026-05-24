@@ -12,6 +12,7 @@ import csv
 import gc
 import json
 import math
+import os
 import statistics
 import subprocess
 import sys
@@ -214,6 +215,34 @@ def infer_original_adapter_path(args: argparse.Namespace) -> str | None:
     return None
 
 
+def infer_hf_hub_cache(args: argparse.Namespace, original_adapter_path: str | None) -> str:
+    if args.hf_hub_cache:
+        return str(Path(args.hf_hub_cache).expanduser())
+    if os.environ.get("HF_HUB_CACHE"):
+        return os.environ["HF_HUB_CACHE"]
+    if original_adapter_path:
+        path = Path(original_adapter_path).expanduser()
+        parts = path.parts
+        if "snapshots" in parts:
+            snapshot_index = parts.index("snapshots")
+            if snapshot_index >= 1:
+                candidate = Path(*parts[: snapshot_index - 1])
+                if candidate.exists():
+                    return str(candidate)
+    fallback = Path("/home/43e3/hf-cache-aisp")
+    if fallback.exists():
+        return str(fallback)
+    return ""
+
+
+def apply_hf_cache_env(cache_root: str) -> None:
+    if not cache_root:
+        return
+    os.environ.setdefault("HF_HUB_CACHE", cache_root)
+    os.environ.setdefault("TRANSFORMERS_CACHE", cache_root)
+    os.environ.setdefault("HF_HOME", str(Path(cache_root).parent / "hf-home"))
+
+
 def cuda_memory_summary(torch_module: Any) -> dict[str, Any]:
     if not torch_module.cuda.is_available():
         return {"cuda_available": False}
@@ -365,6 +394,8 @@ def build_child_report(args: argparse.Namespace) -> dict[str, Any]:
     condition = str(args.child_condition)
     rows = load_clean_reference_rows(Path(args.clean_reference_file))
     original_adapter_path = infer_original_adapter_path(args)
+    hf_hub_cache = infer_hf_hub_cache(args, original_adapter_path)
+    apply_hf_cache_env(hf_hub_cache)
     original_snapshot = None
     if condition != "base_model_only":
         original_snapshot = locate_adapter_snapshot(original_adapter_path, cache_roots=args.cache_root)
@@ -457,6 +488,7 @@ def build_child_report(args: argparse.Namespace) -> dict[str, Any]:
         "base_model": args.base_model,
         "adapter_id": ADAPTER_ID,
         "condition": condition,
+        "hf_hub_cache": hf_hub_cache,
         "batch_size": 1,
         "generation": False,
         "clean_metric_label": CLEAN_METRIC_LABEL,
@@ -527,6 +559,8 @@ def build_parent_report(args: argparse.Namespace) -> dict[str, Any]:
     timestamp = utc_timestamp()
     rows = load_clean_reference_rows(Path(args.clean_reference_file))
     original_adapter_path = infer_original_adapter_path(args)
+    hf_hub_cache = infer_hf_hub_cache(args, original_adapter_path)
+    apply_hf_cache_env(hf_hub_cache)
     original_snapshot = locate_adapter_snapshot(original_adapter_path, cache_roots=args.cache_root)
     resolved_paths = validate_requested_conditions(list(args.conditions), original_snapshot, Path(args.variants_dir))
     child_dir = Path(args.logs_dir) / f"clean_utility_perplexity_children_{timestamp}"
@@ -555,6 +589,8 @@ def build_parent_report(args: argparse.Namespace) -> dict[str, Any]:
         if original_adapter_path:
             command.extend(["--original-adapter-path", str(original_adapter_path)])
         command.extend(["--base-control-summary-csv", str(args.base_control_summary_csv)])
+        if hf_hub_cache:
+            command.extend(["--hf-hub-cache", str(hf_hub_cache)])
         for cache_root in args.cache_root or []:
             command.extend(["--cache-root", str(cache_root)])
 
@@ -570,6 +606,7 @@ def build_parent_report(args: argparse.Namespace) -> dict[str, Any]:
             completed = subprocess.run(
                 command,
                 cwd=str(ROOT),
+                env={**os.environ, **({"HF_HUB_CACHE": hf_hub_cache, "TRANSFORMERS_CACHE": hf_hub_cache} if hf_hub_cache else {})},
                 text=True,
                 capture_output=True,
                 timeout=args.child_timeout_seconds,
@@ -609,6 +646,7 @@ def build_parent_report(args: argparse.Namespace) -> dict[str, Any]:
         "conditions": list(args.conditions),
         "resolved_condition_paths": resolved_paths,
         "original_adapter_path_argument_or_inferred": original_adapter_path or "",
+        "hf_hub_cache_argument_or_inferred": hf_hub_cache,
         "clean_reference_file": str(Path(args.clean_reference_file)),
         "clean_records_per_condition": len(rows),
         "batch_size": 1,
@@ -698,6 +736,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--cache-root", action="append", default=None)
     parser.add_argument("--clean-reference-file", default=str(DEFAULT_CLEAN_REFERENCE_FILE))
     parser.add_argument("--base-control-summary-csv", default=str(DEFAULT_BASE_CONTROL_SUMMARY))
+    parser.add_argument("--hf-hub-cache", default=None)
     parser.add_argument("--seed", type=int, default=20260524)
     parser.add_argument("--child-timeout-seconds", type=int, default=5400)
     parser.add_argument("--logs-dir", default=str(DEFAULT_LOGS_DIR))
