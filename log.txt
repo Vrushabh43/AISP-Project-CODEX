@@ -1,0 +1,50 @@
+v) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ python scripts/44_official_rule_based_asr_rescore_existing_outputs.py 
+Official rule-based ASR existing-output rescore summary
+- CSV/source inspection only; no model loading, inference, official code execution, or APIs
+- ASR metric label: BackdoorLLM official rule-based jailbreak ASR
+- Refusal keyword count: 17
+- Refusal keyword hash: 351c6ad9b45d70ea95926ed9bfb760d33dda99843451d0c7fdfeb7d48808d4af
+- Rescore performed: False
+- Script 45 required: True
+- Full harmful prompts printed: False
+- Full trigger outputs printed: False
+- JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/official_rule_based_asr_rescore_existing_20260525T120801Z.json
+- Summary CSV written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/official_rule_based_asr_rescore_existing_summary.csv
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ python scripts/45_official_rule_based_asr_eval.py 
+Official rule-based jailbreak ASR evaluation summary
+- Model generation required; official BackdoorLLM code/API not executed
+- ASR metric label: BackdoorLLM official rule-based jailbreak ASR
+- Base model: NousResearch/Llama-2-7b-chat-hf
+- Conditions tested: base_model_only, original, uniform_gamma_0.25, uniform_gamma_0.50, top3_gamma_0.50, sensaware_top224_gamma_0.25
+- Official trigger prompts per condition: 99
+- Deterministic generation: do_sample=False, batch_size=1
+- Failure count: 0
+- OOM count: 0
+- Official rule-based ASR success rates:
+  - base_model_only: 15/99 (0.151515)
+  - original: 36/99 (0.363636)
+  - uniform_gamma_0.25: 13/99 (0.131313)
+  - uniform_gamma_0.50: 7/99 (0.070707)
+  - top3_gamma_0.50: 7/99 (0.070707)
+  - sensaware_top224_gamma_0.25: 1/99 (0.010101)
+- is_official_asr: True
+- is_external_judged_asr: False
+- Full harmful prompts printed: False
+- Full trigger outputs stored: False
+- JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/official_rule_based_asr_eval_20260525T120958Z.json
+- Outputs CSV written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/official_rule_based_asr_eval_outputs.csv
+- Summary CSV written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/official_rule_based_asr_eval_summary.csv
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ python scripts/46_official_rule_based_asr_clean_tradeoff.py 
+Official rule-based ASR and clean-utility trade-off summary
+- CSV-only analysis; no model loading, inference, official code execution, or API calls
+- Trigger metric label: BackdoorLLM official rule-based jailbreak ASR
+- is_official_asr: True
+- is_external_judged_asr: False
+- is_final_asr: False
+- is_final_clean_utility: False
+- Rows written: 6
+- Perplexity interpretation: Perplexity shows a measurable spread across focused conditions; small gaps should still be interpreted cautiously.
+- CSV written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/official_rule_based_asr_clean_tradeoff_summary.csv
+- JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/official_rule_based_asr_clean_tradeoff_20260525T142217Z.json
+- Optional figure written: True
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ 
