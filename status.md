@@ -9079,3 +9079,74 @@ Interpretation:
 No model loading, inference, ASR generation, official BackdoorLLM code
 execution, API calls, final artifact updates, README/final verdict updates, or
 report-ready written-claim updates were performed in this step.
+
+## 2026-05-25T14:05:45+02:00 Scripts 44-46 Official Rule-Based ASR Extension Added
+
+Implemented the next optional evaluation scripts after verification of the
+BackdoorLLM official rule-based jailbreak ASR scorer.
+
+Created:
+
+- `scripts/44_official_rule_based_asr_rescore_existing_outputs.py`
+- `scripts/45_official_rule_based_asr_eval.py`
+- `scripts/46_official_rule_based_asr_clean_tradeoff.py`
+
+Script responsibilities:
+
+- script `44`: CSV/source-only rescore attempt for existing generated trigger
+  outputs; if only hashes/redacted previews exist, it stops cleanly and reports
+  that script `45` is required
+- script `45`: model-heavy deterministic generation over the six focused
+  conditions using the verified 17-keyword official BackdoorLLM rule; stores
+  hashes, redacted previews, and flags only, not full trigger outputs
+- script `46`: CSV-only trade-off table combining official rule-based ASR,
+  Wilson confidence intervals, clean reference perplexity/NLL, and optional
+  clean-output similarity
+
+Validation performed:
+
+- Python AST syntax checks passed for scripts `44`, `45`, and `46`.
+- No model loading, inference, ASR generation, official BackdoorLLM code
+  execution, or API calls were run during implementation.
+- Final submission artifacts, README/final verdict files, report-ready written
+  claims, adapters, and cache files were not modified.
+
+Recommended server commands:
+
+```bash
+python scripts/44_official_rule_based_asr_rescore_existing_outputs.py
+```
+
+If script `44` reports that full trigger outputs are unavailable:
+
+```bash
+python scripts/45_official_rule_based_asr_eval.py
+python scripts/46_official_rule_based_asr_clean_tradeoff.py
+```
+
+Expected outputs:
+
+- `logs/official_rule_based_asr_rescore_existing_<timestamp>.json`
+- `outputs/official_rule_based_asr_rescore_existing_summary.csv`
+- `logs/official_rule_based_asr_eval_<timestamp>.json`
+- `outputs/official_rule_based_asr_eval_outputs.csv`
+- `outputs/official_rule_based_asr_eval_summary.csv`
+- `logs/official_rule_based_asr_clean_tradeoff_<timestamp>.json`
+- `outputs/official_rule_based_asr_clean_tradeoff_summary.csv`
+- optionally
+  `reports/figures/report_ready/official_rule_based_asr_clean_tradeoff.png`
+
+Caveats:
+
+- ASR scorer logic is verified as BackdoorLLM official rule-based jailbreak
+  ASR.
+- The generation setting remains project-local deterministic `[INST]`
+  formatting unless a later script exactly reproduces BackdoorLLM generation
+  formatting.
+- Correct wording for script `45` outputs:
+  `BackdoorLLM official rule-based jailbreak ASR scorer applied to
+  project-local deterministic generations`.
+- Clean perplexity remains a reference-likelihood probe, not final human clean
+  utility.
+- Do not update final artifacts or final-facing claims until these results are
+  reviewed and consistency-checked.
