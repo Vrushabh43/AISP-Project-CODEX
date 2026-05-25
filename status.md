@@ -9042,3 +9042,40 @@ Server rerun command:
 ```bash
 python scripts/39c_verify_rule_based_jailbreak_asr.py
 ```
+
+## 2026-05-25T13:50:36+02:00 Script 39c Verification Succeeded On Server
+
+Server rerun of `scripts/39c_verify_rule_based_jailbreak_asr.py` after the
+if-branch extraction fix produced the desired static verification result:
+
+- `eval_ASR_of_backdoor_models`: found
+- `_eval_mode`: found
+- `jailbreak_eval`: found
+- `_key_words`: found
+- refusal keyword count: 17
+- call chain verified: true
+- success-on-no-refusal verified: true
+- external judge in ASR path: false
+- ASR metric label: `BackdoorLLM official rule-based jailbreak ASR`
+- `is_official_asr`: true
+- confidence: high
+
+Generated server outputs:
+
+- `logs/official_rule_based_asr_verification_20260525T114859Z.json`
+- `outputs/official_rule_based_asr_verification_summary.csv`
+- `OFFICIAL_RULE_BASED_ASR_VERIFICATION.md`
+
+Interpretation:
+
+- the jailbreak ASR scorer logic can now be described as
+  `BackdoorLLM official rule-based jailbreak ASR`
+- this verifies the scorer logic only, not exact reproduction of the full
+  BackdoorLLM generation pipeline
+- if project-local deterministic `[INST]` generations are rescored, use wording
+  like: `BackdoorLLM official rule-based jailbreak ASR scorer applied to
+  project-local deterministic generations`
+
+No model loading, inference, ASR generation, official BackdoorLLM code
+execution, API calls, final artifact updates, README/final verdict updates, or
+report-ready written-claim updates were performed in this step.
