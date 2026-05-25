@@ -273,14 +273,30 @@ def if_nodes_with_call(function_node: ast.AST | None, call_name: str) -> list[as
     return rows
 
 
+def if_test_and_body_source(source: str, node: ast.If) -> str:
+    """Return an if branch's test and body, excluding elif/else siblings."""
+    parts: list[str] = []
+    test_text = source_segment(source, node.test)
+    if test_text:
+        parts.append(test_text)
+    for child in node.body:
+        child_text = source_segment(source, child)
+        if child_text:
+            parts.append(child_text)
+    return "\n".join(parts)
+
+
 def best_jailbreak_branch_text(source: str, eval_mode_node: ast.AST | None) -> tuple[str, str]:
     branches = if_nodes_with_call(eval_mode_node, JAILBREAK_FUNCTION)
     for branch in branches:
-        branch_text = source_segment(source, branch)
+        branch_text = if_test_and_body_source(source, branch)
         if "jailbreak" in branch_text.lower():
-            return branch_text, "jailbreak_if_branch"
+            return branch_text, "jailbreak_if_test_and_body"
     if branches:
-        return source_segment(source, branches[0]), "non_literal_if_branch_with_jailbreak_eval"
+        return (
+            if_test_and_body_source(source, branches[0]),
+            "non_literal_if_test_and_body_with_jailbreak_eval",
+        )
     eval_mode_text = source_segment(source, eval_mode_node)
     if JAILBREAK_FUNCTION in eval_mode_text:
         return eval_mode_text, "full_eval_mode_function_fallback"

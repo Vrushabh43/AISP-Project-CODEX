@@ -9008,3 +9008,37 @@ Expected interpretation:
   with the project-local deterministic generation caveat
 - if external hints remain inside the narrowed path, keep
   `BackdoorLLM-aligned ASR proxy`
+
+## 2026-05-25T13:47:53+02:00 Script 39c If-Branch Extraction Tightened
+
+Second server rerun still reported `External judge in ASR path: True`, despite
+the verified rule-based call chain and success-on-no-refusal rule.
+
+Likely cause identified in the verifier:
+
+- AST source extraction for an `if` node includes the whole `if/elif/else`
+  chain
+- therefore, a GPT judge in a sibling clean-performance branch can still be
+  included when the verifier intends to inspect only the jailbreak branch
+
+Patch implemented:
+
+- `scripts/39c_verify_rule_based_jailbreak_asr.py` now extracts only the
+  matched `if` branch test and body for the `_eval_mode` branch that calls
+  `jailbreak_eval`
+- sibling `elif`/`else` branches are excluded from the ASR-path external-judge
+  scan
+
+Validation performed:
+
+- Python AST syntax check passed for the patched script.
+- No model loading, inference, ASR generation, official BackdoorLLM code
+  execution, or API calls were run.
+- Final submission artifacts, README/final verdict files, report-ready written
+  claims, adapters, and cache files were not modified.
+
+Server rerun command:
+
+```bash
+python scripts/39c_verify_rule_based_jailbreak_asr.py
+```
