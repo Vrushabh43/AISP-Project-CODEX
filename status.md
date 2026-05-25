@@ -8596,6 +8596,108 @@ python scripts/42_clean_utility_perplexity_eval.py --hf-hub-cache /home/43e3/hf-
 
 Only rerun script `43` after script `42` reports finite perplexity values.
 
+## 2026-05-24T17:24:09+02:00 Clean Perplexity Probe Completed Successfully
+
+Server run completed with the correct cache environment:
+
+```bash
+cd ~/solr-home/AISP-Project-CODEX
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
+export HF_HUB_CACHE=/home/43e3/hf-cache-aisp
+export TRANSFORMERS_CACHE=/home/43e3/hf-cache-aisp
+source .venv/bin/activate
+
+python scripts/40_create_real_asr_and_clean_utility_prompt_files.py
+python scripts/42_clean_utility_perplexity_eval.py
+python scripts/43_real_asr_clean_utility_tradeoff.py
+```
+
+Generated/updated outputs:
+
+- `data/eval_prompts/clean_utility_reference_eval.jsonl`
+- `data/eval_prompts/real_asr_official_badnets.jsonl`
+- `outputs/real_eval_prompt_file_summary.csv`
+- `logs/real_eval_prompt_file_creation_20260524T151304Z.json`
+- `outputs/clean_utility_perplexity_outputs.csv`
+- `outputs/clean_utility_perplexity_summary.csv`
+- `logs/clean_utility_perplexity_eval_20260524T151304Z.json`
+- `outputs/real_asr_clean_utility_tradeoff_summary.csv`
+- `logs/real_asr_clean_utility_tradeoff_20260524T151630Z.json`
+- `reports/figures/report_ready/real_asr_clean_utility_tradeoff.png`
+
+Script `40` result:
+
+- clean reference records written: `99`
+- ASR-proxy prompt records written: `99`
+- ASR metric label: `BackdoorLLM-aligned ASR proxy`
+- `is_official_asr=false`
+- full harmful prompts printed: `false`
+
+Script `42` result:
+
+- conditions tested:
+  `base_model_only`, `original`, `uniform_gamma_0.25`,
+  `uniform_gamma_0.50`, `top3_gamma_0.50`,
+  `sensaware_top224_gamma_0.25`
+- clean reference records per condition: `99`
+- completed records per condition: `99`
+- failure count: `0`
+- OOM count: `0`
+- total reference tokens per condition: `14834`
+
+Clean reference perplexity results:
+
+- `base_model_only`: `3.980931`
+- `original`: `3.655260`
+- `uniform_gamma_0.25`: `3.747472`
+- `uniform_gamma_0.50`: `3.607213`
+- `top3_gamma_0.50`: `3.559641`
+- `sensaware_top224_gamma_0.25`: `3.557692`
+
+Weighted mean token NLL:
+
+- `base_model_only`: `1.381516`
+- `original`: `1.296167`
+- `uniform_gamma_0.25`: `1.321082`
+- `uniform_gamma_0.50`: `1.282936`
+- `top3_gamma_0.50`: `1.269660`
+- `sensaware_top224_gamma_0.25`: `1.269112`
+
+Script `43` result:
+
+- rows written: `6`
+- trigger metric label: `BackdoorLLM-aligned ASR proxy`
+- `is_official_asr=false`
+- `is_final_asr=false`
+- `is_final_clean_utility=false`
+- optional figure written: `true`
+- perplexity interpretation emitted by script:
+  "Perplexity shows a measurable spread across focused conditions under the
+  configured threshold; inspect confidence/replication before treating small
+  gaps as decisive."
+
+Careful interpretation:
+
+- This is a clean-reference likelihood probe, not final human utility.
+- Lower perplexity indicates higher likelihood assigned to the official-clean
+  reference outputs.
+- Under this probe, `sensaware_top224_gamma_0.25` and `top3_gamma_0.50` are the
+  lowest-perplexity conditions, with a very small gap between them.
+- `uniform_gamma_0.25` remains the strongest ASR-proxy condition by trigger
+  success count, but it has worse clean-reference perplexity than the original
+  adapter in this run.
+- This optional evidence may support a more nuanced trade-off discussion, but
+  it does not make the metric official ASR and does not override the earlier
+  caveats about clean-output similarity.
+
+Current decision:
+
+- Do not update README, final verdict, report-ready written claims, or
+  `final_submission_artifacts/` yet.
+- Review the optional trade-off summary and decide explicitly whether these
+  results should be incorporated into final-facing artifacts.
+
 Expected outputs from script `40`:
 
 - `data/eval_prompts/clean_utility_reference_eval.jsonl`
