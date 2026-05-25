@@ -8521,6 +8521,77 @@ python scripts/42_clean_utility_perplexity_eval.py
 python scripts/43_real_asr_clean_utility_tradeoff.py
 ```
 
+## 2026-05-25T13:15:13+02:00 Official Rule-Based ASR Architecture Planned
+
+Scope of this update: create an architecture-only document for verifying
+whether BackdoorLLM jailbreak ASR uses official rule-based refusal-keyword
+scoring rather than an external judge. No scripts were implemented, no model
+loading was run, no inference was run, no ASR was run, no official BackdoorLLM
+code was executed, and no final-facing artifacts were updated.
+
+File created:
+
+- `OFFICIAL_RULE_BASED_ASR_ARCHITECTURE.md`
+
+Files read before planning:
+
+- `AGENT.md`
+- latest relevant sections of `status.md`
+- `REAL_ASR_AND_CLEAN_UTILITY_ARCHITECTURE.md`
+- `OFFICIAL_SCORER_AUDIT.md`
+- `outputs/official_asr_clean_utility_discovery_summary.csv`
+- `outputs/official_asr_scorer_audit_summary.csv`
+- `outputs/clean_utility_perplexity_summary.csv`
+- `outputs/real_asr_clean_utility_tradeoff_summary.csv`
+
+Corrected understanding captured:
+
+- the earlier audit labelled the discovered scorer path as `external_judge`
+- that may be too broad if judge-related code belongs to clean performance
+  evaluation rather than jailbreak ASR
+- the next step is to statically verify the exact jailbreak ASR call chain:
+  `eval_ASR_of_backdoor_models -> _eval_mode("jailbreak", ...) -> jailbreak_eval`
+- the key question is whether `jailbreak_eval` implements refusal-keyword
+  absence as the official jailbreak success rule
+- GPT-4 or external judging may still exist for clean performance, but that
+  should not automatically make jailbreak ASR external-judged
+
+Decision rules recorded:
+
+- if the rule-based jailbreak ASR path is verified:
+  - `asr_metric_label = BackdoorLLM official rule-based jailbreak ASR`
+  - `is_official_asr = true`
+  - `is_external_judged_asr = false`
+- if exact logic is not verified:
+  - `asr_metric_label = BackdoorLLM-aligned ASR proxy`
+  - `is_official_asr = false`
+- if the jailbreak ASR path itself uses an external judge:
+  - do not implement local official ASR
+  - keep the proxy label
+
+Planned future scripts only:
+
+- `scripts/39c_verify_rule_based_jailbreak_asr.py`
+- `scripts/44_official_rule_based_asr_rescore_existing_outputs.py`
+- `scripts/45_official_rule_based_asr_eval.py`
+- `scripts/46_official_rule_based_asr_clean_tradeoff.py`
+
+Existing clean perplexity result preserved for later combination:
+
+- `base_model_only`: `3.980931`
+- `original`: `3.655260`
+- `uniform_gamma_0.25`: `3.747472`
+- `uniform_gamma_0.50`: `3.607213`
+- `top3_gamma_0.50`: `3.559641`
+- `sensaware_top224_gamma_0.25`: `3.557692`
+
+Safety reminder:
+
+- Do not update README, final verdict, report-ready written claims, or
+  `final_submission_artifacts/` until rule-based ASR verification and any
+  resulting evaluation are reviewed and consistency-checked.
+- Do not implement scripts `39c` to `46` until explicitly requested.
+
 ## 2026-05-24T17:03:57+02:00 Script 42 HF Cache Inference Added
 
 Server issue observed:
@@ -8825,3 +8896,23 @@ ls -lh data/eval_prompts/clean_utility_reference_eval.jsonl data/eval_prompts/re
 python scripts/42_clean_utility_perplexity_eval.py
 python scripts/43_real_asr_clean_utility_tradeoff.py
 ```
+
+## 2026-05-25T13:15:13+02:00 Latest Note - Rule-Based ASR Architecture Added
+
+Latest status note: `OFFICIAL_RULE_BASED_ASR_ARCHITECTURE.md` was created as
+an architecture-only plan to verify whether BackdoorLLM jailbreak ASR is
+official rule-based refusal-keyword scoring rather than external judged ASR.
+
+No scripts were implemented, no experiments were run, no model loading or
+inference was run, no official BackdoorLLM code was executed, and no final
+submission artifacts or report-ready written claims were modified.
+
+Next intended step, only if explicitly requested:
+
+- implement `scripts/39c_verify_rule_based_jailbreak_asr.py` as static source
+  verification only
+- trace `eval_ASR_of_backdoor_models -> _eval_mode("jailbreak", ...) ->
+  jailbreak_eval`
+- verify whether ASR success is based on absence of official refusal keywords
+- keep the current `BackdoorLLM-aligned ASR proxy` label unless the exact
+  official rule-based ASR path is verified
