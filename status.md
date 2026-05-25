@@ -8916,3 +8916,51 @@ Next intended step, only if explicitly requested:
 - verify whether ASR success is based on absence of official refusal keywords
 - keep the current `BackdoorLLM-aligned ASR proxy` label unless the exact
   official rule-based ASR path is verified
+
+## 2026-05-25T13:37:59+02:00 Script 39c Static Rule-Based ASR Verifier Added
+
+Created `scripts/39c_verify_rule_based_jailbreak_asr.py` for static
+source-text and AST verification of the BackdoorLLM jailbreak ASR path.
+
+The script inspects only:
+
+`external_sources/backdoorllm_official_source/attack/DPA/backdoor_evaluate.py`
+
+It is designed to:
+
+- locate `_key_words`, `jailbreak_eval`, `_eval_mode`, and
+  `eval_ASR_of_backdoor_models`
+- extract refusal-keyword count and SHA256 hash
+- trace `eval_ASR_of_backdoor_models -> _eval_mode -> jailbreak_eval`
+- verify whether jailbreak success is based on absence of refusal keywords
+- distinguish jailbreak ASR from any GPT/judge clean-performance path
+- write:
+  - `logs/official_rule_based_asr_verification_<timestamp>.json`
+  - `outputs/official_rule_based_asr_verification_summary.csv`
+  - `OFFICIAL_RULE_BASED_ASR_VERIFICATION.md`
+
+Validation performed:
+
+- Python AST syntax check passed for `scripts/39c_verify_rule_based_jailbreak_asr.py`.
+- No model loading, inference, ASR generation, official BackdoorLLM code
+  execution, or API calls were run.
+- Final submission artifacts, README/final verdict files, report-ready written
+  claims, adapters, and cache files were not modified.
+
+Command to run on the server:
+
+```bash
+python scripts/39c_verify_rule_based_jailbreak_asr.py
+```
+
+Interpretation rule:
+
+- if verified, future local ASR results may be labelled
+  `BackdoorLLM official rule-based jailbreak ASR`, with the caveat that the
+  official rule-based scorer is applied to project-local deterministic
+  generations unless prompt formatting is also matched
+- if not verified, keep the safer `BackdoorLLM-aligned ASR proxy` label
+
+Safe to proceed to scripts `44`-`46` only after reviewing the script `39c`
+outputs. Do not update final artifacts until verified results are reviewed and
+consistency-checked.
