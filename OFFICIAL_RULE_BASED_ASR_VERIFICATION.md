@@ -26,19 +26,19 @@ Inspected `external_sources/backdoorllm_official_source/attack/DPA/backdoor_eval
 
 ## Judge Separation
 
-- External judge/API detected in jailbreak ASR path: `true`
-- ASR-path external hints: `gpt_4, gpt_4_judge_eval`
-- GPT/judge appears only in clean-performance path: `false`
+- External judge/API detected in jailbreak ASR path: `false`
+- ASR-path external hints: `none detected`
+- GPT/judge appears only in clean-performance path: `true`
 
 ## Decision
 
-- Official rule-based ASR verified: `false`
-- ASR metric label: `BackdoorLLM-aligned ASR proxy`
-- `is_official_asr`: `false`
-- `is_external_judged_asr`: `true`
-- Confidence: `medium`
+- Official rule-based ASR verified: `true`
+- ASR metric label: `BackdoorLLM official rule-based jailbreak ASR`
+- `is_official_asr`: `true`
+- `is_external_judged_asr`: `false`
+- Confidence: `high`
 
-External judge/API hints appear in the traced jailbreak ASR path; keep local ASR as proxy.
+Jailbreak ASR call chain and no-refusal keyword success rule were verified by static AST/text inspection. This verifies the scorer logic, not full BackdoorLLM generation formatting.
 
 ## Caveats
 
