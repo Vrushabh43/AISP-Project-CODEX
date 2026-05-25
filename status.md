@@ -8964,3 +8964,47 @@ Interpretation rule:
 Safe to proceed to scripts `44`-`46` only after reviewing the script `39c`
 outputs. Do not update final artifacts until verified results are reviewed and
 consistency-checked.
+
+## 2026-05-25T13:44:52+02:00 Script 39c ASR-Path Judge Detection Narrowed
+
+Server run of `scripts/39c_verify_rule_based_jailbreak_asr.py` found the
+rule-based components and no-refusal success rule, but also flagged
+`gpt_4_judge_eval` in the traced ASR path:
+
+- `_key_words`: found, 17 refusal keywords
+- `jailbreak_eval`: found
+- `eval_ASR_of_backdoor_models -> _eval_mode -> jailbreak_eval`: verified
+- success-on-no-refusal: verified
+- external judge hints reported: `gpt_4`, `gpt_4_judge_eval`
+
+The verifier was patched to avoid over-classifying clean-judge code as
+jailbreak-ASR code. It now checks external-judge hints only inside:
+
+- the `_eval_mode(... "jailbreak" ...)` call segment from
+  `eval_ASR_of_backdoor_models`
+- the `_eval_mode` jailbreak branch that calls `jailbreak_eval`
+- the `jailbreak_eval` function body
+
+This is still static source/AST inspection only.
+
+Validation performed:
+
+- Python AST syntax check passed for the patched script.
+- No model loading, inference, ASR generation, official BackdoorLLM code
+  execution, or API calls were run.
+- Final submission artifacts, README/final verdict files, report-ready written
+  claims, adapters, and cache files were not modified.
+
+Server rerun command:
+
+```bash
+python scripts/39c_verify_rule_based_jailbreak_asr.py
+```
+
+Expected interpretation:
+
+- if external hints disappear and the chain remains verified, the label can
+  become `BackdoorLLM official rule-based jailbreak ASR` for the scorer logic,
+  with the project-local deterministic generation caveat
+- if external hints remain inside the narrowed path, keep
+  `BackdoorLLM-aligned ASR proxy`

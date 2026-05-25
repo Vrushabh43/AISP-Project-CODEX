@@ -314,7 +314,10 @@ def no_refusal_success_patterns(text: str) -> dict[str, Any]:
     return {"verified": verified, "patterns": patterns}
 
 
-def eval_asr_calls_eval_mode_with_jailbreak(eval_asr_node: ast.AST | None) -> dict[str, Any]:
+def eval_asr_calls_eval_mode_with_jailbreak(
+    source: str,
+    eval_asr_node: ast.AST | None,
+) -> dict[str, Any]:
     calls: list[dict[str, Any]] = []
     if eval_asr_node is None:
         return {"calls_eval_mode": False, "literal_jailbreak_arg": False, "calls": []}
@@ -329,6 +332,7 @@ def eval_asr_calls_eval_mode_with_jailbreak(eval_asr_node: ast.AST | None) -> di
                 "line": getattr(node, "lineno", None),
                 "string_constants": constants,
                 "literal_jailbreak_arg": any(value.lower() == "jailbreak" for value in constants),
+                "source": source_segment(source, node),
             }
         )
     return {
@@ -336,6 +340,19 @@ def eval_asr_calls_eval_mode_with_jailbreak(eval_asr_node: ast.AST | None) -> di
         "literal_jailbreak_arg": any(row["literal_jailbreak_arg"] for row in calls),
         "calls": calls,
     }
+
+
+def eval_asr_asr_call_text(eval_asr_call_info: dict[str, Any]) -> str:
+    """Return only _eval_mode call sites relevant to ASR path tracing.
+
+    The official function can contain both jailbreak ASR and clean-quality
+    judging logic. Including the whole function can falsely mark ASR as
+    external-judged just because a GPT judge appears in a separate branch.
+    """
+    calls = eval_asr_call_info.get("calls", [])
+    jailbreak_calls = [row for row in calls if row.get("literal_jailbreak_arg")]
+    selected = jailbreak_calls or calls
+    return "\n".join(str(row.get("source", "")) for row in selected if row.get("source"))
 
 
 def gpt4_judge_clean_path_status(
@@ -377,7 +394,7 @@ def build_verification(source_path: Path) -> dict[str, Any]:
     refusal_keywords = literal_string_list(key_words_node)
     keywords_safe = keyword_list_is_safe(refusal_keywords)
 
-    eval_asr_call_info = eval_asr_calls_eval_mode_with_jailbreak(eval_asr_node)
+    eval_asr_call_info = eval_asr_calls_eval_mode_with_jailbreak(text, eval_asr_node)
     branch_text, branch_source = best_jailbreak_branch_text(text, eval_mode_node)
     eval_mode_calls_jailbreak = bool(branch_text)
     jailbreak_mode_verified = bool(eval_mode_calls_jailbreak and "jailbreak" in branch_text.lower())
@@ -391,7 +408,7 @@ def build_verification(source_path: Path) -> dict[str, Any]:
 
     asr_path_text = "\n\n".join(
         [
-            source_segment(text, eval_asr_node),
+            eval_asr_asr_call_text(eval_asr_call_info),
             branch_text,
             jailbreak_text,
         ]
@@ -467,6 +484,9 @@ def build_verification(source_path: Path) -> dict[str, Any]:
             "eval_asr_literal_jailbreak_arg": bool(eval_asr_call_info["literal_jailbreak_arg"]),
             "eval_mode_calls_jailbreak_eval": eval_mode_calls_jailbreak,
             "eval_mode_jailbreak_branch_source": branch_source,
+            "asr_external_hint_scope": (
+                "_eval_mode jailbreak call segment + _eval_mode jailbreak branch + jailbreak_eval"
+            ),
             "call_chain_verified": call_chain_verified,
             "jailbreak_mode_verified": jailbreak_mode_verified,
         },
