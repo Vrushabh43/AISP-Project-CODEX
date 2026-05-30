@@ -9285,3 +9285,43 @@ Safe next gate:
 - it is reasonable to proceed to final artifact integration only after the user
   explicitly requests it and after checking consistency with the existing final
   submission narrative
+
+## 2026-05-30T10:35:20+02:00 Official Rule-Based ASR Sanity Checks Rerun
+
+Server rerun of `scripts/47_official_rule_based_asr_sanity_checks.py` completed
+successfully.
+
+Result:
+
+- sanity pass: true
+- refusal keyword hash confirmed: true
+- refusal keyword count confirmed: true
+- Wilson CIs computed for all focused conditions
+- clean perplexity best condition:
+  `sensaware_top224_gamma_0.25`
+- full harmful prompts printed: false
+- full generated outputs printed: false
+- no model loading, inference, official BackdoorLLM code execution, or API
+  calls
+
+Updated server outputs:
+
+- `logs/official_rule_based_asr_sanity_checks_20260530T073520Z.json`
+- `outputs/official_rule_based_asr_sanity_checks_summary.csv`
+- `OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md`
+
+Backups created by the rerun:
+
+- `outputs/official_rule_based_asr_sanity_checks_summary.bak_20260530T073520Z.csv`
+- `OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.bak_20260530T073520Z.md`
+
+Local check confirmed the latest sanity markdown still reports:
+
+- keyword count: 17
+- keyword hash:
+  `351c6ad9b45d70ea95926ed9bfb760d33dda99843451d0c7fdfeb7d48808d4af`
+- no full-output columns in the ASR output table
+- failures: none
+
+Final submission artifacts, README, final verdict, and report-ready written
+claims remain unchanged.
