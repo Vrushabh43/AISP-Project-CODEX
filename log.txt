@@ -1,0 +1,37 @@
+
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ python scripts/final_pipeline/35_final_submission_consistency_check.py
+Final submission consistency check summary
+- File-only check; no model loading or inference
+- Checks passed: 79 / 79
+- Checks failed: 0
+- Overall passed: True
+- JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/final_logs/final_submission_consistency_check_20260606T175312Z.json
+- CSV summary written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/final_results/final_submission_consistency_check_summary.csv
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ python scripts/final_pipeline/00_run_final_submission.py --mode quick
+Final submission master runner
+- Mode: quick
+- Project root: /home/43e3/solr-home/AISP-Project-CODEX
+- Python executable: /home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python
+- No GPU/model work is performed in quick or verify mode.
+
+[RUN] final_submission_consistency_check
+      Verify cleaned final docs, official rule-based ASR evidence, final artifacts, and core result numbers.
+      python scripts/final_pipeline/35_final_submission_consistency_check.py
+Final submission consistency check summary
+- File-only check; no model loading or inference
+- Checks passed: 79 / 79
+- Checks failed: 0
+- Overall passed: True
+- JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/final_logs/final_submission_consistency_check_20260606T175326Z.json
+- CSV summary written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/final_results/final_submission_consistency_check_summary.csv
+[PASS] final_submission_consistency_check (0.03s)
+
+Final submission master runner summary
+- Mode: quick
+- Steps completed: 1 / 1
+- Passed: 1
+- Failed: 0
+- Overall: PASS
+- JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/final_logs/final_submission_runner_quick_20260606T175326Z.json
+- CSV summary written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/final_results/final_submission_runner_quick_summary.csv
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ ^C
