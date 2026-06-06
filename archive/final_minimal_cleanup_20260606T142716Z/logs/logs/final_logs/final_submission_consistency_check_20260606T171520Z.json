@@ -1,0 +1,406 @@
+{
+  "checks": [
+    {
+      "check": "root file exists: README.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\README.md",
+      "passed": true
+    },
+    {
+      "check": "root file exists: RUN_ORDER.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\RUN_ORDER.md",
+      "passed": true
+    },
+    {
+      "check": "root file exists: SUBMISSION_STRUCTURE.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\SUBMISSION_STRUCTURE.md",
+      "passed": true
+    },
+    {
+      "check": "root file exists: IMPLEMENTATION_NOTES.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\IMPLEMENTATION_NOTES.md",
+      "passed": true
+    },
+    {
+      "check": "root file exists: FINAL_SUBMISSION_VERDICT.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\FINAL_SUBMISSION_VERDICT.md",
+      "passed": true
+    },
+    {
+      "check": "root file exists: OFFICIAL_RULE_BASED_ASR_VERIFICATION.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md",
+      "passed": true
+    },
+    {
+      "check": "root file exists: OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md",
+      "passed": true
+    },
+    {
+      "check": "root file exists: FINAL_CLEANUP_SUMMARY.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\FINAL_CLEANUP_SUMMARY.md",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\official_rule_based_asr_eval_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\official_rule_based_asr_eval_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\official_rule_based_asr_clean_tradeoff_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\official_rule_based_asr_clean_tradeoff_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\official_rule_based_asr_sanity_checks_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\official_rule_based_asr_sanity_checks_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\official_rule_based_asr_verification_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\official_rule_based_asr_verification_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\clean_utility_perplexity_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\clean_utility_perplexity_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\clean_behaviour_similarity_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\clean_behaviour_similarity_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\final_submission_consistency_check_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\final_submission_consistency_check_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\report_ready_main_results.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\report_ready_main_results.md",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\report_ready_key_findings.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\report_ready_key_findings.md",
+      "passed": true
+    },
+    {
+      "check": "result file exists: outputs\\final_results\\report_ready_case_diagnostics_summary.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\report_ready_case_diagnostics_summary.md",
+      "passed": true
+    },
+    {
+      "check": "figure exists: reports\\figures\\report_ready\\official_rule_based_asr_clean_tradeoff.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\reports\\figures\\report_ready\\official_rule_based_asr_clean_tradeoff.png",
+      "passed": true
+    },
+    {
+      "check": "figure exists: reports\\figures\\report_ready\\report_tradeoff_scatter_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\reports\\figures\\report_ready\\report_tradeoff_scatter_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "figure exists: reports\\figures\\report_ready\\report_trigger_rate_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\reports\\figures\\report_ready\\report_trigger_rate_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "figure exists: reports\\figures\\report_ready\\report_trigger_reduction_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\reports\\figures\\report_ready\\report_trigger_reduction_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "figure exists: reports\\figures\\report_ready\\report_clean_utility_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\reports\\figures\\report_ready\\report_clean_utility_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\00_run_final_submission.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\00_run_final_submission.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\02_extract_spectral_stats.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\02_extract_spectral_stats.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\07_generate_spectral_sanitised_adapters.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\07_generate_spectral_sanitised_adapters.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\18_generate_uniform_scaling_adapters.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\18_generate_uniform_scaling_adapters.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\26_clean_sensitivity_probe_expanded.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\26_clean_sensitivity_probe_expanded.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\27_generate_sensitivity_aware_expanded_adapters.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\27_generate_sensitivity_aware_expanded_adapters.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\35_final_submission_consistency_check.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\35_final_submission_consistency_check.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\39c_verify_rule_based_jailbreak_asr.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\39c_verify_rule_based_jailbreak_asr.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\40_create_real_asr_and_clean_utility_prompt_files.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\40_create_real_asr_and_clean_utility_prompt_files.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\42_clean_utility_perplexity_eval.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\42_clean_utility_perplexity_eval.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\45_official_rule_based_asr_eval.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\45_official_rule_based_asr_eval.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\46_official_rule_based_asr_clean_tradeoff.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\46_official_rule_based_asr_clean_tradeoff.py",
+      "passed": true
+    },
+    {
+      "check": "final pipeline script exists: scripts\\final_pipeline\\47_official_rule_based_asr_sanity_checks.py",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\scripts\\final_pipeline\\47_official_rule_based_asr_sanity_checks.py",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\README.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\README.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\RUN_ORDER.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\RUN_ORDER.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\SUBMISSION_STRUCTURE.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\SUBMISSION_STRUCTURE.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\IMPLEMENTATION_NOTES.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\IMPLEMENTATION_NOTES.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\FINAL_SUBMISSION_VERDICT.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\FINAL_SUBMISSION_VERDICT.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\FINAL_CLEANUP_SUMMARY.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\FINAL_CLEANUP_SUMMARY.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\official_rule_based_asr_eval_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\official_rule_based_asr_eval_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\official_rule_based_asr_clean_tradeoff_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\official_rule_based_asr_clean_tradeoff_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\official_rule_based_asr_sanity_checks_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\official_rule_based_asr_sanity_checks_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\official_rule_based_asr_verification_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\official_rule_based_asr_verification_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\clean_utility_perplexity_summary.csv",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\clean_utility_perplexity_summary.csv",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\report_ready_main_results.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\report_ready_main_results.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\report_ready_key_findings.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\report_ready_key_findings.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\results\\report_ready_case_diagnostics_summary.md",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\results\\report_ready_case_diagnostics_summary.md",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\figures\\official_rule_based_asr_clean_tradeoff.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\figures\\official_rule_based_asr_clean_tradeoff.png",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\figures\\report_tradeoff_scatter_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\figures\\report_tradeoff_scatter_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\figures\\report_trigger_rate_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\figures\\report_trigger_rate_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\figures\\report_trigger_reduction_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\figures\\report_trigger_reduction_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "final bundle exists: final_submission_artifacts\\figures\\report_clean_utility_key_methods.png",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts\\figures\\report_clean_utility_key_methods.png",
+      "passed": true
+    },
+    {
+      "check": "final_submission_artifacts directory exists",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\final_submission_artifacts",
+      "passed": true
+    },
+    {
+      "check": "outputs/final_results directory exists",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results",
+      "passed": true
+    },
+    {
+      "check": "logs/final_logs directory exists",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\logs\\final_logs",
+      "passed": true
+    },
+    {
+      "check": "dev/smoke scripts archived from root scripts",
+      "detail": "No root-level scripts/*.py should remain after final minimal cleanup.",
+      "passed": true
+    },
+    {
+      "check": "final_submission_artifacts excludes old CSVs",
+      "detail": "Old heuristic CSVs should be archived, not included in professor-facing artifacts.",
+      "passed": true
+    },
+    {
+      "check": "AGENT not final-visible root file",
+      "detail": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\AGENT.md",
+      "passed": true
+    },
+    {
+      "check": "archived AGENT exists",
+      "detail": "D:/OTH/SEM-3/AI-Privacy/AISP-Project-CODEX/archive/final_cleanup_20260530T113656/superseded_project_memory/AGENT.md",
+      "passed": true
+    },
+    {
+      "check": "ASR label verified",
+      "detail": "BackdoorLLM official rule-based jailbreak ASR",
+      "passed": true
+    },
+    {
+      "check": "is_official_asr true",
+      "detail": "True",
+      "passed": true
+    },
+    {
+      "check": "is_external_judged_asr false",
+      "detail": "False",
+      "passed": true
+    },
+    {
+      "check": "official ASR count: original",
+      "detail": "observed=36/99, expected=36/99",
+      "passed": true
+    },
+    {
+      "check": "official ASR count: uniform_gamma_0.25",
+      "detail": "observed=13/99, expected=13/99",
+      "passed": true
+    },
+    {
+      "check": "official ASR count: uniform_gamma_0.50",
+      "detail": "observed=7/99, expected=7/99",
+      "passed": true
+    },
+    {
+      "check": "official ASR count: top3_gamma_0.50",
+      "detail": "observed=7/99, expected=7/99",
+      "passed": true
+    },
+    {
+      "check": "official ASR count: sensaware_top224_gamma_0.25",
+      "detail": "observed=1/99, expected=1/99",
+      "passed": true
+    },
+    {
+      "check": "sensaware clean-reference perplexity",
+      "detail": "observed=3.557692, expected=3.557692",
+      "passed": true
+    },
+    {
+      "check": "README no required AGENT mention",
+      "detail": "README should not require AGENT.md",
+      "passed": true
+    },
+    {
+      "check": "official ASR label in README/verdict",
+      "detail": "README/verdict should name the official rule-based ASR metric.",
+      "passed": true
+    },
+    {
+      "check": "no external-judged ASR claim",
+      "detail": "README/verdict should explicitly say ASR is not external-judged.",
+      "passed": true
+    },
+    {
+      "check": "Wilson intervals mentioned",
+      "detail": "README/verdict should mention Wilson intervals.",
+      "passed": true
+    },
+    {
+      "check": "project-local deterministic INST caveat",
+      "detail": "README/verdict should include project-local deterministic [INST] caveat.",
+      "passed": true
+    },
+    {
+      "check": "no full harmful prompts or outputs in final-facing markdown",
+      "detail": "No prompt/output-like payloads detected.",
+      "passed": true
+    }
+  ],
+  "failed_count": 0,
+  "is_inference": false,
+  "is_model_loading": false,
+  "passed": true,
+  "passed_count": 79,
+  "script": "scripts\\final_pipeline\\35_final_submission_consistency_check.py",
+  "timestamp_utc": "20260606T171520Z"
+}

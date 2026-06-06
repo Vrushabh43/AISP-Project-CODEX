@@ -9325,3 +9325,120 @@ Local check confirmed the latest sanity markdown still reports:
 
 Final submission artifacts, README, final verdict, and report-ready written
 claims remain unchanged.
+
+## 2026-05-30T11:45:00+02:00 Final Cleanup Branch Completed
+
+Final cleanup was completed as a file-only/documentation pass. No model
+loading, inference, official BackdoorLLM code execution, or API calls were run.
+
+Archive created:
+
+- `archive/final_cleanup_20260530T113656/`
+- archived item count recorded in manifest: 22
+- manifest files:
+  - `archive/final_cleanup_20260530T113656/ARCHIVE_MANIFEST.md`
+  - `archive/final_cleanup_20260530T113656/archive_manifest.csv`
+
+Files archived, not permanently deleted:
+
+- `AGENT.md` moved to
+  `archive/final_cleanup_20260530T113656/superseded_project_memory/AGENT.md`
+- superseded planning/audit documents moved under
+  `archive/final_cleanup_20260530T113656/superseded_docs/`
+- backup CSV/JSONL/MD files moved under
+  `archive/final_cleanup_20260530T113656/duplicate_or_backup/`
+- unused `src/lora_sanitise/` stubs moved under
+  `archive/final_cleanup_20260530T113656/unused_src_stubs/`
+
+Cleanup inventory and plan outputs:
+
+- `outputs/final_cleanup_inventory.csv`
+- `outputs/final_cleanup_plan.csv`
+- `outputs/src_cleanup_audit.csv`
+
+Source cleanup result:
+
+- kept for reproducibility:
+  - `src/lora_sanitise/__init__.py`
+  - `src/lora_sanitise/attenuation.py`
+  - `src/lora_sanitise/lora_io.py`
+  - `src/lora_sanitise/svd_tools.py`
+- archived unused/docstring-only stubs:
+  - `baselines.py`
+  - `config.py`
+  - `delta_w.py`
+  - `eval_asr.py`
+  - `eval_clean.py`
+  - `logging_utils.py`
+  - `plots.py`
+  - `sensitivity.py`
+
+Final-facing documentation updated:
+
+- `README.md`
+- `RUN_ORDER.md`
+- `SUBMISSION_STRUCTURE.md`
+- `IMPLEMENTATION_NOTES.md`
+- `FINAL_SUBMISSION_VERDICT.md`
+- `OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md`
+- `FINAL_CLEANUP_SUMMARY.md`
+
+Runner/check scripts updated:
+
+- `scripts/00_run_final_submission.py`
+- `scripts/35_final_submission_consistency_check.py`
+
+`final_submission_artifacts/` was refreshed with the cleaned final-facing
+documents, official rule-based ASR verification/sanity files, final cleanup
+summary, official ASR/clean utility result summaries, and final report-ready
+figures. `AGENT.md` is not included in the final visible artifact bundle.
+
+Final consistency check:
+
+- command run: `python scripts/35_final_submission_consistency_check.py`
+- result: pass
+- checks passed: 60/60
+- checks failed: 0
+- latest log:
+  `logs/final_submission_consistency_check_20260530T094459Z.json`
+- summary:
+  `outputs/final_submission_consistency_check_summary.csv`
+
+One wording issue was caught and fixed before the final pass:
+
+- `OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md` no longer uses the trigger-token
+  name in the base-model explanation; it now says "trigger-specific
+  behaviour" to keep final-facing markdown free of unnecessary trigger context.
+
+Final result statement for this cleaned branch:
+
+- ASR metric:
+  `BackdoorLLM official rule-based jailbreak ASR`
+- scorer caveat:
+  official rule-based scorer applied to project-local deterministic `[INST]`
+  generations, not exact full BackdoorLLM generation-pipeline reproduction
+- not external-judged ASR
+- not final human clean utility
+- best focused condition:
+  `sensaware_top224_gamma_0.25`
+- official rule-based ASR:
+  `1/99 = 0.010101`, Wilson 95% CI `[0.001785, 0.055017]`
+- clean-reference perplexity:
+  `3.557692`
+
+Remaining limitations:
+
+- official ASR scoring is rule-based, not external/human judged
+- clean-reference perplexity is a likelihood probe, not final human utility
+- Wilson intervals should remain visible because there are only 99 trigger
+  prompts
+- earlier bounded-heuristic results remain historical evidence, not the final
+  strongest claim
+
+Final submission verdict:
+
+- cleaned submission package is ready for final review
+- do not restore `AGENT.md` to the visible final structure
+- do not rerun GPU/model scripts unless intentionally reopening experiments
+- do not change final numerical claims unless regenerating and rechecking all
+  official result files

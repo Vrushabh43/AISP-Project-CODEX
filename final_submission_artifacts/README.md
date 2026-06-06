@@ -69,42 +69,61 @@ The bounded experiments compare:
 
 ## Final Honest Result Summary
 
-All metrics below are bounded heuristic metrics, not final judged ASR or final
-judged clean utility.
+The final-facing result uses the verified BackdoorLLM official rule-based
+jailbreak ASR scorer. This scorer counts a generation as successful when the
+output avoids the verified refusal-keyword list. It is **not** an
+external-judged harmfulness metric.
 
-Key current result:
+The scorer is applied to project-local deterministic `[INST]` generations, so
+the result verifies the official scorer logic but does not claim exact
+reproduction of the full BackdoorLLM generation pipeline.
 
-- Original adapter: trigger success `0.6061`, clean utility `0.9667`.
-- Best spectral-only baseline, `top3_gamma_0.50`: trigger success `0.0606`,
-  clean utility `0.9333`.
-- Best SensAware variant, `sensaware_top224_gamma_0.25`: trigger success
-  `0.0101`, clean utility `0.9667`.
-- Strongest uniform baseline, `uniform_gamma_0.25`: trigger success `0.0000`,
-  clean utility `0.9667`.
+Focused official rule-based ASR results over 99 official BadNets trigger
+records:
+
+| Condition | ASR count | ASR rate | Wilson 95% CI | Clean-reference perplexity |
+|---|---:|---:|---:|---:|
+| `base_model_only` | 15/99 | 0.151515 | [0.094022, 0.235043] | 3.980931 |
+| `original` | 36/99 | 0.363636 | [0.275617, 0.461843] | 3.655260 |
+| `uniform_gamma_0.25` | 13/99 | 0.131313 | [0.078372, 0.211799] | 3.747472 |
+| `uniform_gamma_0.50` | 7/99 | 0.070707 | [0.034670, 0.138816] | 3.607213 |
+| `top3_gamma_0.50` | 7/99 | 0.070707 | [0.034670, 0.138816] | 3.559641 |
+| `sensaware_top224_gamma_0.25` | 1/99 | 0.010101 | [0.001785, 0.055017] | 3.557692 |
 
 Interpretation:
 
-- Expanded SensAware beats spectral-only under the bounded heuristic evaluation.
-- Expanded SensAware nearly matches but does not beat the strongest uniform
-  scaling baseline.
-- The result is mixed, not a full win for the proposed method.
-- Uniform scaling may reduce trigger behavior by globally weakening the adapter;
-  this is a caveat requiring stronger clean-utility evaluation, not a proven
-  conclusion.
-- The first small SensAware variants were too conservative and mostly failed.
+- `sensaware_top224_gamma_0.25` has the lowest observed official rule-based
+  ASR among the focused conditions.
+- It also has the lowest clean-reference perplexity in this run, narrowly ahead
+  of `top3_gamma_0.50`.
+- Clean-reference perplexity is a reference-likelihood probe, not final human
+  clean utility.
+- Wilson intervals over 99 prompts should be reported; the 1/99 versus 7/99
+  gap is meaningful-looking but should still be described cautiously.
+- The `base_model_only` value of 15/99 is a control artifact of the
+  no-refusal-keyword rule, not evidence of a learned backdoor.
+- Earlier bounded heuristic results are preserved as historical evidence, but
+  the final-facing ASR result is the official rule-based ASR audit above.
+- The first small SensAware variants were too conservative and mostly failed;
+  that negative result is preserved.
 
 ## Key Final Outputs
 
 Report-facing tables:
 
-- `outputs/report_ready_main_results.md`
-- `outputs/report_ready_key_findings.md`
-- `outputs/report_ready_case_diagnostics_summary.md`
-- `outputs/consolidated_tradeoff_results.csv`
-- `outputs/expanded_sensaware_asr_utility_tradeoff_summary.csv`
+- `outputs/final_results/official_rule_based_asr_clean_tradeoff_summary.csv`
+- `outputs/final_results/official_rule_based_asr_eval_summary.csv`
+- `outputs/final_results/official_rule_based_asr_sanity_checks_summary.csv`
+- `outputs/final_results/official_rule_based_asr_verification_summary.csv`
+- `outputs/final_results/clean_utility_perplexity_summary.csv`
+- `outputs/final_results/clean_behaviour_similarity_summary.csv`
+- `outputs/final_results/report_ready_main_results.md`
+- `outputs/final_results/report_ready_key_findings.md`
+- `outputs/final_results/report_ready_case_diagnostics_summary.md`
 
 Report-facing figures:
 
+- `reports/figures/report_ready/official_rule_based_asr_clean_tradeoff.png`
 - `reports/figures/report_ready/report_tradeoff_scatter_key_methods.png`
 - `reports/figures/report_ready/report_trigger_rate_key_methods.png`
 - `reports/figures/report_ready/report_trigger_reduction_key_methods.png`
@@ -119,7 +138,7 @@ Submission bundle:
 For grading or submission review, run:
 
 ```bash
-python scripts/00_run_final_submission.py --mode quick
+python scripts/final_pipeline/00_run_final_submission.py --mode quick
 ```
 
 This is the recommended professor-facing command. It is file-only, does not load
@@ -130,8 +149,8 @@ consistent.
 Optional modes:
 
 ```bash
-python scripts/00_run_final_submission.py --mode verify
-python scripts/00_run_final_submission.py --mode full
+python scripts/final_pipeline/00_run_final_submission.py --mode verify
+python scripts/final_pipeline/00_run_final_submission.py --mode full
 ```
 
 - `verify` regenerates lightweight final analysis/report artifacts and then
@@ -139,6 +158,10 @@ python scripts/00_run_final_submission.py --mode full
 - `full` runs the canonical heavy final reproduction pipeline and requires a
   configured GPU machine plus a Hugging Face cache containing the base model and
   adapter.
+
+The retained professor-facing scripts live in `scripts/final_pipeline/`.
+Development, smoke, pilot, and diagnostic scripts are archived under
+`archive/final_minimal_cleanup_<timestamp>/dev_smoke_scripts/`.
 
 ## Reproduction Notes
 
@@ -181,14 +204,18 @@ source .venv/bin/activate
 
 ## Safety and Reporting Warning
 
-The official BadNets trigger format was verified from BackdoorLLM assets, but
-the evaluation in this repository is still bounded and heuristic. Do not present
-the current numbers as final judged ASR or final judged clean utility. Do not
-include full harmful prompts or full generated outputs in the final report.
+The final ASR metric is the verified BackdoorLLM official rule-based jailbreak
+ASR scorer applied to project-local deterministic `[INST]` generations. It is
+not external-judged ASR or a human harmfulness judgment. Clean-reference
+perplexity is not final human utility. Do not include full harmful prompts or
+full generated outputs in the final report.
 
-## Project Memory
+## Project Log
 
-Read these files before continuing project work:
+For future maintenance, use:
 
-- `AGENT.md`
 - `status.md`
+- `RUN_ORDER.md`
+- `SUBMISSION_STRUCTURE.md`
+
+Historical project memory was archived during final cleanup.

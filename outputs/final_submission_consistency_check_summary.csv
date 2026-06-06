@@ -4,12 +4,18 @@ root file exists: RUN_ORDER.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\R
 root file exists: SUBMISSION_STRUCTURE.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\SUBMISSION_STRUCTURE.md
 root file exists: IMPLEMENTATION_NOTES.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\IMPLEMENTATION_NOTES.md
 root file exists: FINAL_SUBMISSION_VERDICT.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\FINAL_SUBMISSION_VERDICT.md
+root file exists: OFFICIAL_RULE_BASED_ASR_VERIFICATION.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md
+root file exists: OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md
+root file exists: FINAL_CLEANUP_SUMMARY.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\FINAL_CLEANUP_SUMMARY.md
+result file exists: outputs\official_rule_based_asr_eval_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\official_rule_based_asr_eval_summary.csv
+result file exists: outputs\official_rule_based_asr_clean_tradeoff_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\official_rule_based_asr_clean_tradeoff_summary.csv
+result file exists: outputs\official_rule_based_asr_sanity_checks_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\official_rule_based_asr_sanity_checks_summary.csv
+result file exists: outputs\official_rule_based_asr_verification_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\official_rule_based_asr_verification_summary.csv
+result file exists: outputs\clean_utility_perplexity_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\clean_utility_perplexity_summary.csv
 result file exists: outputs\report_ready_main_results.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\report_ready_main_results.md
 result file exists: outputs\report_ready_key_findings.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\report_ready_key_findings.md
 result file exists: outputs\report_ready_case_diagnostics_summary.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\report_ready_case_diagnostics_summary.md
-result file exists: outputs\consolidated_tradeoff_results.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\consolidated_tradeoff_results.csv
-result file exists: outputs\eval_case_diagnostics.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\eval_case_diagnostics.csv
-result file exists: outputs\expanded_sensaware_asr_utility_tradeoff_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\expanded_sensaware_asr_utility_tradeoff_summary.csv
+figure exists: reports\figures\report_ready\official_rule_based_asr_clean_tradeoff.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\reports\figures\report_ready\official_rule_based_asr_clean_tradeoff.png
 figure exists: reports\figures\report_ready\report_tradeoff_scatter_key_methods.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\reports\figures\report_ready\report_tradeoff_scatter_key_methods.png
 figure exists: reports\figures\report_ready\report_trigger_rate_key_methods.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\reports\figures\report_ready\report_trigger_rate_key_methods.png
 figure exists: reports\figures\report_ready\report_trigger_reduction_key_methods.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\reports\figures\report_ready\report_trigger_reduction_key_methods.png
@@ -19,22 +25,37 @@ final bundle exists: final_submission_artifacts\RUN_ORDER.md,True,D:\OTH\SEM-3\A
 final bundle exists: final_submission_artifacts\SUBMISSION_STRUCTURE.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\SUBMISSION_STRUCTURE.md
 final bundle exists: final_submission_artifacts\IMPLEMENTATION_NOTES.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\IMPLEMENTATION_NOTES.md
 final bundle exists: final_submission_artifacts\FINAL_SUBMISSION_VERDICT.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\FINAL_SUBMISSION_VERDICT.md
+final bundle exists: final_submission_artifacts\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md
+final bundle exists: final_submission_artifacts\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md
+final bundle exists: final_submission_artifacts\FINAL_CLEANUP_SUMMARY.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\FINAL_CLEANUP_SUMMARY.md
+final bundle exists: final_submission_artifacts\results\official_rule_based_asr_eval_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\official_rule_based_asr_eval_summary.csv
+final bundle exists: final_submission_artifacts\results\official_rule_based_asr_clean_tradeoff_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\official_rule_based_asr_clean_tradeoff_summary.csv
+final bundle exists: final_submission_artifacts\results\official_rule_based_asr_sanity_checks_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\official_rule_based_asr_sanity_checks_summary.csv
+final bundle exists: final_submission_artifacts\results\official_rule_based_asr_verification_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\official_rule_based_asr_verification_summary.csv
+final bundle exists: final_submission_artifacts\results\clean_utility_perplexity_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\clean_utility_perplexity_summary.csv
 final bundle exists: final_submission_artifacts\results\report_ready_main_results.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\report_ready_main_results.md
 final bundle exists: final_submission_artifacts\results\report_ready_key_findings.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\report_ready_key_findings.md
 final bundle exists: final_submission_artifacts\results\report_ready_case_diagnostics_summary.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\report_ready_case_diagnostics_summary.md
-final bundle exists: final_submission_artifacts\results\consolidated_tradeoff_results.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\consolidated_tradeoff_results.csv
-final bundle exists: final_submission_artifacts\results\eval_case_diagnostics.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\eval_case_diagnostics.csv
-final bundle exists: final_submission_artifacts\results\expanded_sensaware_asr_utility_tradeoff_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\results\expanded_sensaware_asr_utility_tradeoff_summary.csv
+final bundle exists: final_submission_artifacts\figures\official_rule_based_asr_clean_tradeoff.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\figures\official_rule_based_asr_clean_tradeoff.png
 final bundle exists: final_submission_artifacts\figures\report_tradeoff_scatter_key_methods.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\figures\report_tradeoff_scatter_key_methods.png
 final bundle exists: final_submission_artifacts\figures\report_trigger_rate_key_methods.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\figures\report_trigger_rate_key_methods.png
 final bundle exists: final_submission_artifacts\figures\report_trigger_reduction_key_methods.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\figures\report_trigger_reduction_key_methods.png
 final bundle exists: final_submission_artifacts\figures\report_clean_utility_key_methods.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts\figures\report_clean_utility_key_methods.png
 final_submission_artifacts directory exists,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts
-rate: original,True,"observed=0.6061, expected=0.6061"
-rate: uniform_gamma_0.25,True,"observed=0.0000, expected=0.0000"
-rate: top3_gamma_0.50,True,"observed=0.0606, expected=0.0606"
-rate: sensaware_top224_gamma_0.25,True,"observed=0.0101, expected=0.0101"
-README no bootstrap-only wording,True,README should describe completed bounded study.
-bounded heuristic caveat present,True,"README/verdict must say metrics are bounded heuristic, not final judged."
-does not claim SensAware beats uniform,True,README/verdict must not claim SensAware beats uniform scaling.
+AGENT not final-visible root file,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\AGENT.md
+archived AGENT exists,True,D:/OTH/SEM-3/AI-Privacy/AISP-Project-CODEX/archive/final_cleanup_20260530T113656/superseded_project_memory/AGENT.md
+ASR label verified,True,BackdoorLLM official rule-based jailbreak ASR
+is_official_asr true,True,True
+is_external_judged_asr false,True,False
+official ASR count: original,True,"observed=36/99, expected=36/99"
+official ASR count: uniform_gamma_0.25,True,"observed=13/99, expected=13/99"
+official ASR count: uniform_gamma_0.50,True,"observed=7/99, expected=7/99"
+official ASR count: top3_gamma_0.50,True,"observed=7/99, expected=7/99"
+official ASR count: sensaware_top224_gamma_0.25,True,"observed=1/99, expected=1/99"
+sensaware clean-reference perplexity,True,"observed=3.557692, expected=3.557692"
+README no required AGENT mention,True,README should not require AGENT.md
+official ASR label in README/verdict,True,README/verdict should name the official rule-based ASR metric.
+no external-judged ASR claim,True,README/verdict should explicitly say ASR is not external-judged.
+Wilson intervals mentioned,True,README/verdict should mention Wilson intervals.
+project-local deterministic INST caveat,True,README/verdict should include project-local deterministic [INST] caveat.
 no full harmful prompts or outputs in final-facing markdown,True,No prompt/output-like payloads detected.

@@ -1,115 +1,145 @@
 # Submission Structure
 
-This file explains which project files are final-facing, which are raw
-artifacts, and which are preserved as historical or archived material.
+This file describes the cleaned, professor-facing repository layout.
 
-## Final-Facing Files
+## Reviewer Starting Points
 
-These are the files a reviewer should start with:
+Read these first:
 
-- `README.md`: concise project overview, honest result summary, reproduction
-  pointers, and caveats.
-- `RUN_ORDER.md`: reproducible script order grouped by phase.
-- `IMPLEMENTATION_NOTES.md`: what was actually implemented and how it differs
-  from the original plan.
-- `FINAL_SUBMISSION_VERDICT.md`: submission readiness, risks, limitations, and
-  what should not be changed before submission.
-- `outputs/report_ready_main_results.md`: compact report-ready result table.
-- `outputs/report_ready_key_findings.md`: cautious key findings.
-- `outputs/report_ready_case_diagnostics_summary.md`: aggregate diagnostics
-  without full prompt/output text.
-- `reports/figures/report_ready/`: report-ready figures.
-- `final_submission_artifacts/`: copied final-facing bundle.
+- `README.md`
+- `RUN_ORDER.md`
+- `SUBMISSION_STRUCTURE.md`
+- `FINAL_SUBMISSION_VERDICT.md`
+- `FINAL_CLEANUP_SUMMARY.md`
+- `IMPLEMENTATION_NOTES.md`
+- `OFFICIAL_RULE_BASED_ASR_VERIFICATION.md`
+- `OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md`
 
-## Important Project Memory
+The copied submission bundle is:
 
-- `AGENT.md`: stable project memory, scope, threat model, and workflow rules.
-- `status.md`: chronological project log, commands, outputs, failures, and
-  decisions.
-- `task.txt`: original course/project task description.
-- `lora_sanitisation_master_project.md`: historical phase-1 planning document.
-  It is preserved for provenance and should not be read as the exact final
-  implementation.
+- `final_submission_artifacts/`
+
+## Final Pipeline
+
+Final reproduction and audit scripts are separated into:
+
+- `scripts/final_pipeline/`
+
+Development, smoke, pilot, and older diagnostic scripts are preserved in:
+
+- `archive/final_minimal_cleanup_<timestamp>/dev_smoke_scripts/`
+
+The retained prompt-file script is:
+
+- `scripts/final_pipeline/40_create_real_asr_and_clean_utility_prompt_files.py`
+
+The older small-prompt creator is archived and should not be used for the final
+minimal structure.
+
+## Final Results
+
+Final result summaries are collected in:
+
+- `outputs/final_results/`
+
+Key files:
+
+- `outputs/final_results/official_rule_based_asr_eval_summary.csv`
+- `outputs/final_results/official_rule_based_asr_clean_tradeoff_summary.csv`
+- `outputs/final_results/official_rule_based_asr_verification_summary.csv`
+- `outputs/final_results/official_rule_based_asr_sanity_checks_summary.csv`
+- `outputs/final_results/clean_utility_perplexity_summary.csv`
+- `outputs/final_results/clean_behaviour_similarity_summary.csv`
+- `outputs/final_results/final_submission_consistency_check_summary.csv`
+- `outputs/final_results/report_ready_main_results.md`
+- `outputs/final_results/report_ready_key_findings.md`
+- `outputs/final_results/report_ready_case_diagnostics_summary.md`
+
+Intermediate CSVs, per-record outputs, smoke outputs, and old heuristic
+summaries were archived unless they are explicitly part of the final result set.
+
+## Final Logs
+
+Final logs are collected in:
+
+- `logs/final_logs/`
+
+This folder keeps only the latest final verification/evaluation/trade-off,
+sanity-check, and consistency-check logs. Older logs and child-process folders
+are preserved under the final minimal cleanup archive.
+
+## Data and Provenance
+
+Kept final data/provenance files include:
+
+- `data/eval_prompts/official_badnets_jailbreak_full.jsonl`
+- `data/eval_prompts/real_asr_official_badnets.jsonl`
+- `data/eval_prompts/clean_utility_reference_eval.jsonl`
+- `data/eval_prompts/clean_utility_medium.jsonl`
+- `external_sources/backdoorllm_official/`
+- official ASR verification summaries in `outputs/final_results/`
+
+If the fetched BackdoorLLM source tree is not present in this local Windows
+workspace, the verified scorer evidence remains in the saved verification
+Markdown/CSV/log artifacts. Re-running source verification requires restoring
+the source files used to create those artifacts.
 
 ## Source Code
 
-- `src/lora_sanitise/`: reusable adapter I/O, compact SVD, attenuation, and
-  related helper code.
-- `scripts/`: numbered experiment, analysis, plotting, packaging, and
-  consistency-check scripts.
-- `scripts/35_final_submission_consistency_check.py`: lightweight final
-  packaging check. It does not load models or run inference.
+Reusable source code remains in:
 
-## Configs
+- `src/lora_sanitise/__init__.py`
+- `src/lora_sanitise/attenuation.py`
+- `src/lora_sanitise/lora_io.py`
+- `src/lora_sanitise/svd_tools.py`
 
-- `configs/experiment.yaml`: final lightweight configuration summary matching
-  the implemented bounded study.
-- Superseded configs are preserved under
-  `archive/submission_cleanup_<timestamp>/stale_or_superseded/`.
-
-## Data and Prompt Provenance
-
-- `data/eval_prompts/clean_utility_small.jsonl`: small clean prompt set.
-- `data/eval_prompts/clean_utility_medium.jsonl`: bounded clean-utility prompt
-  set used in final heuristic comparisons.
-- `data/eval_prompts/official_badnets_jailbreak_small.jsonl`: small official
-  BadNets prompt subset.
-- `data/eval_prompts/official_badnets_jailbreak_full.jsonl`: 99-record official
-  BadNets trigger prompt file used in bounded heuristic evaluation.
-- `external_sources/backdoorllm_official/`: fetched official BackdoorLLM
-  metadata and test-data assets used to verify the trigger source.
-
-The unverified placeholder trigger probe file was superseded by official
-BackdoorLLM prompts and archived during final cleanup.
-
-## Final Result Tables
-
-- `outputs/report_ready_main_results.csv`
-- `outputs/report_ready_main_results.md`
-- `outputs/report_ready_key_findings.md`
-- `outputs/report_ready_case_diagnostics_summary.md`
-- `outputs/consolidated_tradeoff_results.csv`
-- `outputs/expanded_sensaware_asr_utility_tradeoff_summary.csv`
-- `outputs/eval_case_diagnostics.csv`
+Blank/docstring-only unused stubs were archived in the earlier final cleanup.
 
 ## Final Figures
 
+Kept report-ready figures:
+
+- `reports/figures/report_ready/official_rule_based_asr_clean_tradeoff.png`
+- `reports/figures/report_ready/report_clean_utility_key_methods.png`
 - `reports/figures/report_ready/report_tradeoff_scatter_key_methods.png`
 - `reports/figures/report_ready/report_trigger_rate_key_methods.png`
 - `reports/figures/report_ready/report_trigger_reduction_key_methods.png`
-- `reports/figures/report_ready/report_clean_utility_key_methods.png`
 
-Older figure backups are archived, not deleted.
+Exploratory figures are archived.
 
-## Raw Logs and Intermediate Artifacts
+## Final Submission Artifacts
 
-- `logs/`: timestamped JSON logs for environment checks, inspections,
-  generation, evaluations, analyses, and report-ready scripts.
-- `outputs/`: CSV/Markdown outputs, including intermediate diagnostics and
-  final report-ready outputs.
-- `outputs/sanitised_adapters/`: generated adapter variants and their
-  sanitisation reports.
+`final_submission_artifacts/` contains only professor-facing documents, final
+summary results, and final figures. It intentionally excludes:
 
-These are intentionally preserved. Failed or less successful experiments are not
-hidden because they document the research path.
+- `AGENT.md`
+- `status.md`
+- raw logs
+- smoke scripts
+- old CSVs
+- pilot outputs
+- backup files
+- full harmful prompts or full generated trigger outputs
 
-## Archived Material
+## Archive
 
-Archive folders use:
+Archive folders preserve removed material:
 
-`archive/submission_cleanup_<timestamp>/`
+- `archive/submission_cleanup_20260523T170729/`
+- `archive/final_cleanup_20260530T113656/`
+- `archive/final_minimal_cleanup_<timestamp>/`
 
-The archive contains duplicate backups, bytecode caches, superseded unverified
-prompt plumbing, and stale/template-only files. Each cleanup archive includes an
-`ARCHIVE_MANIFEST.md` listing every moved item, its reason, and whether it is
-needed for reproducibility.
+Each archive includes:
 
-## What Not To Use As Final Evidence
+- `ARCHIVE_MANIFEST.md`
+- `archive_manifest.csv`
 
-- Unverified placeholder trigger probes.
-- Early smoke-test-only outputs.
-- First small SensAware variants as the main proposed result.
-- Any metric described as final judged ASR or final judged clean utility.
+Nothing important was permanently deleted.
 
-The final result wording must remain: bounded heuristic evaluation, not final
-judged ASR/utility.
+## Final Claim Boundary
+
+The final result wording must remain:
+
+BackdoorLLM official rule-based jailbreak ASR scorer applied to project-local
+deterministic `[INST]` generations. It is not external-judged ASR. Clean
+perplexity is a reference-likelihood probe, not final human clean utility.

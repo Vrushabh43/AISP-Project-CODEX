@@ -1,9 +1,0 @@
-row_type,variant_name,kind,adapter_path,passed,peft_config_ok,peft_type,task_type,rank,target_modules_ok,safetensors_ok,tensor_count,lora_A_count,lora_B_count,complete_pair_count,incomplete_pair_count,unique_ranks,adapter_attach_attempted,base_loaded,adapter_attached,tiny_forward_check_attempted,tiny_forward_check_ok,oom,error
-adapter_only,original,original,/home/huggingface/hub/models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets/snapshots/408295cd17df70e5164e7692e2aa3c5b9e2e4f3b,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-adapter_only,top1_gamma_0.0,sanitised,outputs/sanitised_adapters/top1_gamma_0.0,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-adapter_only,top1_gamma_0.25,sanitised,outputs/sanitised_adapters/top1_gamma_0.25,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-adapter_only,top1_gamma_0.50,sanitised,outputs/sanitised_adapters/top1_gamma_0.50,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-adapter_only,top3_gamma_0.0,sanitised,outputs/sanitised_adapters/top3_gamma_0.0,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-adapter_only,top3_gamma_0.25,sanitised,outputs/sanitised_adapters/top3_gamma_0.25,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-adapter_only,top3_gamma_0.50,sanitised,outputs/sanitised_adapters/top3_gamma_0.50,True,True,LORA,CAUSAL_LM,8,True,True,448,224,224,224,0,[8],False,,,,,,
-base_attach,top1_gamma_0.50,optional_base_attach,outputs/sanitised_adapters/top1_gamma_0.50,True,,,,,,,,,,,,,True,True,True,True,True,False,

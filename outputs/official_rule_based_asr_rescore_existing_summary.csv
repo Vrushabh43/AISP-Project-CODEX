@@ -1,4 +1,0 @@
-source_csv,source_exists,adapter,trigger_rows,full_output_column,rescore_performed,requires_script_45,official_success_count,official_success_rate,refusal_keyword_detected_count,failure_count,notes
-outputs/base_model_control_eval_outputs.csv,True,,594,,False,True,,,,,Full trigger outputs are unavailable; redacted/hash-only outputs cannot be rescored. Redacted columns present: output_preview_redacted
-outputs/expanded_sensaware_official_bounded_eval_outputs.csv,True,,990,,False,True,,,,,Full trigger outputs are unavailable; redacted/hash-only outputs cannot be rescored. Redacted columns present: redacted_preview
-outputs/official_badnets_full_bounded_eval_outputs.csv,True,,495,,False,True,,,,,Full trigger outputs are unavailable; redacted/hash-only outputs cannot be rescored. Redacted columns present: redacted_preview

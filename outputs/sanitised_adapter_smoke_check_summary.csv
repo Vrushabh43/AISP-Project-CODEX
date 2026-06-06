@@ -1,7 +1,0 @@
-variant_name,passed,adapter_config_exists,adapter_model_exists,sanitisation_report_exists,config_ok,tensor_count,lora_A_count,lora_B_count,complete_pair_count,incomplete_pair_count,unique_ranks,target_module_hints,all_required_target_modules_exist,all_finite,shapes_match_original,report_ok,modules_edited,selected_k,gamma,warnings,errors
-top1_gamma_0.0,True,True,True,True,True,448,224,224,224,0,[8],"[""down_proj"", ""gate_proj"", ""k_proj"", ""o_proj"", ""q_proj"", ""up_proj"", ""v_proj""]",True,True,True,True,224,1,0.0,[],[]
-top1_gamma_0.25,True,True,True,True,True,448,224,224,224,0,[8],"[""down_proj"", ""gate_proj"", ""k_proj"", ""o_proj"", ""q_proj"", ""up_proj"", ""v_proj""]",True,True,True,True,224,1,0.25,[],[]
-top1_gamma_0.50,True,True,True,True,True,448,224,224,224,0,[8],"[""down_proj"", ""gate_proj"", ""k_proj"", ""o_proj"", ""q_proj"", ""up_proj"", ""v_proj""]",True,True,True,True,224,1,0.5,[],[]
-top3_gamma_0.0,True,True,True,True,True,448,224,224,224,0,[8],"[""down_proj"", ""gate_proj"", ""k_proj"", ""o_proj"", ""q_proj"", ""up_proj"", ""v_proj""]",True,True,True,True,224,3,0.0,[],[]
-top3_gamma_0.25,True,True,True,True,True,448,224,224,224,0,[8],"[""down_proj"", ""gate_proj"", ""k_proj"", ""o_proj"", ""q_proj"", ""up_proj"", ""v_proj""]",True,True,True,True,224,3,0.25,[],[]
-top3_gamma_0.50,True,True,True,True,True,448,224,224,224,0,[8],"[""down_proj"", ""gate_proj"", ""k_proj"", ""o_proj"", ""q_proj"", ""up_proj"", ""v_proj""]",True,True,True,True,224,3,0.5,[],[]

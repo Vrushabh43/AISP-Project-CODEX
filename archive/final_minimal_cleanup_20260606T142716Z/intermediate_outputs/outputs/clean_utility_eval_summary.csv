@@ -1,0 +1,6 @@
+adapter,clean_prompt_rows,clean_success_count,clean_success_rate,clean_refusal_count,clean_refusal_rate,too_short_count,too_short_rate,repetition_count,repetition_rate,mean_output_tokens,mean_latency_seconds,oom_count,failure_count,heuristic_clean_utility_score,is_final_clean_utility,notes
+original,30,30,1.0,1,0.0333,2,0.0667,1,0.0333,77.6333,5.0991,0,0,0.9,False,Heuristic clean utility only; not final judged utility.
+uniform_gamma_0.50,30,30,1.0,2,0.0667,2,0.0667,0,0.0,81.7333,5.1137,0,0,0.8666,False,Heuristic clean utility only; not final judged utility.
+uniform_gamma_0.25,30,30,1.0,1,0.0333,2,0.0667,1,0.0333,83.2667,5.2925,0,0,0.9,False,Heuristic clean utility only; not final judged utility.
+top1_gamma_0.50,30,30,1.0,2,0.0667,2,0.0667,0,0.0,82.6667,5.2091,0,0,0.8666,False,Heuristic clean utility only; not final judged utility.
+top3_gamma_0.50,30,30,1.0,2,0.0667,2,0.0667,0,0.0,82.4333,5.2564,0,0,0.8666,False,Heuristic clean utility only; not final judged utility.

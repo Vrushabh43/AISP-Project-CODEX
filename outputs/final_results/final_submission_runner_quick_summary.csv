@@ -1,0 +1,2 @@
+name,script,purpose,status,returncode,duration_seconds,missing_inputs
+final_submission_consistency_check,scripts/final_pipeline/35_final_submission_consistency_check.py,"Verify cleaned final docs, official rule-based ASR evidence, final artifacts, and core result numbers.",PASS,0,0.375,[]

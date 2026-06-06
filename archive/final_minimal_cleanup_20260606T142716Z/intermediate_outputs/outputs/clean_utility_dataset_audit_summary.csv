@@ -1,0 +1,8 @@
+item,value,source_path,notes
+clean_dataset_found,true,external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json,Clean dataset file readable.
+record_count,99,external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json,Record count only; no record contents printed.
+schema_keys,"[""input"", ""instruction"", ""output""]",external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json,Keys only.
+has_instruction_input_output,true,external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json,Instruction/input/output schema check.
+outputs_usable_as_reference_answers_for_nll,true,external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json,True requires prompt-side fields and non-empty outputs.
+appears_official_clean,true,external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json,Based on file path/provenance only; manual review still needed.
+appears_generic_clean,false,external_sources/backdoorllm_official_source/DefenseBox/data/test_data/clean/jailbreak/test_data_no_trigger.json,Generic clean means not clearly tied to the adapter task.
