@@ -35,3 +35,18 @@ Final submission master runner summary
 - JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/final_logs/final_submission_runner_quick_20260606T175326Z.json
 - CSV summary written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/final_results/final_submission_runner_quick_summary.csv
 ((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ ^C
+
+
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ python scripts/final_pipeline/00_run_final_submission.py --mode full
+Final submission master runner
+- Mode: full
+- Project root: /home/43e3/solr-home/AISP-Project-CODEX
+- Python executable: /home/43e3/solr-home/AISP-Project-CODEX/.venv/bin/python
+- No GPU/model work is performed in quick or verify mode.
+- Full mode includes model loading/evaluation scripts and requires cached model assets.
+[FAIL] Full mode requirements are not satisfied:
+  - HF_HUB_CACHE is not set. Expected a cache containing the base model and adapter.
+Set HF_HUB_CACHE to a cache containing the base model and adapter, then retry full mode.
+- JSON log written: /home/43e3/solr-home/AISP-Project-CODEX/logs/final_logs/final_submission_runner_full_20260606T175639Z.json
+- CSV summary written: /home/43e3/solr-home/AISP-Project-CODEX/outputs/final_results/final_submission_runner_full_summary.csv
+((.venv) ) 43e3@oth-aw.de@ki-010:~/solr-home/AISP-Project-CODEX$ 
