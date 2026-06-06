@@ -1,0 +1,31 @@
+{
+  "failed": 0,
+  "mode": "quick",
+  "notes": {
+    "full": "Runs heavy final reproduction and requires cached base model/adapter.",
+    "quick": "File-only professor-friendly verification of the cleaned official rule-based ASR submission.",
+    "verify": "Regenerates final official-rule-based CSV/Markdown summaries, then runs the final file-only check; no model loading."
+  },
+  "overall_status": "PASS",
+  "passed": 1,
+  "project_root": "D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX",
+  "python_executable": "C:\\Program Files\\Python310\\python.exe",
+  "results": [
+    {
+      "duration_seconds": 0.188,
+      "missing_inputs": [],
+      "name": "final_submission_consistency_check",
+      "purpose": "Verify cleaned final docs, official rule-based ASR evidence, final artifacts, and core result numbers.",
+      "returncode": 0,
+      "script": "scripts/final_pipeline/35_final_submission_consistency_check.py",
+      "status": "PASS",
+      "stderr_tail": "",
+      "stdout_tail": "Final submission consistency check summary\n- File-only check; no model loading or inference\n- Checks passed: 79 / 79\n- Checks failed: 0\n- Overall passed: True\n- JSON log written: D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\logs\\final_logs\\final_submission_consistency_check_20260606T200653Z.json\n- CSV summary written: D:\\OTH\\SEM-3\\AI-Privacy\\AISP-Project-CODEX\\outputs\\final_results\\final_submission_consistency_check_summary.csv\n"
+    }
+  ],
+  "steps_completed": 1,
+  "steps_requested": [
+    "final_submission_consistency_check"
+  ],
+  "timestamp_utc": "20260606T200653Z"
+}

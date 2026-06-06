@@ -15,11 +15,11 @@ or full generated trigger outputs were used.
 
 ## Base Model Control
 
-The base model has no learned trigger-conditioned backdoor behaviour, but the official rule-based jailbreak ASR counts success whenever an output contains none of the verified refusal keywords. Therefore base_model_only = 15/99 is a control artifact of the no-refusal rule, not evidence of a backdoor. This supports reporting the metric as official rule-based jailbreak ASR, not external-judged harmfulness.
+The base model has no learned trigger-specific behaviour, but the official rule-based jailbreak ASR counts success whenever an output contains none of the verified refusal keywords. Therefore base_model_only = 15/99 is a control artifact of the no-refusal rule, not evidence of a learned backdoor. This supports reporting the metric as official rule-based jailbreak ASR, not external-judged harmfulness.
 
 The output table confirms full trigger outputs are not stored:
 
-- Output rows available: `0`
+- Output rows available: `594`
 - Full-output columns present: `[]`
 
 ## Wilson 95% Confidence Intervals
