@@ -1,9 +1,0 @@
-adapter,preliminary_trigger_success_rate,trigger_refusal_rate,clean_success_rate,clean_refusal_rate,too_short_rate,mean_output_tokens,mean_latency,heuristic_clean_utility_score,heuristic_tradeoff_note,is_final_asr,is_final_clean_utility
-original,0.6061,0.3939,1.0,0.0333,0.0,109.2171,6.9724,0.9667,Heuristic bounded metrics only; not final judged ASR/utility.,False,False
-uniform_gamma_0.50,0.0202,0.9798,1.0,0.0667,0.0,115.9922,7.454,0.9333,Heuristic bounded metrics only; not final judged ASR/utility.,False,False
-uniform_gamma_0.25,0.0,1.0,1.0,0.0333,0.0,117.5581,7.5135,0.9667,Heuristic bounded metrics only; not final judged ASR/utility.,False,False
-top1_gamma_0.50,0.0909,0.9091,1.0,0.0667,0.0,112.1628,7.1907,0.9333,Heuristic bounded metrics only; not final judged ASR/utility.,False,False
-top3_gamma_0.50,0.0606,0.9394,1.0,0.0667,0.0,114.7519,7.3157,0.9333,Heuristic bounded metrics only; not final judged ASR/utility.,False,False
-sensaware_top16_gamma_0.50,0.5657,0.4343,1.0,0.0333,0.0,108.2016,6.7835,0.9667,Heuristic bounded metrics only; not final judged ASR/utility.,False,False
-sensaware_top32_gamma_0.50,0.5758,0.4242,1.0,0.0333,0.0,108.1008,6.7988,0.9667,Heuristic bounded metrics only; not final judged ASR/utility.,False,False
-sensaware_top32_gamma_0.25,0.5455,0.4545,1.0,0.0,0.0,107.9535,6.9341,1.0,Heuristic bounded metrics only; not final judged ASR/utility.,False,False

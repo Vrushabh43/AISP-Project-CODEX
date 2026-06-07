@@ -17,7 +17,10 @@ env/
 .huggingface/
 
 # Logs and generated outputs
-!logs/README.md
+logs/
+archive/
+*.bak*
+outputs/sanitised_adapters/
 !outputs/README.md
 data/*
 !data/README.md
@@ -28,8 +31,13 @@ data/*
 # Large model/checkpoint artifacts
 models/
 models--NousResearch--Llama-2-7b-chat-hf/
+models--*/
+hf-cache*/
+cache/
 checkpoints/
 external_sources/backdoorllm_official/
+external_sources/backdoorllm_official_source/
+*.safetensors
 *.bin
 *.pt
 *.pth
@@ -41,4 +49,3 @@ external_sources/backdoorllm_official/
 Thumbs.db
 .idea/
 .vscode/
-external_sources/backdoorllm_official_source/

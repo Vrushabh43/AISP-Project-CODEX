@@ -1,0 +1,91 @@
+check,passed,detail
+root document exists: README.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\README.md
+root document exists: REPRODUCIBILITY.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\REPRODUCIBILITY.md
+root document exists: PROJECT_STRUCTURE.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\PROJECT_STRUCTURE.md
+root document exists: PROJECT_VERDICT.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\PROJECT_VERDICT.md
+root document exists: CLEANUP_SUMMARY.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\CLEANUP_SUMMARY.md
+root document exists: IMPLEMENTATION_NOTES.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\IMPLEMENTATION_NOTES.md
+root document exists: OFFICIAL_RULE_BASED_ASR_VERIFICATION.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md
+root document exists: OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md
+pipeline script exists: scripts\pipeline\run_pipeline.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\run_pipeline.py
+pipeline script exists: scripts\pipeline\validate_submission.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\validate_submission.py
+pipeline script exists: scripts\pipeline\verify_rule_based_asr.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\verify_rule_based_asr.py
+pipeline script exists: scripts\pipeline\prepare_evaluation_data.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\prepare_evaluation_data.py
+pipeline script exists: scripts\pipeline\evaluate_clean_perplexity.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\evaluate_clean_perplexity.py
+pipeline script exists: scripts\pipeline\evaluate_rule_based_asr.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\evaluate_rule_based_asr.py
+pipeline script exists: scripts\pipeline\build_tradeoff_summary.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\build_tradeoff_summary.py
+pipeline script exists: scripts\pipeline\audit_rule_based_asr.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\audit_rule_based_asr.py
+pipeline script exists: scripts\pipeline\extract_spectral_statistics.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\extract_spectral_statistics.py
+pipeline script exists: scripts\pipeline\generate_spectral_baselines.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\generate_spectral_baselines.py
+pipeline script exists: scripts\pipeline\generate_uniform_baselines.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\generate_uniform_baselines.py
+pipeline script exists: scripts\pipeline\compute_sensitivity_scores.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\compute_sensitivity_scores.py
+pipeline script exists: scripts\pipeline\generate_sensitivity_aware_adapter.py,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\pipeline\generate_sensitivity_aware_adapter.py
+result file exists: outputs\results\official_rule_based_asr_eval_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\official_rule_based_asr_eval_summary.csv
+result file exists: outputs\results\official_rule_based_asr_clean_tradeoff_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\official_rule_based_asr_clean_tradeoff_summary.csv
+result file exists: outputs\results\official_rule_based_asr_sanity_checks_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\official_rule_based_asr_sanity_checks_summary.csv
+result file exists: outputs\results\official_rule_based_asr_verification_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\official_rule_based_asr_verification_summary.csv
+result file exists: outputs\results\clean_utility_perplexity_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\clean_utility_perplexity_summary.csv
+result file exists: outputs\results\clean_behaviour_similarity_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\clean_behaviour_similarity_summary.csv
+result file exists: outputs\results\report_ready_main_results.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\report_ready_main_results.md
+result file exists: outputs\results\report_ready_key_findings.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\report_ready_key_findings.md
+result file exists: outputs\results\report_ready_case_diagnostics_summary.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\report_ready_case_diagnostics_summary.md
+result file exists: outputs\results\src_cleanup_audit.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\src_cleanup_audit.csv
+result file exists: outputs\results\project_size_audit.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results\project_size_audit.csv
+figure exists: reports\figures\official_rule_based_asr_clean_tradeoff.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\reports\figures\official_rule_based_asr_clean_tradeoff.png
+artifact file exists: submission_artifacts\README.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\README.md
+artifact file exists: submission_artifacts\REPRODUCIBILITY.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\REPRODUCIBILITY.md
+artifact file exists: submission_artifacts\PROJECT_STRUCTURE.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\PROJECT_STRUCTURE.md
+artifact file exists: submission_artifacts\PROJECT_VERDICT.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\PROJECT_VERDICT.md
+artifact file exists: submission_artifacts\CLEANUP_SUMMARY.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\CLEANUP_SUMMARY.md
+artifact file exists: submission_artifacts\IMPLEMENTATION_NOTES.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\IMPLEMENTATION_NOTES.md
+artifact file exists: submission_artifacts\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\OFFICIAL_RULE_BASED_ASR_VERIFICATION.md
+artifact file exists: submission_artifacts\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md
+artifact file exists: submission_artifacts\results\official_rule_based_asr_eval_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\official_rule_based_asr_eval_summary.csv
+artifact file exists: submission_artifacts\results\official_rule_based_asr_clean_tradeoff_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\official_rule_based_asr_clean_tradeoff_summary.csv
+artifact file exists: submission_artifacts\results\official_rule_based_asr_sanity_checks_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\official_rule_based_asr_sanity_checks_summary.csv
+artifact file exists: submission_artifacts\results\official_rule_based_asr_verification_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\official_rule_based_asr_verification_summary.csv
+artifact file exists: submission_artifacts\results\clean_utility_perplexity_summary.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\clean_utility_perplexity_summary.csv
+artifact file exists: submission_artifacts\results\project_size_audit.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\project_size_audit.csv
+artifact file exists: submission_artifacts\results\src_cleanup_audit.csv,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\src_cleanup_audit.csv
+artifact file exists: submission_artifacts\results\report_ready_main_results.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\report_ready_main_results.md
+artifact file exists: submission_artifacts\results\report_ready_key_findings.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\report_ready_key_findings.md
+artifact file exists: submission_artifacts\results\report_ready_case_diagnostics_summary.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\report_ready_case_diagnostics_summary.md
+artifact file exists: submission_artifacts\figures\official_rule_based_asr_clean_tradeoff.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\figures\official_rule_based_asr_clean_tradeoff.png
+submission_artifacts directory exists,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts
+project size under 100 MB excluding git metadata,True,3.73 MB
+outputs/results directory exists,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results
+logs/audit directory exists,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\logs\audit
+logs/audit is compact,True,0.87 MB
+removed old visible path: AGENT.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\AGENT.md
+removed old visible path: status.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\status.md
+removed old visible path: archive,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\archive
+removed old visible path: final_submission_artifacts,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\final_submission_artifacts
+removed old visible path: scripts\final_pipeline,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\scripts\final_pipeline
+removed old visible path: outputs\final_results,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\final_results
+removed old visible path: logs\final_logs,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\logs\final_logs
+removed old visible path: models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\models--BackdoorLLM--Jailbreak_Llama2-7B_BadNets
+removed old visible path: outputs\sanitised_adapters,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\sanitised_adapters
+no root-level scripts remain,True,Only scripts/pipeline/ should contain professor-facing scripts.
+no numeric-prefix scripts in scripts/pipeline,True,professional script names only
+no safetensors files in visible package,True,
+no __pycache__ directories,True,
+no backup files,True,
+no model/cache folders in repo root,True,
+ASR label verified,True,BackdoorLLM official rule-based jailbreak ASR
+is_official_asr true,True,True
+is_external_judged_asr false,True,False
+official ASR count: original,True,"observed=36/99, expected=36/99"
+official ASR count: uniform_gamma_0.25,True,"observed=13/99, expected=13/99"
+official ASR count: uniform_gamma_0.50,True,"observed=7/99, expected=7/99"
+official ASR count: top3_gamma_0.50,True,"observed=7/99, expected=7/99"
+official ASR count: sensaware_top224_gamma_0.25,True,"observed=1/99, expected=1/99"
+sensaware clean-reference perplexity,True,"observed=3.557692, expected=3.557692"
+README has no AGENT requirement,True,README should not mention AGENT.md
+README has no status requirement,True,README should not mention status.md
+official ASR label in README/verdict,True,README/PROJECT_VERDICT should name the official rule-based ASR metric.
+ASR is not described as external judged,True,README/PROJECT_VERDICT should say the metric is not external-judged.
+Wilson intervals mentioned,True,README/PROJECT_VERDICT should mention Wilson intervals.
+project-local deterministic INST caveat,True,README/PROJECT_VERDICT should include project-local deterministic [INST] caveat.
+README points to professional runner,True,README should point to scripts/pipeline/run_pipeline.py
+no full harmful prompts/outputs or literal trigger token in final-facing markdown,True,No prompt/output-like payloads detected.
+submission_artifacts excludes logs/cache/backups/project memory,True,clean artifact bundle

@@ -1,0 +1,5 @@
+file,line_count,nonempty_line_count,imported_by,classification,action_taken
+src/lora_sanitise/__init__.py,3,2,scripts/pipeline/evaluate_clean_perplexity.py;scripts/pipeline/evaluate_rule_based_asr.py;scripts/pipeline/extract_spectral_statistics.py;scripts/pipeline/generate_spectral_baselines.py;scripts/pipeline/generate_uniform_baselines.py,KEEP_REPRODUCIBILITY,kept in compact package
+src/lora_sanitise/attenuation.py,122,100,scripts/pipeline/generate_spectral_baselines.py,KEEP_REPRODUCIBILITY,kept in compact package
+src/lora_sanitise/lora_io.py,214,175,scripts/pipeline/evaluate_clean_perplexity.py;scripts/pipeline/evaluate_rule_based_asr.py;scripts/pipeline/extract_spectral_statistics.py;scripts/pipeline/generate_spectral_baselines.py;scripts/pipeline/generate_uniform_baselines.py,KEEP_REPRODUCIBILITY,kept in compact package
+src/lora_sanitise/svd_tools.py,129,100,scripts/pipeline/extract_spectral_statistics.py;scripts/pipeline/generate_spectral_baselines.py,KEEP_REPRODUCIBILITY,kept in compact package

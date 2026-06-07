@@ -1,0 +1,23 @@
+category,path,size_bytes,size_mb,note
+summary,.,746747947,712.1543,current repository including .git metadata
+summary,.,3882615,3.7028,current package size excluding .git metadata
+top_level,.gitignore,705,0.0007,post-cleanup top-level item
+top_level,CLEANUP_SUMMARY.md,2157,0.0021,post-cleanup top-level item
+top_level,data,482254,0.4599,post-cleanup top-level item
+top_level,external_sources,1972107,1.8807,post-cleanup top-level item
+top_level,IMPLEMENTATION_NOTES.md,6391,0.0061,post-cleanup top-level item
+top_level,logs,894945,0.8535,post-cleanup top-level item
+top_level,OFFICIAL_RULE_BASED_ASR_SANITY_CHECKS.md,3521,0.0034,post-cleanup top-level item
+top_level,OFFICIAL_RULE_BASED_ASR_VERIFICATION.md,1945,0.0019,post-cleanup top-level item
+top_level,outputs,35842,0.0342,post-cleanup top-level item
+top_level,PROJECT_STRUCTURE.md,2718,0.0026,post-cleanup top-level item
+top_level,PROJECT_VERDICT.md,2192,0.0021,post-cleanup top-level item
+top_level,README.md,3766,0.0036,post-cleanup top-level item
+top_level,reports,82364,0.0785,post-cleanup top-level item
+top_level,REPRODUCIBILITY.md,3344,0.0032,post-cleanup top-level item
+top_level,requirements.txt,495,0.0005,post-cleanup top-level item
+top_level,scripts,238506,0.2275,post-cleanup top-level item
+top_level,src,15679,0.015,post-cleanup top-level item
+top_level,submission_artifacts,128833,0.1229,post-cleanup top-level item
+top_level,task.txt,4851,0.0046,post-cleanup top-level item
+file_over_1mb,external_sources/backdoorllm_official/attack/DPA/examples/llama2-7b-chat/jailbreak/badnet/tokenizer.json,1936186,1.8465,large visible file
