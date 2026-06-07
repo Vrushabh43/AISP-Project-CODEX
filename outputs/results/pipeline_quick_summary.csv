@@ -1,2 +1,2 @@
 name,script,purpose,status,returncode,duration_seconds,missing_inputs
-submission_validation,scripts/pipeline/validate_submission.py,"Validate cleaned docs, artifact bundle, official ASR evidence, and core result numbers.",PASS,0,1.187,[]
+submission_validation,scripts/pipeline/validate_submission.py,"Validate cleaned docs, artifact bundle, official ASR evidence, and core result numbers.",PASS,0,0.234,[]

@@ -52,10 +52,10 @@ artifact file exists: submission_artifacts\results\report_ready_key_findings.md,
 artifact file exists: submission_artifacts\results\report_ready_case_diagnostics_summary.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\results\report_ready_case_diagnostics_summary.md
 artifact file exists: submission_artifacts\figures\official_rule_based_asr_clean_tradeoff.png,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts\figures\official_rule_based_asr_clean_tradeoff.png
 submission_artifacts directory exists,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\submission_artifacts
-project size under 100 MB excluding git metadata,True,3.73 MB
+project size under 100 MB excluding git/runtime metadata,True,3.79 MB
 outputs/results directory exists,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\outputs\results
 logs/audit directory exists,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\logs\audit
-logs/audit is compact,True,0.87 MB
+logs/audit is compact,True,0.93 MB
 removed old visible path: AGENT.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\AGENT.md
 removed old visible path: status.md,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\status.md
 removed old visible path: archive,True,D:\OTH\SEM-3\AI-Privacy\AISP-Project-CODEX\archive

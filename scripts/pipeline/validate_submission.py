@@ -22,6 +22,7 @@ RESULTS_DIR = ROOT / "outputs" / "results"
 ARTIFACTS_DIR = ROOT / "submission_artifacts"
 SIZE_LIMIT_BYTES = 100 * 1024 * 1024
 AUDIT_LOG_LIMIT_BYTES = 10 * 1024 * 1024
+RUNTIME_EXCLUDED_DIRS = {".git", ".venv", "venv", "env", ".mypy_cache", ".pytest_cache", ".ruff_cache"}
 
 ASR_LABEL = "BackdoorLLM official rule-based jailbreak ASR"
 EXPECTED_COUNTS = {
@@ -136,17 +137,21 @@ def file_exists_checks(checks: list[dict[str, Any]], label: str, paths: list[Pat
         add_check(checks, f"{label}: {path.relative_to(ROOT)}", path.exists(), str(path))
 
 
-def directory_size(path: Path, exclude_git: bool = False) -> int:
+def is_runtime_excluded(path: Path) -> bool:
+    return any(part in RUNTIME_EXCLUDED_DIRS for part in path.parts)
+
+
+def directory_size(path: Path, exclude_runtime: bool = False) -> int:
     total = 0
     if not path.exists():
         return 0
     for current, dirs, files in os.walk(path):
         current_path = Path(current)
-        if exclude_git and ".git" in current_path.parts:
+        if exclude_runtime and is_runtime_excluded(current_path):
             dirs[:] = []
             continue
-        if exclude_git:
-            dirs[:] = [item for item in dirs if item != ".git"]
+        if exclude_runtime:
+            dirs[:] = [item for item in dirs if item not in RUNTIME_EXCLUDED_DIRS]
         for filename in files:
             file_path = current_path / filename
             try:
@@ -157,12 +162,12 @@ def directory_size(path: Path, exclude_git: bool = False) -> int:
 
 
 def check_size_and_structure(checks: list[dict[str, Any]]) -> None:
-    size_without_git = directory_size(ROOT, exclude_git=True)
+    size_without_runtime = directory_size(ROOT, exclude_runtime=True)
     add_check(
         checks,
-        "project size under 100 MB excluding git metadata",
-        size_without_git <= SIZE_LIMIT_BYTES,
-        f"{size_without_git / (1024 * 1024):.2f} MB",
+        "project size under 100 MB excluding git/runtime metadata",
+        size_without_runtime <= SIZE_LIMIT_BYTES,
+        f"{size_without_runtime / (1024 * 1024):.2f} MB",
     )
     add_check(checks, "outputs/results directory exists", RESULTS_DIR.exists(), str(RESULTS_DIR))
     add_check(checks, "logs/audit directory exists", LOGS_DIR.exists(), str(LOGS_DIR))
@@ -191,9 +196,18 @@ def check_size_and_structure(checks: list[dict[str, Any]]) -> None:
 
 
 def check_large_artifacts_removed(checks: list[dict[str, Any]]) -> None:
-    safetensors = [path for path in ROOT.rglob("*.safetensors") if ".git" not in path.parts]
-    pycache = [path for path in ROOT.rglob("__pycache__") if ".git" not in path.parts]
-    bak_files = [path for path in ROOT.rglob("*.bak*") if ".git" not in path.parts]
+    safetensors = [
+        path for path in ROOT.rglob("*.safetensors")
+        if not is_runtime_excluded(path)
+    ]
+    pycache = [
+        path for path in ROOT.rglob("__pycache__")
+        if not is_runtime_excluded(path)
+    ]
+    bak_files = [
+        path for path in ROOT.rglob("*.bak*")
+        if not is_runtime_excluded(path)
+    ]
     model_dirs = [
         path for path in ROOT.iterdir()
         if path.is_dir() and (path.name.startswith("models--") or "hf-cache" in path.name.lower())
